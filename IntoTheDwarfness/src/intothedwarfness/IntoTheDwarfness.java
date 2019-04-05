@@ -6,8 +6,8 @@
 package intothedwarfness;
 
 /**
- *
- * @author mathe
+ * @Studio: Waffliors
+ * @Devs: Matheus Vicente, Nathan Andre and Raphael Melo
  */
 public class IntoTheDwarfness {
 
@@ -15,7 +15,6 @@ public class IntoTheDwarfness {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
         System.out.println("Hello World!");
     }
     
