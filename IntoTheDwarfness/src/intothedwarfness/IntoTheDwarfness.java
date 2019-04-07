@@ -5,6 +5,8 @@
  */
 package intothedwarfness;
 
+import intothedwarfness.Classes.Window;
+
 /**
  * @Studio: Waffliors
  * @Devs: Matheus Vicente, Nathan Andre and Raphael Melo
@@ -15,7 +17,7 @@ public class IntoTheDwarfness {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        Window screen = new Window(800, 600, "Into The Dwarfness");
     }
     
 }
