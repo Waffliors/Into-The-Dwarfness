@@ -1,33 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package intothedwarfness.Classes;
 
+package intothed;
 import javax.swing.JFrame;
-/**
- *
- * @authors: Matheus Vicente 
- */
-public class Window {
-    JFrame frame;
+
+public class Window  extends JFrame{
     
-    public int width, height;
-    public String title;
-    
+    //Construtor
     public Window(int width, int height, String title) {
-        this.width = width;
-        this.height = height;
-        this.title = title;
-        
-        createFrame();
-    }
-    
-    public void createFrame() {
-        frame = new JFrame(title);
-        frame.setSize(width, height);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        super (title);
+        this.setSize(width, height);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true);
+        this.setLocationRelativeTo(null);
     }
 }
