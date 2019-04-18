@@ -18,9 +18,9 @@ public class IntoTheDwarfness {
      * @param args the command line arguments
      */
     public static GameStateManager gsm;
+    public  static Window screen = new Window(800, 600, "Into The Dwarfness");
     
     public static void main(String[] args) {
-        Window screen = new Window(800, 600, "Into The Dwarfness");
 
         init();
         run();
@@ -37,7 +37,7 @@ public class IntoTheDwarfness {
         while (!done) {
             try {
                 tick();
-                //repaint();
+                screen.repaint();
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
