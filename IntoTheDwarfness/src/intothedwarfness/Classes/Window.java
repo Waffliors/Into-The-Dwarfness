@@ -1,24 +1,25 @@
+package intothedwarfness.Classes;
 
-
-package intothedwarfness.Classes;;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JFrame;
 import java.awt.Graphics;
 
-public class Window  extends JFrame{
+public class Window  extends JFrame
+{
     private final int width;
     private final int height;
     
     //Construtor
-    public Window(int width, int height, String title) {
+    public Window(int width, int height, String title) 
+    {
         super (title);
         this.width = width;
         this.height = height;
         
-        this.setSize(width, height);
-        //this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        //this.setUndecorated(true);
+//        this.setSize(width, height);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setUndecorated(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
         this.setLocationRelativeTo(null);
@@ -27,10 +28,9 @@ public class Window  extends JFrame{
     }
     
     @Override
-    public void paint(Graphics g){
-        
+    public void paint(Graphics g)
+    {        
         g.setColor(Color.black);
-        g.fillRect(0,0, this.width, this.height);
-
+        g.fillRect(0, 0, super.getContentPane().getSize().width, super.getContentPane().getSize().height);
     }
 }
