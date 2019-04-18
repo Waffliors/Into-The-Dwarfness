@@ -17,14 +17,11 @@ public class Window  extends JFrame
         this.width = width;
         this.height = height;
         
-//        this.setSize(width, height);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setUndecorated(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
         this.setLocationRelativeTo(null);
-        System.out.println(this.getContentPane().getAlignmentX());
-        
     }
     
     @Override
