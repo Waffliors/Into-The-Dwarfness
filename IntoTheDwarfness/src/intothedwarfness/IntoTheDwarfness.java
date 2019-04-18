@@ -5,7 +5,6 @@
  */
 package intothedwarfness;
 
-import intothedwarfness.Classes.States.GameStateManager;
 import intothedwarfness.Classes.Window;
 
 /**
@@ -17,35 +16,11 @@ public class IntoTheDwarfness {
     /**
      * @param args the command line arguments
      */
-    public static GameStateManager gsm;
-    public  static Window screen = new Window(800, 600, "Into The Dwarfness");
     
     public static void main(String[] args) {
-
-        init();
-        run();
-    }
-    
-    public static void init() {
-        gsm = new GameStateManager();
-        gsm.init();
-    }
-
-    public static void run() {
-        boolean done = true;
-
-        while (!done) {
-            try {
-                tick();
-                screen.repaint();
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void tick() {
-        gsm.tick();
+        Window screen = new Window(800, 600, "Into The Dwarfness");
+        
+        screen.init();
+        screen.run();
     }
 }

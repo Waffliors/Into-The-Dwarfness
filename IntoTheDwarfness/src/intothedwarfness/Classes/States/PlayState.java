@@ -5,6 +5,7 @@
  */
 package intothedwarfness.Classes.States;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 /**
@@ -21,7 +22,9 @@ public class PlayState extends GameState {
 
     @Override
     public void render(Graphics g) {
-        g.drawString("Playing", 0, 0);
+        System.out.println("Initialize");
+        g.setColor(Color.RED);
+        g.drawString("Playing", 20, 20);
     }
     
 }
