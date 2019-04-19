@@ -38,7 +38,7 @@ public class Window  extends JFrame
         while (!done) {
             try {
                 tick();
-                this. repaint();
+                repaint();
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
