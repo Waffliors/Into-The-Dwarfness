@@ -18,7 +18,7 @@ public class IntoTheDwarfness {
      */
     
     public static void main(String[] args) {
-        Window screen = new Window(800, 600, "Into The Dwarfness");
+        Window screen = new Window("Into The Dwarfness");
         
         screen.init();
         screen.run();
