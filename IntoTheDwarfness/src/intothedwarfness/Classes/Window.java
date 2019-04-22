@@ -14,6 +14,7 @@ import java.awt.event.KeyListener;
 import intothedwarfness.Classes.States.GameStateManager;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.PlayState;
+import java.awt.Color;
 
 public class Window  extends JFrame  implements  KeyListener {
 
@@ -70,9 +71,9 @@ public class Window  extends JFrame  implements  KeyListener {
     @Override
     public void paint(Graphics g) {
         //Fill the background
-        //g.setColor(Color.darkGray);
-        //g.fillRect(0, 0, super.getContentPane().getSize().width, 
-        //                 super.getContentPane().getSize().height);
+        g.setColor(Color.darkGray);
+        g.fillRect(0, 0, super.getContentPane().getSize().width, 
+                         super.getContentPane().getSize().height);
         
         //Drawing test image
         g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(),this);
@@ -80,7 +81,6 @@ public class Window  extends JFrame  implements  KeyListener {
         gsm.render(g);
 
     }
-
 
     //Overlapped methods of KeyListener:    
     @Override

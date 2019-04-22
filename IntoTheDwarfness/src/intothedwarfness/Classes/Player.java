@@ -75,7 +75,7 @@ public class Player extends Character implements Drawable{
 
     @Override
     public Image draw() {
-        if (this.cont > 6)
+        if (this.cont >= this.AnimationList.size()-1)
             this.cont = 0;
         cont++;
         this.defImage = this.AnimationList.get(cont);
