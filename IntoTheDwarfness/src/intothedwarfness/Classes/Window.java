@@ -38,7 +38,6 @@ public class Window  extends JFrame  implements  KeyListener {
         //Records this in the list of events to be passed
         this.addKeyListener(this);
         
-        
         this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_01.png"));
         this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_02.png"));
         this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_03.png"));
