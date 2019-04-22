@@ -11,15 +11,16 @@ import java.awt.Graphics;
 import javax.swing.JFrame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import intothedwarfness.Interfaces.Drawable;
 import intothedwarfness.Classes.States.GameStateManager;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.util.ArrayList;
 
 
-public class Window  extends JFrame  implements  KeyListener, Drawable {
+public class Window  extends JFrame  implements  KeyListener {
     //Creating GameStateManeger
     private static GameStateManager gsm;
+    private ArrayList<Image> AnimationList = new ArrayList();
     
     /*-------------------------- Constructor ---------------------------------*/
     public Window(String title) {
@@ -35,7 +36,14 @@ public class Window  extends JFrame  implements  KeyListener, Drawable {
         //Indicates whether this Component is focusable
         this.setFocusable(true);
         //Records this in the list of events to be passed
-        this.addKeyListener(this); 
+        this.addKeyListener(this);
+        
+        
+        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_01.png"));
+        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_02.png"));
+        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_03.png"));
+        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_04.png"));
+        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_05.png"));
     }
     
     /*---------------------------- Methods -----------------------------------*/
@@ -74,8 +82,7 @@ public class Window  extends JFrame  implements  KeyListener, Drawable {
                          super.getContentPane().getSize().height);
         
         //Drawing test image
-        Image img1 = Toolkit.getDefaultToolkit().getImage("images\\Bat_Sprite_Sheet.png");
-        g.drawImage(img1, 10, 10, 500, 500, this);
+        g.drawImage(this.AnimationList.get(0), 10, 10,this);
     }
 
 

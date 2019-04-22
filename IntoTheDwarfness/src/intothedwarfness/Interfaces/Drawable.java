@@ -5,10 +5,10 @@
  */
 package intothedwarfness.Interfaces;
 
-/**
- *
- * @author T-Gamer
- */
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.util.ArrayList;
+
 public interface Drawable {
-    
+    public void Animation();
 }
