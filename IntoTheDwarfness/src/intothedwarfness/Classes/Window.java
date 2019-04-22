@@ -1,5 +1,5 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *  Class drawable, here's created the game window, where will occur the Game  * 
+ *  Class Window, here's created the game window, where will occur the Game  * 
  *  Loop, the events will be captured and where the objects of the game will   *
  *  be drawn and animated.                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -73,35 +73,23 @@ public class Window  extends JFrame  implements  KeyListener, Drawable {
         g.fillRect(0, 0, super.getContentPane().getSize().width, 
                          super.getContentPane().getSize().height);
         
+        //Drawing test image
         Image img1 = Toolkit.getDefaultToolkit().getImage("images\\Bat_Sprite_Sheet.png");
         g.drawImage(img1, 10, 10, 500, 500, this);
     }
 
 
-
-    
-    /*
-     * Métodos sobrescritos da KeyListener:
-     *
-     * KeyTyped: Escuta a tecla que foi uma vez pressionada
-     * KeyPressed: Escuta a tecla que está sendo constantemente pressionada
-     * KeyReleased: Escuta a tecla que foi solta
-     *
-     */
-    
+    //Overlapped methods of KeyListener:    
     @Override
-    public void keyTyped(KeyEvent e) 
-    {
+    public void keyTyped(KeyEvent e) {
         System.out.println("Key "+e.getKeyChar()+" typed!");
     }
     @Override
-    public void keyPressed(KeyEvent e) 
-    {
+    public void keyPressed(KeyEvent e) {
         System.out.println("Key"+e.getKeyChar()+" pressed!");
     }
     @Override
-    public void keyReleased(KeyEvent e) 
-    {
+    public void keyReleased(KeyEvent e) {
         System.out.println("Key "+e.getKeyChar()+" released!");
     }
 }
