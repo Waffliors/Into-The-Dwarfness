@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  Abstract Class Character, responsible for serving as the basis for the     *
+ * creation of the player, the enemies and the bosses of the phases            *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package intothedwarfness.Classes;
+public abstract class Character {
 
-/**
- *
- * @author T-Gamer
- */
-public class Character {
+    public abstract void update();
+    public abstract void collision();
     
 }

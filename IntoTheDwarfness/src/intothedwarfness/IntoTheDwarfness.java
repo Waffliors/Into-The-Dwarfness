@@ -5,6 +5,7 @@
  */
 package intothedwarfness;
 
+import intothedwarfness.Classes.Player;
 import intothedwarfness.Classes.Window;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -16,12 +17,12 @@ import intothedwarfness.Classes.Window;
  *                                                                             *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-public class IntoTheDwarfness 
-{
-    public static void main(String[] args) 
-    {
+public class IntoTheDwarfness {
+    public static void main(String[] args) {
+        //Creating Player
+        Player player = new Player();
         //Initializing game window:
-        Window screen = new Window("Into The Dwarfness");
+        Window screen = new Window("Into The Dwarfness", player);
         //Starting GameState and the game loop:
         screen.init();
         screen.run();

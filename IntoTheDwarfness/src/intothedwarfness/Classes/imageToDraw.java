@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package intothedwarfness.Interfaces;
+package intothedwarfness.Classes;
 
-import java.awt.Image;
-import java.util.ArrayList;
-
-public interface Drawable {
-    public Image draw();
+/**
+ *
+ * @author T-Gamer
+ */
+class imageToDraw {
+    
 }
