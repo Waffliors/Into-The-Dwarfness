@@ -15,5 +15,6 @@ public abstract class GameState {
     
     public abstract void init();
     public abstract void tick();
+    public abstract String getType();
     public abstract void render(Graphics g);
 }

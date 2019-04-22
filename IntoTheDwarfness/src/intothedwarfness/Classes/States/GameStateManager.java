@@ -27,8 +27,14 @@ public class GameStateManager {
         currGameState.tick();
     }
     
+    public String getType() {
+        return currGameState.getType();
+    }
+    
     public void render(Graphics g) {
+        //System.out.println("RENDER");
         currGameState.render(g);
+       // System.out.println("RENDERED IN " + currGameState.getType());
     }
     
     public void switchState (GameState newState) {

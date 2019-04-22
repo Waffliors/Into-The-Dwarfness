@@ -12,23 +12,24 @@ import java.awt.Graphics;
  *
  * @author matheus
  */
-public class PlayState extends GameState {
+public class PauseState extends GameState {
 
     @Override
-    public void init() {System.out.println("Initialize play");}
+    public void init() {System.out.println("Initialize pause");}
 
     @Override
     public void tick() {}
-
-    @Override
-    public String getType() {
-        return "PlayState";
-    }
     
     @Override
+    public String getType() {
+        return "PauseState";
+    }
+
+    @Override
     public void render(Graphics g) {
-        g.setColor(Color.GREEN);
-        g.drawString("Playing", 10, 10);
+        System.out.println("RENDER PAUSE");
+        g.setColor(Color.RED);
+        g.drawString("Paused", 10, 10);
     }
     
 }

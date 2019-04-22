@@ -6,12 +6,15 @@
 
 package intothedwarfness.Classes;
 
+import intothedwarfness.Classes.States.GameState;
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JFrame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import intothedwarfness.Classes.States.GameStateManager;
+import intothedwarfness.Classes.States.PauseState;
+import intothedwarfness.Classes.States.PlayState;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ArrayList;
@@ -58,6 +61,7 @@ public class Window  extends JFrame  implements  KeyListener {
     public void run() {
         boolean done = true;
         while (!done) {
+            System.out.println("GameStateManager atual: " + gsm.getType());
             try {
                 tick();
                 repaint();
@@ -83,20 +87,30 @@ public class Window  extends JFrame  implements  KeyListener {
         
         //Drawing test image
         g.drawImage(this.AnimationList.get(0), 10, 10,this);
+        gsm.render(g);
     }
 
 
     //Overlapped methods of KeyListener:    
     @Override
     public void keyTyped(KeyEvent e) {
-        System.out.println("Key "+e.getKeyChar()+" typed!");
+        //System.out.println("Key "+e.getKeyChar()+" typed!");
     }
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("Key"+e.getKeyChar()+" pressed!");
+        //System.out.println("Key"+e.getKeyChar()+" pressed!");
+        if (e.getKeyChar() == 'p') {
+            if (gsm.getType() == "PlayState") {
+                GameState pause = new PauseState();
+                gsm.switchState(pause);
+            } else {
+                GameState play = new PlayState();
+                gsm.switchState(play);
+            }
+        }
     }
     @Override
     public void keyReleased(KeyEvent e) {
-        System.out.println("Key "+e.getKeyChar()+" released!");
+        //System.out.println("Key "+e.getKeyChar()+" released!");
     }
 }
