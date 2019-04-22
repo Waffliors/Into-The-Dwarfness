@@ -27,7 +27,6 @@ public class PauseState extends GameState {
 
     @Override
     public void render(Graphics g) {
-        System.out.println("RENDER PAUSE");
         g.setColor(Color.RED);
         g.drawString("Paused", 10, 10);
     }
