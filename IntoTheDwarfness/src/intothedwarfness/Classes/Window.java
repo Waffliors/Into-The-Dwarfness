@@ -1,5 +1,5 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *  Class Window, here's created the game window, where will occur the Game  * 
+ *  Class Window, here's created the game window, where will occur the Game    * 
  *  Loop, the events will be captured and where the objects of the game will   *
  *  be drawn and animated.                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -7,7 +7,6 @@
 package intothedwarfness.Classes;
 
 import intothedwarfness.Classes.States.GameState;
-import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JFrame;
 import java.awt.event.KeyEvent;
@@ -15,19 +14,16 @@ import java.awt.event.KeyListener;
 import intothedwarfness.Classes.States.GameStateManager;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.PlayState;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.util.ArrayList;
-
 
 public class Window  extends JFrame  implements  KeyListener {
-    //Creating GameStateManeger
+
+    private Player player;
     private static GameStateManager gsm;
-    private ArrayList<Image> AnimationList = new ArrayList();
     
     /*-------------------------- Constructor ---------------------------------*/
-    public Window(String title) {
+    public Window(String title, Player player) {
         super (title);
+        this.player = player;
         //Maximize the window to fill the screen
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         //Disabling Windows borders
@@ -40,13 +36,6 @@ public class Window  extends JFrame  implements  KeyListener {
         this.setFocusable(true);
         //Records this in the list of events to be passed
         this.addKeyListener(this);
-        
-        
-        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_01.png"));
-        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_02.png"));
-        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_03.png"));
-        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_04.png"));
-        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_05.png"));
     }
     
     /*---------------------------- Methods -----------------------------------*/
@@ -81,24 +70,21 @@ public class Window  extends JFrame  implements  KeyListener {
     @Override
     public void paint(Graphics g) {
         //Fill the background
-        g.setColor(Color.darkGray);
-        g.fillRect(0, 0, super.getContentPane().getSize().width, 
-                         super.getContentPane().getSize().height);
+        //g.setColor(Color.darkGray);
+        //g.fillRect(0, 0, super.getContentPane().getSize().width, 
+        //                 super.getContentPane().getSize().height);
         
         //Drawing test image
-        g.drawImage(this.AnimationList.get(0), 10, 10,this);
+        g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(),this);
+
         gsm.render(g);
+
     }
 
 
     //Overlapped methods of KeyListener:    
     @Override
     public void keyTyped(KeyEvent e) {
-        //System.out.println("Key "+e.getKeyChar()+" typed!");
-    }
-    @Override
-    public void keyPressed(KeyEvent e) {
-        //System.out.println("Key"+e.getKeyChar()+" pressed!");
         if (e.getKeyChar() == 'p') {
             if (gsm.getType() == "PlayState") {
                 GameState pause = new PauseState();
@@ -109,8 +95,12 @@ public class Window  extends JFrame  implements  KeyListener {
             }
         }
     }
+    
     @Override
-    public void keyReleased(KeyEvent e) {
-        //System.out.println("Key "+e.getKeyChar()+" released!");
+    public void keyPressed(KeyEvent e) {
+        player.move(e);
+        repaint();
     }
+    @Override
+    public void keyReleased(KeyEvent e) {}
 }
