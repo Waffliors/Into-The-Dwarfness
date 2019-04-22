@@ -51,7 +51,6 @@ public class Window  extends JFrame  implements  KeyListener {
     public void run() {
         boolean done = true;
         while (!done) {
-            System.out.println("GameStateManager atual: " + gsm.getType());
             try {
                 tick();
                 repaint();
@@ -98,8 +97,10 @@ public class Window  extends JFrame  implements  KeyListener {
     
     @Override
     public void keyPressed(KeyEvent e) {
-        player.move(e);
-        repaint();
+        if (gsm.getType() == "PlayState") {
+            player.move(e);
+            repaint();
+        }
     }
     @Override
     public void keyReleased(KeyEvent e) {}
