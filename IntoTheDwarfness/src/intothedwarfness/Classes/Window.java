@@ -1,38 +1,53 @@
-//Classe Window: Responsável por criar a janela de jogo e capturar os eventos
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  Class drawable, here's created the game window, where will occur the Game  * 
+ *  Loop, the events will be captured and where the objects of the game will   *
+ *  be drawn and animated.                                                     *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 package intothedwarfness.Classes;
-import intothedwarfness.Classes.States.GameStateManager;
+
 import java.awt.Color;
-import javax.swing.JFrame;
 import java.awt.Graphics;
+import javax.swing.JFrame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import intothedwarfness.Interfaces.Drawable;
+import intothedwarfness.Classes.States.GameStateManager;
+import java.awt.Image;
+import java.awt.Toolkit;
 
-public class Window  extends JFrame  implements  KeyListener
-{
+
+public class Window  extends JFrame  implements  KeyListener, Drawable {
+    //Creating GameStateManeger
     private static GameStateManager gsm;
-    public Window(String title)
-    {
-        //Atribuindo características para a exibição da tela
+    
+    /*-------------------------- Constructor ---------------------------------*/
+    public Window(String title) {
         super (title);
-        setFocusable(true);
+        //Maximize the window to fill the screen
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //Disabling Windows borders
         this.setUndecorated(true);
+        //Configuring program to close when prompted
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //Shows or hides this component depending on the value of parameter 
         this.setVisible(true);
-        this.setLocationRelativeTo(null);
+        //Indicates whether this Component is focusable
+        this.setFocusable(true);
+        //Records this in the list of events to be passed
         this.addKeyListener(this); 
     }
     
-    //Inicializa os estados do jogo
-    public void init() 
-    {
+    /*---------------------------- Methods -----------------------------------*/
+    
+    //Initialize GameState
+    public void init() {
         gsm = new GameStateManager();
         gsm.init();
     }
 
-    //GameLoop
-    public void run() 
-    {
+    //Initialize GameLoop
+    public void run() {
         boolean done = true;
         while (!done) {
             try {
@@ -45,22 +60,24 @@ public class Window  extends JFrame  implements  KeyListener
         }
     }
 
-    //Clocks
-    public void tick() 
-    {
+    //Game Clock
+    public void tick() {
         gsm.tick();
     }
     
-    //Inicializa a tela no seu estado puro
+    //Paint the screen
     @Override
-    public void paint(Graphics g)
-    {        
+    public void paint(Graphics g) {
+        //Fill the background
         g.setColor(Color.darkGray);
         g.fillRect(0, 0, super.getContentPane().getSize().width, 
                          super.getContentPane().getSize().height);
         
-        gsm.render(g);
+        Image img1 = Toolkit.getDefaultToolkit().getImage("images\\Bat_Sprite_Sheet.png");
+        g.drawImage(img1, 10, 10, 500, 500, this);
     }
+
+
 
     
     /*

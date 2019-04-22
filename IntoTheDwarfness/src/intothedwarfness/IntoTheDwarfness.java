@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package intothedwarfness;
+
 import intothedwarfness.Classes.Window;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -15,8 +16,10 @@ import intothedwarfness.Classes.Window;
  *                                                                             *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-public class IntoTheDwarfness {
-    public static void main(String[] args) {
+public class IntoTheDwarfness 
+{
+    public static void main(String[] args) 
+    {
         //Initializing game window:
         Window screen = new Window("Into The Dwarfness");
         //Starting GameState and the game loop:

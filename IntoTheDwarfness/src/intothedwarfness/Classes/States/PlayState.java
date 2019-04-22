@@ -22,9 +22,6 @@ public class PlayState extends GameState {
 
     @Override
     public void render(Graphics g) {
-        System.out.println("Initialize");
-        g.setColor(Color.RED);
-        g.drawString("Playing", 20, 20);
     }
     
 }
