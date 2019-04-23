@@ -16,6 +16,13 @@ import intothedwarfness.Classes.States.GameState;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
 import intothedwarfness.IntoTheDwarfness;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.Timer;
 
 public class Window  extends IntoTheDwarfness  implements  KeyListener {
     
@@ -26,6 +33,8 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
     private Player player;
     private Tilemap tilemap;
     private static GameStateManager gsm;
+    private boolean test;
+    private Timer time;
     
     /*------------------------------------------------------------------------*
      *----------------------- Class Constructor ------------------------------*
@@ -34,6 +43,7 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
     public Window(String title, Player player, Tilemap tilemap) {
         this.player = player;
         this.tilemap = tilemap;
+        this.test = true;
         //Maximize the window to fill the screen
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         //Disabling Windows borders
@@ -46,6 +56,10 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
         this.setFocusable(true);
         //Records this in the list of events to be passed
         this.addKeyListener(this);
+        //
+        
+        
+        //
     }
     
     /*------------------------------------------------------------------------*
@@ -61,14 +75,14 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
     //Initialize GameLoop
     public void run() {
         boolean done = true;
-        while (!done) {
+        while (done) {
             try {
                 tick();
-                repaint();
-                Thread.sleep(10);
+                Thread.sleep(145);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            repaint();
         }
     }
 
@@ -78,22 +92,22 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
     }
     
     //Paint the screen
-    // @Override
+    @Override
     public void paint(Graphics g) {
         //Fill the background
         g.setColor(Color.darkGray);
         g.fillRect(0, 0, super.getContentPane().getSize().width, super.getContentPane().getSize().height);
-
-        //g.drawImage(Tilemap.tile().get(0));
-        //g.drawImage(tilemap.draw(), 64, 0, 128, 64, 33, 0, 64, 32, null);
-        
         //Drawing test image
-        //g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(),null);
-        //g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(), player.getXPosition() + 64, player.getyPosition()+ 64, 0, 0, 220, 233, Color.getHSBColor(135,57,36),null);
-
-        
-
-        gsm.render(g);
+        try {
+            g.drawImage(ImageIO.read(new File("images/dwarf/idle_r_1.png")), player.getXPosition(), player.getyPosition(), 64, 64, null);
+            //g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(), player.getXPosition() + 64, player.getyPosition() + 64, 0, 0, 220, 233, Color.getHSBColor(135, 57, 36), null);
+            
+            
+            
+            //gsm.render(g);
+        } catch (IOException ex) {
+            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 

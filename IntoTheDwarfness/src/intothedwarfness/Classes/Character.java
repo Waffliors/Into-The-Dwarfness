@@ -3,8 +3,9 @@
  * creation of the player, the enemies and the bosses of the phases            *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package intothedwarfness.Classes;
+import intothedwarfness.IntoTheDwarfness;
 
-public abstract class Character {
+public abstract class Character extends IntoTheDwarfness {
     public abstract void update();
     public abstract void collision(); 
 }

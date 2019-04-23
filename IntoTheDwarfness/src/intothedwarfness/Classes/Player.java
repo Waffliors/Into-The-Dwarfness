@@ -7,6 +7,7 @@ import intothedwarfness.Interfaces.Drawable;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random; 
 
@@ -18,22 +19,16 @@ public class Player extends Character implements Drawable{
     private int xPosition;
     private int yPosition;
     private int cont;
-    private Image defImage;
-    private ArrayList<Image> AnimationList = new ArrayList();
+    private BufferedImage defImage;
+    private ArrayList<BufferedImage> AnimationList = new ArrayList();
     /*-------------------------- Constructor ---------------------------------*/
-    public Player(){
+    public Player(ArrayList<ArrayList<BufferedImage>> animations){
         this.speed = (float) 0.5;
         this.xPosition = 10;
         this.yPosition = 10;
         this.cont = 0;
         this.rand = new Random();
-        this.defImage = Toolkit.getDefaultToolkit().getImage("images\\Dwarf_01.png");
-
-        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_01.png"));
-        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_02.png"));
-        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_03.png"));
-        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_04.png"));
-        this.AnimationList.add(Toolkit.getDefaultToolkit().getImage("images\\Dwarf_05.png"));
+        this.AnimationList = animations.get(0);
     }
     
     /*---------------------------- Methods -----------------------------------*/
@@ -74,11 +69,13 @@ public class Player extends Character implements Drawable{
     }
 
     @Override
-    public Image draw() {
+    public BufferedImage draw() {
         if (this.cont >= this.AnimationList.size()-1)
             this.cont = 0;
         cont++;
         this.defImage = this.AnimationList.get(cont);
+        
+        
         return this.defImage;
     }
     
