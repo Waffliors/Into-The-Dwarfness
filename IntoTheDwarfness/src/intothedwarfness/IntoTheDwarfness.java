@@ -5,7 +5,10 @@
  */
 package intothedwarfness;
 
+import java.io.IOException;
+
 import intothedwarfness.Classes.Player;
+import intothedwarfness.Classes.Tilemap;
 import intothedwarfness.Classes.Window;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -18,11 +21,12 @@ import intothedwarfness.Classes.Window;
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 public class IntoTheDwarfness {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //Creating Player
         Player player = new Player();
+        Tilemap tilemap = new Tilemap();
         //Initializing game window:
-        Window screen = new Window("Into The Dwarfness", player);
+        Window screen = new Window("Into The Dwarfness", player, tilemap);
         //Starting GameState and the game loop:
         screen.init();
         screen.run();
