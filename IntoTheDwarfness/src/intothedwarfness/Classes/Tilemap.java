@@ -8,26 +8,22 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 
-public class Tilemap
-{
-	private BufferedImage image;
-	private ArrayList<Object> TilemapList = new ArrayList();
-	public Tilemap() 
-	{
-		try
-		{
-			image = ImageIO.read(new File("src/Images/Dungeon_Tileset.png"));
-			TilemapList.add(image, 0, 0, 64, 64, 0, 0, 32, 32, null);
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}		
-	}
+public class Tilemap {
 
-	//@Override
-	public ArrayList<Object> tile() 
-	{
-        return TilemapList;	
-	}
+    private BufferedImage image;
+    private ArrayList<Object> TilemapList = new ArrayList();
+
+    public Tilemap() {
+        try {
+            image = ImageIO.read(new File("src/Images/Dungeon_Tileset.png"));
+            //TilemapList.add(image, 0, 0, 64, 64, 0, 0, 32, 32, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //@Override
+    public ArrayList<Object> tile() {
+        return TilemapList;
+    }
 }

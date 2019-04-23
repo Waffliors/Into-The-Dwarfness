@@ -6,25 +6,32 @@
 
 package intothedwarfness.Classes;
 
-import intothedwarfness.Classes.States.GameState;
+import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JFrame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import intothedwarfness.Classes.States.GameStateManager;
-import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.PlayState;
-import java.awt.Color;
+import intothedwarfness.Classes.States.GameState;
+import intothedwarfness.Classes.States.PauseState;
+import intothedwarfness.Classes.States.GameStateManager;
+import intothedwarfness.IntoTheDwarfness;
 
-public class Window  extends JFrame  implements  KeyListener {
-
+public class Window  extends IntoTheDwarfness  implements  KeyListener {
+    
+    /*------------------------------------------------------------------------*
+     *------------------------ Class Variables -------------------------------*
+     *------------------------------------------------------------------------*/
+    
     private Player player;
     private Tilemap tilemap;
     private static GameStateManager gsm;
     
-    /*-------------------------- Constructor ---------------------------------*/
+    /*------------------------------------------------------------------------*
+     *----------------------- Class Constructor ------------------------------*
+     *------------------------------------------------------------------------*/
+    
     public Window(String title, Player player, Tilemap tilemap) {
-        super (title);
         this.player = player;
         this.tilemap = tilemap;
         //Maximize the window to fill the screen
@@ -41,9 +48,11 @@ public class Window  extends JFrame  implements  KeyListener {
         this.addKeyListener(this);
     }
     
-    /*---------------------------- Methods -----------------------------------*/
+    /*------------------------------------------------------------------------*
+     *------------------------- Class Methods --------------------------------*
+     *------------------------------------------------------------------------*/
     
-    //Initialize GameState
+    //Method init: Initialize GameState
     public void init() {
         gsm = new GameStateManager();
         gsm.init();
@@ -75,7 +84,7 @@ public class Window  extends JFrame  implements  KeyListener {
         g.setColor(Color.darkGray);
         g.fillRect(0, 0, super.getContentPane().getSize().width, super.getContentPane().getSize().height);
 
-        g.drawImage(Tilemap.tile().get(0));
+        //g.drawImage(Tilemap.tile().get(0));
         //g.drawImage(tilemap.draw(), 64, 0, 128, 64, 33, 0, 64, 32, null);
         
         //Drawing test image
