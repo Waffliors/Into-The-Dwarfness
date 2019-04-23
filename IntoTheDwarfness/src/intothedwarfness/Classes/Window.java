@@ -19,12 +19,14 @@ import java.awt.Color;
 public class Window  extends JFrame  implements  KeyListener {
 
     private Player player;
+    private Tilemap tilemap;
     private static GameStateManager gsm;
     
     /*-------------------------- Constructor ---------------------------------*/
-    public Window(String title, Player player) {
+    public Window(String title, Player player, Tilemap tilemap) {
         super (title);
         this.player = player;
+        this.tilemap = tilemap;
         //Maximize the window to fill the screen
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         //Disabling Windows borders
@@ -67,15 +69,20 @@ public class Window  extends JFrame  implements  KeyListener {
     }
     
     //Paint the screen
-    @Override
+    // @Override
     public void paint(Graphics g) {
         //Fill the background
         g.setColor(Color.darkGray);
-        g.fillRect(0, 0, super.getContentPane().getSize().width, 
-                         super.getContentPane().getSize().height);
+        g.fillRect(0, 0, super.getContentPane().getSize().width, super.getContentPane().getSize().height);
+
+        g.drawImage(Tilemap.tile().get(0));
+        //g.drawImage(tilemap.draw(), 64, 0, 128, 64, 33, 0, 64, 32, null);
         
         //Drawing test image
-        g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(),this);
+        //g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(),null);
+        //g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(), player.getXPosition() + 64, player.getyPosition()+ 64, 0, 0, 220, 233, Color.getHSBColor(135,57,36),null);
+
+        
 
         gsm.render(g);
 
