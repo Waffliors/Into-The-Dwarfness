@@ -40,7 +40,7 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
      *----------------------- Class Constructor ------------------------------*
      *------------------------------------------------------------------------*/
     
-    public Window(String title, Player player, Tilemap tilemap) {
+    public Window(String title, Player player) {
         this.player = player;
         this.tilemap = tilemap;
         this.test = true;
@@ -98,16 +98,12 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
         g.setColor(Color.darkGray);
         g.fillRect(0, 0, super.getContentPane().getSize().width, super.getContentPane().getSize().height);
         //Drawing test image
-        try {
-            g.drawImage(ImageIO.read(new File("images/dwarf/idle_r_1.png")), player.getXPosition(), player.getyPosition(), 64, 64, null);
+            g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(), 64, 64, null);
             //g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(), player.getXPosition() + 64, player.getyPosition() + 64, 0, 0, 220, 233, Color.getHSBColor(135, 57, 36), null);
-            
-            
+          
             
             //gsm.render(g);
-        } catch (IOException ex) {
-            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
 
     }
 

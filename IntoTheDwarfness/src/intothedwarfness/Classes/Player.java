@@ -19,16 +19,16 @@ public class Player extends Character implements Drawable{
     private int xPosition;
     private int yPosition;
     private int cont;
-    private BufferedImage defImage;
+    private BufferedImage SpriteSheet;
     private ArrayList<BufferedImage> AnimationList = new ArrayList();
     /*-------------------------- Constructor ---------------------------------*/
-    public Player(ArrayList<ArrayList<BufferedImage>> animations){
+    public Player(BufferedImage spriteSheet){
         this.speed = (float) 0.5;
         this.xPosition = 10;
         this.yPosition = 10;
         this.cont = 0;
         this.rand = new Random();
-        this.AnimationList = animations.get(0);
+        this.SpriteSheet = spriteSheet;
     }
     
     /*---------------------------- Methods -----------------------------------*/
@@ -70,13 +70,7 @@ public class Player extends Character implements Drawable{
 
     @Override
     public BufferedImage draw() {
-        if (this.cont >= this.AnimationList.size()-1)
-            this.cont = 0;
-        cont++;
-        this.defImage = this.AnimationList.get(cont);
-        
-        
-        return this.defImage;
+        return this.SpriteSheet;
     }
     
     public int getXPosition() {
