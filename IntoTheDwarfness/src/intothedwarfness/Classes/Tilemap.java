@@ -12,7 +12,7 @@ public class Tilemap
 {
 	private BufferedImage image;
 	private int destX1, destY1, destX2, destY2, srcX1, srcY1, srcX2, srcY2;
-	private ArrayList<Tilemap> TilemapList = new ArrayList<>();
+	private static ArrayList<Tilemap> TilemapList = new ArrayList<>();
 	
 	public Tilemap(int destX1, int destY1, int destX2, int destY2, int srcX1, int srcY1, int srcX2, int srcY2) 
 	{
@@ -23,15 +23,15 @@ public class Tilemap
 		this.srcX1 = srcX1;
 		this.srcY1 = srcY1;
 		this.srcX2 = srcX2;
-		this.srcY2 = srcY2;			
-	}
-	
-	public void Tile() 
-	{
-		Tilemap left_border_1 = new Tilemap(this.destX1, this.destY2, this.destX2, this.destY2, this.srcX1, this.srcY1, this.srcX2, this.srcY2);
-		TilemapList.add(left_border_1);
+		this.srcY2 = srcY2;
+
+		TilemapList.add(this);
 		
-		System.out.println(TilemapList);
+		createTile();		
+	}
+
+	public static ArrayList<Tilemap> Tile() 
+	{		
 		/*
 		try
 		{
@@ -41,6 +41,40 @@ public class Tilemap
 		{
 			e.printStackTrace();
 		}*/
+		
+		return TilemapList;
+	}
+	
+	public void createTile()
+	{
+		int x, y;
+		
+		this.destX1 = 0;
+		this.destY1 = 0;
+		this.destX2 = 0;
+		this.destY2 = 0;
+		this.srcX1 = 0;
+		this.srcY1 = 0;
+		this.srcX2 = 32;
+		this.srcY2 = 32;				
+		
+		for(y = 0; y < 20; y++)
+		{			
+			for(x = 0; x < 16; x++)
+			{				
+				this.srcX1 = 32 * x;
+				this.srcX2 = this.srcX1 + 32;
+				
+				TilemapList.add(this);
+				System.out.println(TilemapList.size());
+			}	
+
+			this.srcX1 = 0;
+			this.srcX2 = 0;				
+			this.srcY1 = 32 * y;
+			this.srcY2 = this.srcY1 + 32;	
+			
+		}
 	}
 	
 	public int getDestX1() 
