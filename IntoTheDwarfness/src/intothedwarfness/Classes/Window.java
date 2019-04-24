@@ -16,12 +16,8 @@ import intothedwarfness.Classes.States.GameState;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
 import intothedwarfness.IntoTheDwarfness;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
 public class Window  extends IntoTheDwarfness  implements  KeyListener {
@@ -31,10 +27,9 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
      *------------------------------------------------------------------------*/
     
     private Player player;
-    private Tilemap tilemap;
     private static GameStateManager gsm;
-    private boolean test;
-    private Timer time;
+    private int myTimerDelay;
+    private Timer myTimer;
     
     /*------------------------------------------------------------------------*
      *----------------------- Class Constructor ------------------------------*
@@ -42,8 +37,6 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
     
     public Window(String title, Player player) {
         this.player = player;
-        this.tilemap = tilemap;
-        this.test = true;
         //Maximize the window to fill the screen
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         //Disabling Windows borders
@@ -56,11 +49,22 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
         this.setFocusable(true);
         //Records this in the list of events to be passed
         this.addKeyListener(this);
-        //
+        //Ignore repaint parameters
+        this.setIgnoreRepaint(true);
         
-        
         //
+        myTimerDelay = 600;
+        myTimer = new Timer(myTimerDelay, gameTimer);
+        myTimer.start();
     }
+    
+    ActionListener gameTimer = new ActionListener(){
+        @Override
+        public void actionPerformed(ActionEvent theEvent) {
+                        
+                        
+        }
+    };
     
     /*------------------------------------------------------------------------*
      *------------------------- Class Methods --------------------------------*
@@ -76,13 +80,9 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
     public void run() {
         boolean done = true;
         while (done) {
-            try {
-                tick();
-                Thread.sleep(145);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             repaint();
+            
+
         }
     }
 
@@ -98,7 +98,7 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
         g.setColor(Color.darkGray);
         g.fillRect(0, 0, super.getContentPane().getSize().width, super.getContentPane().getSize().height);
         //Drawing test image
-            g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(), 64, 64, null);
+            g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(),600, 600, null);
             //g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(), player.getXPosition() + 64, player.getyPosition() + 64, 0, 0, 220, 233, Color.getHSBColor(135, 57, 36), null);
           
             
@@ -125,7 +125,6 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
     public void keyPressed(KeyEvent e) {
         if (gsm.getType() == "PlayState") {
             player.move(e);
-            repaint();
         }
     }
     @Override

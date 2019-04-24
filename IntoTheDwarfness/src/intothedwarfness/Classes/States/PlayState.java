@@ -18,7 +18,9 @@ public class PlayState extends GameState {
     public void init() {System.out.println("Initialize play");}
 
     @Override
-    public void tick() {}
+    public void tick() {
+        
+    }
 
     @Override
     public String getType() {

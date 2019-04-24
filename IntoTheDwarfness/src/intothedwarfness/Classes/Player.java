@@ -36,25 +36,25 @@ public class Player extends Character implements Drawable{
         //If left arrow
         if (e.getKeyCode() == 37){
             System.out.println("left");
-            this.xPosition -= 10;
+            this.xPosition -= 5;
             System.out.println(this.xPosition);
         }
         //If right arrow
         if (e.getKeyCode() == 39) {
             System.out.println("right");
-            this.xPosition += 10;
+            this.xPosition += 5;
             System.out.println(this.xPosition);
         }
         //If up arrow
         if (e.getKeyCode() == 38){
            System.out.println("up");
-            this.yPosition -= 10;
+            this.yPosition -= 5;
             System.out.println(this.yPosition);
         }
         //If down arrow
         if (e.getKeyCode() == 40) {
             System.out.println("down");
-            this.yPosition += 10;
+            this.yPosition += 5;
             System.out.println(this.yPosition);
         }
     }
