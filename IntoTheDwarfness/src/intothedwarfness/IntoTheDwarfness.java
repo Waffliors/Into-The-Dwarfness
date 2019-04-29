@@ -2,6 +2,10 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+
+
+
+test
  */
 package intothedwarfness;
 
@@ -26,7 +30,7 @@ import intothedwarfness.Classes.Window;
 <<<<<<< HEAD
  *            @Devs: Matheus Vicente, Nathan Andre and Raphael Melo            *
 =======
- *            @Devs: Matheus Vicente, Nathan André and Raphael Melo            *
+ *            @Devs: Matheus Vicente, Nathan Andrï¿½ and Raphael Melo            *
 >>>>>>> 404e51cb210e02684a5eb38d1e238683dc0f989f
  *                             GDD available at:                               *
  *                                                                             *
