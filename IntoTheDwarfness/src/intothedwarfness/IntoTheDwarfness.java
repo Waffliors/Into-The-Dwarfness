@@ -2,65 +2,55 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
-
-
-
-test
  */
 package intothedwarfness;
 
-<<<<<<< HEAD
 import java.io.File;
-import javax.swing.JFrame;
 import java.util.ArrayList;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import intothedwarfness.Classes.Map;
 import java.awt.image.BufferedImage;
-=======
-import java.io.IOException;
-
->>>>>>> 404e51cb210e02684a5eb38d1e238683dc0f989f
 import intothedwarfness.Classes.Player;
 import intothedwarfness.Classes.Window;
+import intothedwarfness.Classes.TileMap;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *                                                                             *                   
  *                            @Studio: Waffliors                               *
  *                             @Team: Bugnatron                                *
-<<<<<<< HEAD
  *            @Devs: Matheus Vicente, Nathan Andre and Raphael Melo            *
-=======
- *            @Devs: Matheus Vicente, Nathan Andr� and Raphael Melo            *
->>>>>>> 404e51cb210e02684a5eb38d1e238683dc0f989f
  *                             GDD available at:                               *
  *                                                                             *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-<<<<<<< HEAD
-public class IntoTheDwarfness extends JFrame {
+public class IntoTheDwarfness{
     public static void main (String[] args) throws IOException {
+        
+        //Loading the list of Sprites
         ArrayList<BufferedImage> spriteList = new ArrayList();
         loadanimations(spriteList);
-         
+        
+        //Loading the list of Tiles
+        ArrayList<TileMap> TilemapList = new ArrayList<>();
+    	loadTile(TilemapList);
+        
+        //Creating the Map that receives a image and the tiles
+        Map map = new Map(TilemapList, spriteList.get(18));
+        
+        //Initializing the Player
         Player player = new Player(spriteList.get(0));
-=======
-public class IntoTheDwarfness {
-    public static void main(String[] args) throws IOException {
-        //Creating Player
-        Player player = new Player();
-        new Tilemap(0,0,0,0,0,0,0,0);
+
         //Initializing game window:
->>>>>>> 404e51cb210e02684a5eb38d1e238683dc0f989f
-        Window screen = new Window("Into The Dwarfness", player);
+        Window screen = new Window(player, map);
         
         screen.init();
         screen.run();
     }
-<<<<<<< HEAD
 
-    private static void loadanimations(ArrayList<BufferedImage> spriteList) 
-            throws IOException {
-        for (int cont = 1; cont <= 17; cont++) {
+    //Function that load the animations
+    private static void loadanimations(ArrayList<BufferedImage> spriteList) throws IOException {
+        for (int cont = 1; cont <= 19; cont++) {
             spriteList.add(ImageIO.read(new File("images/" + cont + ".png")));
         }
         /*  [0] = Dwarf
@@ -80,8 +70,31 @@ public class IntoTheDwarfness {
          *  [14] = Purple Portal
          *  [15] = Spider
          *  [16] = Worm Left
-         *  [17] = Worm Right */
+         *  [17] = Worm Right
+         *  [18] = TileSet
+         */
     }
-=======
->>>>>>> 404e51cb210e02684a5eb38d1e238683dc0f989f
+
+    //Function that initialize the Tiles for the TilemapList
+    private static void loadTile(ArrayList<TileMap> TilemapList) {
+        int x, y,srcX1,srcY1,
+                srcX2 = 32,
+                srcY2 = 32;
+
+        for (y = 0; y < 20; y++) {
+            srcX1 = 0;
+            srcX2 = 0;
+            srcY1 = 32 * y;
+            srcY2 = srcY1 + 32;
+
+            for (x = 0; x < 16; x++) {
+                srcX1 = 32 * x;
+                srcX2 = srcX1 + 32;
+
+                TilemapList.add(new TileMap(srcX1, srcY1, srcX2, srcY2));
+            }
+        }
+    }
+    
+    
 }

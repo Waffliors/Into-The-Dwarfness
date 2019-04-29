@@ -3,82 +3,83 @@
  * the tasks that the corresponding                                            *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package intothedwarfness.Classes;
+
 import intothedwarfness.Interfaces.Drawable;
+import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Random; 
-
-
 
 public class Player extends Character implements Drawable{
-    private Random rand; 
-    private float speed;
-    private int xPosition;
-    private int yPosition;
-    private int cont;
-    private BufferedImage SpriteSheet;
-    private ArrayList<BufferedImage> AnimationList = new ArrayList();
-    /*-------------------------- Constructor ---------------------------------*/
+    
+    /*------------------------------------------------------------------------*
+     *------------------------ Class Variables -------------------------------*
+     *------------------------------------------------------------------------*/
+    private final float speed;
+    private int xPosition, yPosition;
+    private final BufferedImage SpriteSheet;
+    
+    /*------------------------------------------------------------------------*
+     *----------------------- Class Constructor ------------------------------*
+     *------------------------------------------------------------------------*/
     public Player(BufferedImage spriteSheet){
         this.speed = (float) 0.5;
-        this.xPosition = 10;
-        this.yPosition = 10;
-        this.cont = 0;
-        this.rand = new Random();
+        this.xPosition = 64;
+        this.yPosition = 60;
         this.SpriteSheet = spriteSheet;
     }
     
-    /*---------------------------- Methods -----------------------------------*/
+   /*------------------------------------------------------------------------*
+    *------------------------- Class Methods --------------------------------*
+    *------------------------------------------------------------------------*/
     public void move(KeyEvent e){
         //If left arrow
-        if (e.getKeyCode() == 37){
-            System.out.println("left");
-            this.xPosition -= 5;
-            System.out.println(this.xPosition);
+        if (e.getKeyCode() == 37 || e.getKeyChar() == 'a'){
+            this.xPosition = this.xPosition - 64;
         }
         //If right arrow
         if (e.getKeyCode() == 39) {
-            System.out.println("right");
-            this.xPosition += 5;
-            System.out.println(this.xPosition);
+            this.xPosition = this.xPosition + 64;
         }
         //If up arrow
         if (e.getKeyCode() == 38){
-           System.out.println("up");
-            this.yPosition -= 5;
-            System.out.println(this.yPosition);
+           this.yPosition = this.yPosition - 64;
         }
         //If down arrow
         if (e.getKeyCode() == 40) {
-            System.out.println("down");
-            this.yPosition += 5;
-            System.out.println(this.yPosition);
+            this.yPosition = this.yPosition + 64;
         }
     }
 
     @Override
-    public void update() {
-    }
+    public void update() {}
 
     @Override
-    public void collision() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public void collision() {}
 
+
+    
     @Override
-    public BufferedImage draw() {
-        return this.SpriteSheet;
+    public void paintComponent(Graphics g){
+        //drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, Color bgcolor, ImageObserver observer)
+            BufferedImage image = SpriteSheet.getSubimage(128, 0, 32, 32);
+            g.drawImage(image, getXPosition(), getYPosition(), 64, 64, null);
+        
+        //for (int i = 32; i<160; i++){
+        //g.drawImage(SpriteSheet, 0,0,64,64, 0,0,32,32, null);
+        //    System.out.println("cont");
+        //}
+        //g.drawImage(this.SpriteSheet, getXPosition(), getyPosition(),600, 600, null);
+
     }
     
-    public int getXPosition() {
-        return this.xPosition;
-    }
+    public int getXPosition() {return this.xPosition;}
 
-    public int getyPosition() {
-        return this.yPosition;
+    public int getYPosition() {return this.yPosition;}
+
+    @Override
+    public Image draw() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

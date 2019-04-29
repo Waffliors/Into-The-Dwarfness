@@ -4,8 +4,9 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package intothedwarfness.Classes;
 import intothedwarfness.IntoTheDwarfness;
+import javax.swing.JPanel;
 
-public abstract class Character extends IntoTheDwarfness {
+public abstract class Character extends JPanel {
     public abstract void update();
     public abstract void collision(); 
 }

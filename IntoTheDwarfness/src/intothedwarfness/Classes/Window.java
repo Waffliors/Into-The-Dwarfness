@@ -15,27 +15,21 @@ import intothedwarfness.Classes.States.PlayState;
 import intothedwarfness.Classes.States.GameState;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
-import intothedwarfness.IntoTheDwarfness;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.Timer;
 
-public class Window  extends IntoTheDwarfness  implements  KeyListener {
-    
+public class Window extends JFrame implements KeyListener {
+
     /*------------------------------------------------------------------------*
      *------------------------ Class Variables -------------------------------*
      *------------------------------------------------------------------------*/
-    
-    private Player player;
-    private static GameStateManager gsm;
-    private int myTimerDelay;
-    private Timer myTimer;
-    
+    private final Map map;
+    private final Player player;
+    private GameStateManager gsm;
+
     /*------------------------------------------------------------------------*
      *----------------------- Class Constructor ------------------------------*
      *------------------------------------------------------------------------*/
-    
-    public Window(String title, Player player) {
+    public Window(Player player, Map map) {
+        this.map = map;
         this.player = player;
         //Maximize the window to fill the screen
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -51,67 +45,48 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
         this.addKeyListener(this);
         //Ignore repaint parameters
         this.setIgnoreRepaint(true);
-        
-        //
-        myTimerDelay = 600;
-        myTimer = new Timer(myTimerDelay, gameTimer);
-        myTimer.start();
     }
-    
-    ActionListener gameTimer = new ActionListener(){
-        @Override
-        public void actionPerformed(ActionEvent theEvent) {
-                        
-                        
-        }
-    };
-    
+
     /*------------------------------------------------------------------------*
      *------------------------- Class Methods --------------------------------*
      *------------------------------------------------------------------------*/
-    
     //Method init: Initialize GameState
     public void init() {
         gsm = new GameStateManager();
         gsm.init();
     }
 
-    //Initialize GameLoop
+    //Method run: Execute the GameLoop
     public void run() {
         boolean done = true;
         while (done) {
             repaint();
-            
-
         }
     }
 
-    //Game Clock
+    //Method tick: It's the Game Clock
     public void tick() {
         gsm.tick();
     }
-    
-    //Paint the screen
+
+    //Method paint: It's the method that paint the Window 
     @Override
     public void paint(Graphics g) {
-        //Fill the background
-        g.setColor(Color.darkGray);
-        g.fillRect(0, 0, super.getContentPane().getSize().width, super.getContentPane().getSize().height);
-        //Drawing test image
-            g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(),600, 600, null);
-            //g.drawImage(player.draw(), player.getXPosition(), player.getyPosition(), player.getXPosition() + 64, player.getyPosition() + 64, 0, 0, 220, 233, Color.getHSBColor(135, 57, 36), null);
-          
-            
-            //gsm.render(g);
-
-
+        //Clear the previous 
+        //g.clearRect(0, 0, super.getContentPane().getSize().width, super.getContentPane().getSize().height);
+        //Paint
+        //g.setColor(new Color(47, 47, 46));
+        //g.fillRect(0, 0, super.getContentPane().getSize().width, super.getContentPane().getSize().height);
+        map.paintComponent(g);
+        player.update();
+        player.paintComponent(g);
     }
 
-    //Overlapped methods of KeyListener:    
+    //Method keyTyped: listen when the key has been typed   
     @Override
     public void keyTyped(KeyEvent e) {
         if (e.getKeyChar() == 'p') {
-            if (gsm.getType() == "PlayState") {
+            if ("PlayState".equals(gsm.getType())) {
                 GameState pause = new PauseState();
                 gsm.switchState(pause);
             } else {
@@ -120,13 +95,17 @@ public class Window  extends IntoTheDwarfness  implements  KeyListener {
             }
         }
     }
-    
+
+    //Method keyPressed: listen when the key is pressed
     @Override
     public void keyPressed(KeyEvent e) {
-        if (gsm.getType() == "PlayState") {
+        if ("PlayState".equals(gsm.getType())) {
             player.move(e);
         }
     }
+
+    ////Method keyTyped: listen when the key has been released
     @Override
-    public void keyReleased(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {
+    }
 }
