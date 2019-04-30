@@ -78,7 +78,6 @@ public class Window extends JFrame implements KeyListener {
         //g.setColor(new Color(47, 47, 46));
         //g.fillRect(0, 0, super.getContentPane().getSize().width, super.getContentPane().getSize().height);
         map.paintComponent(g);
-        player.update();
         player.paintComponent(g);
     }
 
@@ -100,7 +99,7 @@ public class Window extends JFrame implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if ("PlayState".equals(gsm.getType())) {
-            player.move(e);
+            Map.move(e);
         }
     }
 

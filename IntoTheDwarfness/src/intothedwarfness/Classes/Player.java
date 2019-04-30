@@ -32,24 +32,6 @@ public class Player extends Character implements Drawable{
    /*------------------------------------------------------------------------*
     *------------------------- Class Methods --------------------------------*
     *------------------------------------------------------------------------*/
-    public void move(KeyEvent e){
-        //If left arrow
-        if (e.getKeyCode() == 37 || e.getKeyChar() == 'a'){
-            this.xPosition = this.xPosition - 64;
-        }
-        //If right arrow
-        if (e.getKeyCode() == 39) {
-            this.xPosition = this.xPosition + 64;
-        }
-        //If up arrow
-        if (e.getKeyCode() == 38){
-           this.yPosition = this.yPosition - 64;
-        }
-        //If down arrow
-        if (e.getKeyCode() == 40) {
-            this.yPosition = this.yPosition + 64;
-        }
-    }
 
     @Override
     public void update() {}

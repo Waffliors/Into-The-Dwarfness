@@ -13,7 +13,8 @@ import java.awt.image.BufferedImage;
 public class Map extends JPanel {
    /*------------------------------------------------------------------------*
     *------------------------ Class Variables -------------------------------*
-    *------------------------------------------------------------------------*/
+	*------------------------------------------------------------------------*/
+	private int xPosition, yPosition;
     private final BufferedImage SSheet;
     private final ArrayList<TileMap> TMList;
     private final int graphFloorMap[][];
@@ -24,6 +25,8 @@ public class Map extends JPanel {
      *----------------------- Class Constructor ------------------------------*
      *------------------------------------------------------------------------*/
     public Map(ArrayList<TileMap> TilemapList, BufferedImage spriteSheet){
+		this.xPosition = 0;
+		this.yPosition = 0;
         this.SSheet = spriteSheet;
         this.TMList = TilemapList;
         this.graphFloorMap =  new int[][]{
@@ -83,14 +86,33 @@ public class Map extends JPanel {
     
    /*------------------------------------------------------------------------*
     *------------------------- Class Methods --------------------------------*
-    *------------------------------------------------------------------------*/
+	*------------------------------------------------------------------------*/
+	public void move(KeyEvent e){
+        //If left arrow
+        if (e.getKeyCode() == 37 || e.getKeyChar() == 'a'){
+            this.xPosition = this.xPosition - 64;
+        }
+        //If right arrow
+        if (e.getKeyCode() == 39) {
+            this.xPosition = this.xPosition + 64;
+        }
+        //If up arrow
+        if (e.getKeyCode() == 38){
+           this.yPosition = this.yPosition - 64;
+        }
+        //If down arrow
+        if (e.getKeyCode() == 40) {
+            this.yPosition = this.yPosition + 64;
+        }
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         for (int x = 0; x < graphFloorMap[0].length; x++) {
             for (int y = 0; y < graphFloorMap.length; y++) {
-                g.drawImage(SSheet, (x * 64), (y * 64), (x * 64) + 64, (y * 64) + 64, TMList.get(graphFloorMap[y][x]).getSrcX1(), TMList.get(graphFloorMap[y][x]).getSrcY1(), TMList.get(graphFloorMap[y][x]).getSrcX2(), TMList.get(graphFloorMap[y][x]).getSrcY2(), null);
-                g.drawImage(SSheet, (x * 64), (y * 64), (x * 64) + 64, (y * 64) + 64, TMList.get(graphWallMap[y][x]).getSrcX1(), TMList.get(graphWallMap[y][x]).getSrcY1(), TMList.get(graphWallMap[y][x]).getSrcX2(), TMList.get(graphWallMap[y][x]).getSrcY2(), null);
-                g.drawImage(SSheet, (x * 64), (y * 64), (x * 64) + 64, (y * 64) + 64, TMList.get(graphObjectMap[y][x]).getSrcX1(), TMList.get(graphObjectMap[y][x]).getSrcY1(), TMList.get(graphObjectMap[y][x]).getSrcX2(), TMList.get(graphObjectMap[y][x]).getSrcY2(), null);
+                g.drawImage(SSheet, (x * 64)+xPosition, (y * 64) +yPosition, (x * 64) + 64 + xPosition, (y * 64) + 64 +yPosition, TMList.get(graphFloorMap[y][x]).getSrcX1(), TMList.get(graphFloorMap[y][x]).getSrcY1(), TMList.get(graphFloorMap[y][x]).getSrcX2(), TMList.get(graphFloorMap[y][x]).getSrcY2(), null);
+                g.drawImage(SSheet, (x * 64)+xPosition, (y * 64) +yPosition, (x * 64) + 64 + xPosition, (y * 64) + 64 +yPosition, TMList.get(graphWallMap[y][x]).getSrcX1(), TMList.get(graphWallMap[y][x]).getSrcY1(), TMList.get(graphWallMap[y][x]).getSrcX2(), TMList.get(graphWallMap[y][x]).getSrcY2(), null);
+                g.drawImage(SSheet, (x * 64)+xPosition, (y * 64) +yPosition, (x * 64) + 64 + xPosition, (y * 64) + 64 +yPosition, TMList.get(graphObjectMap[y][x]).getSrcX1(), TMList.get(graphObjectMap[y][x]).getSrcY1(), TMList.get(graphObjectMap[y][x]).getSrcX2(), TMList.get(graphObjectMap[y][x]).getSrcY2(), null);
             }
         }
     }
