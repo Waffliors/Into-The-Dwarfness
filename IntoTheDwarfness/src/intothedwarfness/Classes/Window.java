@@ -99,7 +99,7 @@ public class Window extends JFrame implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if ("PlayState".equals(gsm.getType())) {
-            Map.move(e);
+            map.move(e);
         }
     }
 
