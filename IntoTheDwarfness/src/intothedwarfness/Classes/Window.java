@@ -63,7 +63,7 @@ public class Window extends JFrame implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if ("PlayState".equals(gsm.getType())) {
-            map.move(e);
+            player.move(e);
         }
     }
     @Override
@@ -72,7 +72,7 @@ public class Window extends JFrame implements KeyListener {
     @Override
     public void paint(Graphics g) {
         map.paintComponent(g);
-        //player.paintComponent(g);
+        player.paintComponent(g);
     }
     
     public void initialize() {
@@ -84,7 +84,7 @@ public class Window extends JFrame implements KeyListener {
         int FPS = 25;
 
         boolean isRunning = true;
-        while (!isRunning) {
+        while (isRunning) {
                 Thread.sleep(1000 / FPS);
                 repaint();
             }

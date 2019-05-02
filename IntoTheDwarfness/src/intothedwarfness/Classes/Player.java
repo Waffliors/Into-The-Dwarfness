@@ -8,6 +8,7 @@ import intothedwarfness.Interfaces.Drawable;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 public class Player extends Character implements Drawable{
@@ -16,7 +17,7 @@ public class Player extends Character implements Drawable{
      *------------------------ Class Variables -------------------------------*
      *------------------------------------------------------------------------*/
     private final float speed;
-    private int xPosition, yPosition;
+    private int xPos, yPos;
     private final BufferedImage SpriteSheet;
     private Dimension screenSize;
     
@@ -26,8 +27,8 @@ public class Player extends Character implements Drawable{
     public Player(BufferedImage spriteSheet){
         this.speed = (float) 0.5;
         this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.xPosition = (int)this.screenSize.getWidth()/2-64;
-        this.yPosition = (int)this.screenSize.getHeight()/2-32;
+        this.xPos = 512;
+        this.yPos = 128;
         this.SpriteSheet = spriteSheet;
     }
     
@@ -56,9 +57,24 @@ public class Player extends Character implements Drawable{
         //g.drawImage(this.SpriteSheet, getXPosition(), getyPosition(),600, 600, null);
 
     }
-    
-    public int getXPosition() {return this.xPosition;}
 
-    public int getYPosition() {return this.yPosition;}
+    public void move(KeyEvent e) {
+        if (e.getKeyChar() == 'a') {
+            this.xPos = this.xPos - 64;
+        }
+        if (e.getKeyChar() == 'd') {
+            this.xPos = this.xPos + 64;
+        }
+        if (e.getKeyChar() == 'w') {
+            this.yPos = this.yPos - 64;
+        }
+        if (e.getKeyChar() == 's') {
+            this.yPos = this.yPos + 64;
+        }
+    }
+        
+    public int getXPosition() {return this.xPos;}
+
+    public int getYPosition() {return this.yPos;}
     
 }

@@ -130,7 +130,7 @@ public class Map extends JPanel {
     
     @Override
     public void paintComponent(Graphics g) {
-        stage2();
+        //stage2();
         
         for (int x = 0; x < gFloorMap[0].length; x++) {
             for (int y = 0; y < gFloorMap.length; y++) {
@@ -155,25 +155,6 @@ public class Map extends JPanel {
                         null);
 
             }
-        }
-    }
-
-
-    public void move(KeyEvent e) {
-        if (e.getKeyChar() == 'l') {
-            stage2();
-        }
-        if (e.getKeyChar() == 'a') {
-            this.xPos = this.xPos + 64;
-        }
-        if (e.getKeyChar() == 'd') {
-            this.xPos = this.xPos - 64;
-        }
-        if (e.getKeyChar() == 'w') {
-            this.yPos = this.yPos + 64;
-        }
-        if (e.getKeyChar() == 's') {
-            this.yPos = this.yPos - 64;
         }
     }
 }
