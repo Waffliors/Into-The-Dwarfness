@@ -3,7 +3,6 @@
  *  Loop, the events will be captured and where the objects of the game will   *
  *  be drawn and animated.                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 package intothedwarfness.Classes;
 
 import java.awt.Color;
@@ -18,21 +17,21 @@ import intothedwarfness.Classes.States.GameStateManager;
 
 public class Window extends JFrame implements KeyListener {
 
-/*-----------------------------------------------------------------------------*
+    /*-----------------------------------------------------------------------------*
  *                              Class Variables                                *
  *-----------------------------------------------------------------------------*/
     private final Map map;
     private final Player player;
     private GameStateManager gsm;
-    
 
-/*-----------------------------------------------------------------------------*
+
+    /*-----------------------------------------------------------------------------*
  *                             Class Contructor                                *
  *-----------------------------------------------------------------------------*/
     public Window(Player player, Map map) {
         super("Ola Mundo Grafico");
         this.player = player;
-        this.map = map;        
+        this.map = map;
         this.setSize(1024, 768);
         this.setLocationRelativeTo(null);
         this.setUndecorated(false);
@@ -45,7 +44,7 @@ public class Window extends JFrame implements KeyListener {
         this.setBackground(new Color(47, 47, 46));
     }
 
-/*-----------------------------------------------------------------------------*
+    /*-----------------------------------------------------------------------------*
  *                              Class Methods                                  *
  *-----------------------------------------------------------------------------*/
     @Override
@@ -60,37 +59,60 @@ public class Window extends JFrame implements KeyListener {
             }
         }
     }
+
     @Override
     public void keyPressed(KeyEvent e) {
         if ("PlayState".equals(gsm.getType())) {
             player.move(e);
         }
     }
+
     @Override
     public void keyReleased(KeyEvent e) {
     }
+
     @Override
     public void paint(Graphics g) {
         map.paintComponent(g);
         player.paintComponent(g);
     }
-    
+
     public void initialize() {
         gsm = new GameStateManager();
         gsm.init();
     }
-    
-    public void run() throws InterruptedException {
-        int FPS = 25;
 
+    public void run() throws InterruptedException {
         boolean isRunning = true;
+        long excess = 0;
+        long noDelays = 0;
+
+        final long DESIRED_UPDATE_TIME = 60;
+        final long NO_DELAYS_PER_YIELD = 16;
+
         while (isRunning) {
-                Thread.sleep(1000 / FPS);
-                repaint();
+            long beforeTime = System.currentTimeMillis();
+
+            //Pula os quadros enquanto o tempo for em excesso.
+            while (excess > DESIRED_UPDATE_TIME) {
+                //game.processLogics();
+                excess -= DESIRED_UPDATE_TIME;
+            }
+            repaint();
+
+            long afterTime = System.currentTimeMillis();
+            long sleepTime = afterTime - beforeTime;
+
+            if (sleepTime < DESIRED_UPDATE_TIME) {
+                Thread.sleep(DESIRED_UPDATE_TIME - sleepTime);
+                noDelays = 0;
+            } else {
+                excess += sleepTime - DESIRED_UPDATE_TIME;
+
+                if (++noDelays == NO_DELAYS_PER_YIELD) {
+                    Thread.yield();
+                }
             }
         }
-    
-    
-    
     }
-
+}
