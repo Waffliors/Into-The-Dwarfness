@@ -6,6 +6,7 @@
 package intothedwarfness.Classes;
 
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 import java.util.ArrayList;
 import java.awt.event.KeyEvent;
