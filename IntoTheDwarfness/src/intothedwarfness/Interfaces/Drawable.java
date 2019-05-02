@@ -5,9 +5,8 @@
  */
 package intothedwarfness.Interfaces;
 
-import java.awt.Image;
-import java.util.ArrayList;
+import java.awt.Graphics;
 
-public interface Drawable {
-    public Image draw();
+public interface Drawable{
+    public void paintComponent(Graphics g);
 }

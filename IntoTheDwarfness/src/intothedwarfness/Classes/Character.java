@@ -3,7 +3,6 @@
  * creation of the player, the enemies and the bosses of the phases            *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package intothedwarfness.Classes;
-import intothedwarfness.IntoTheDwarfness;
 import javax.swing.JPanel;
 
 public abstract class Character extends JPanel {

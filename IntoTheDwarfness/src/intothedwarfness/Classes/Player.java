@@ -5,9 +5,9 @@
 package intothedwarfness.Classes;
 
 import intothedwarfness.Interfaces.Drawable;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.KeyEvent;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
 public class Player extends Character implements Drawable{
@@ -18,14 +18,16 @@ public class Player extends Character implements Drawable{
     private final float speed;
     private int xPosition, yPosition;
     private final BufferedImage SpriteSheet;
+    private Dimension screenSize;
     
     /*------------------------------------------------------------------------*
      *----------------------- Class Constructor ------------------------------*
      *------------------------------------------------------------------------*/
     public Player(BufferedImage spriteSheet){
         this.speed = (float) 0.5;
-        this.xPosition = 64;
-        this.yPosition = 60;
+        this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.xPosition = (int)this.screenSize.getWidth()/2-64;
+        this.yPosition = (int)this.screenSize.getHeight()/2-32;
         this.SpriteSheet = spriteSheet;
     }
     
@@ -58,10 +60,5 @@ public class Player extends Character implements Drawable{
     public int getXPosition() {return this.xPosition;}
 
     public int getYPosition() {return this.yPosition;}
-
-    @Override
-    public Image draw() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
     
 }
