@@ -14,6 +14,7 @@ import intothedwarfness.Classes.States.PlayState;
 import intothedwarfness.Classes.States.GameState;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
+import java.awt.image.BufferStrategy;
 
 public class Window extends JFrame implements KeyListener {
 
@@ -21,6 +22,8 @@ public class Window extends JFrame implements KeyListener {
  *                              Class Variables                                *
  *-----------------------------------------------------------------------------*/
     private final Map map;
+    private final int width;
+    private final int height;
     private final Player player;
     private GameStateManager gsm;
 
@@ -32,7 +35,9 @@ public class Window extends JFrame implements KeyListener {
         super("Ola Mundo Grafico");
         this.player = player;
         this.map = map;
-        this.setSize(1024, 768);
+        this.width = 1024;
+        this.height = 768;
+        this.setSize(this.width, this.height);
         this.setLocationRelativeTo(null);
         this.setUndecorated(false);
         this.setResizable(false);
@@ -73,8 +78,20 @@ public class Window extends JFrame implements KeyListener {
 
     @Override
     public void paint(Graphics g) {
-        map.paintComponent(g);
-        player.paintComponent(g);
+        BufferStrategy strategy = this.getBufferStrategy();
+        do {
+            do {
+                Graphics graphics = strategy.getDrawGraphics();
+                
+                graphics.clearRect(0, 0, this.width, this.height);
+                map.paintComponent(graphics);
+                player.paintComponent(graphics);
+                graphics.dispose();
+            } while (strategy.contentsRestored());
+            
+            strategy.show();
+            
+        } while (strategy.contentsLost());
     }
 
     public void initialize() {
@@ -90,14 +107,19 @@ public class Window extends JFrame implements KeyListener {
         final long DESIRED_UPDATE_TIME = 60;
         final long NO_DELAYS_PER_YIELD = 16;
 
+        // Cria double-buffering strategy genérico
+        this.createBufferStrategy(2);
+        // BufferStrategy strategy = this.getBufferStrategy();
+
         while (isRunning) {
             long beforeTime = System.currentTimeMillis();
 
-            //Pula os quadros enquanto o tempo for em excesso.
+            // Pula os quadros enquanto o tempo for em excesso.
             while (excess > DESIRED_UPDATE_TIME) {
                 //game.processLogics();
                 excess -= DESIRED_UPDATE_TIME;
             }
+
             repaint();
 
             long afterTime = System.currentTimeMillis();
