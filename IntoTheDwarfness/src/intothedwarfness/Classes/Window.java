@@ -73,6 +73,7 @@ public class Window extends JFrame implements KeyListener {
 
     @Override
     public void paint(Graphics g) {
+        g.clearRect(0, 0, 1024, 768);
         map.paintComponent(g);
         player.paintComponent(g);
     }
@@ -87,7 +88,7 @@ public class Window extends JFrame implements KeyListener {
         long excess = 0;
         long noDelays = 0;
 
-        final long DESIRED_UPDATE_TIME = 60;
+        final long DESIRED_UPDATE_TIME = 200;
         final long NO_DELAYS_PER_YIELD = 16;
 
         while (isRunning) {
