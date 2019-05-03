@@ -28,7 +28,7 @@ public class Player extends Character implements Drawable {
         this.speed = (float) 0.5;
         this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.xPos = 512;
-        this.yPos = 128;
+        this.yPos = 55;
         this.SpriteSheet = spriteSheet;
     }
 
