@@ -249,23 +249,4 @@ public class Map extends JPanel {
             }
         }
     }
-
-
-    public void move(KeyEvent e) {
-        if (e.getKeyChar() == 'l') {
-            stage2();
-        }
-        if (e.getKeyChar() == 'a') {
-            this.xPos = this.xPos + 64;
-        }
-        if (e.getKeyChar() == 'd') {
-            this.xPos = this.xPos - 64;
-        }
-        if (e.getKeyChar() == 'w') {
-            this.yPos = this.yPos + 64;
-        }
-        if (e.getKeyChar() == 's') {
-            this.yPos = this.yPos - 64;
-        }
-    }
 }
