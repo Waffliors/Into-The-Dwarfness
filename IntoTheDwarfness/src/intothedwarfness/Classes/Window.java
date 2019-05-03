@@ -3,6 +3,7 @@
  *  Loop, the events will be captured and where the objects of the game will   *
  *  be drawn and animated.                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 package intothedwarfness.Classes;
 
 import java.awt.Color;
@@ -18,7 +19,7 @@ import java.awt.image.BufferStrategy;
 
 public class Window extends JFrame implements KeyListener {
 
-    /*-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                              Class Variables                                *
  *-----------------------------------------------------------------------------*/
     private final Map map;
@@ -26,13 +27,13 @@ public class Window extends JFrame implements KeyListener {
     private final int height;
     private final Player player;
     private GameStateManager gsm;
+    
 
-
-    /*-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                             Class Contructor                                *
  *-----------------------------------------------------------------------------*/
     public Window(Player player, Map map) {
-        super("Ola Mundo Grafico");
+        super("Into The Dwarfness");
         this.player = player;
         this.map = map;
         this.width = 1024;
@@ -49,7 +50,7 @@ public class Window extends JFrame implements KeyListener {
         this.setBackground(new Color(47, 47, 46));
     }
 
-    /*-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                              Class Methods                                  *
  *-----------------------------------------------------------------------------*/
     @Override
@@ -64,18 +65,15 @@ public class Window extends JFrame implements KeyListener {
             }
         }
     }
-
     @Override
     public void keyPressed(KeyEvent e) {
         if ("PlayState".equals(gsm.getType())) {
             player.move(e);
         }
     }
-
     @Override
     public void keyReleased(KeyEvent e) {
     }
-
     @Override
     public void paint(Graphics g) {
         BufferStrategy strategy = this.getBufferStrategy();
@@ -93,20 +91,20 @@ public class Window extends JFrame implements KeyListener {
             
         } while (strategy.contentsLost());
     }
-
+    
     public void initialize() {
         gsm = new GameStateManager();
         gsm.init();
     }
-
+    
     public void run() throws InterruptedException {
-        boolean isRunning = true;
+         boolean isRunning = true;
         long excess = 0;
         long noDelays = 0;
 
         final long DESIRED_UPDATE_TIME = 60;
         final long NO_DELAYS_PER_YIELD = 16;
-
+        
         // Cria double-buffering strategy genérico
         this.createBufferStrategy(2);
         // BufferStrategy strategy = this.getBufferStrategy();
