@@ -79,7 +79,7 @@ public class Map extends JPanel implements Drawable {
         for (int i = 0; i < gFloorMap.length; i++) {
             for (int j = 0; j < gFloorMap[0].length; j++) {
                 for (int k = 0; k < unblockedFloorTile.size(); k++) {
-                    if (gFloorMap[i][j] == unblockedFloorTile.get(k) && gWallMap[i][j] == 6) {
+                    if (gFloorMap[i][j] == unblockedFloorTile.get(k) && gWallMap[i][j] == 6 || gObjectMap[i][j] == unblockedFloorTile.get(k) && gWallMap[i][j] == 6) {
                         gUnblockedT[i][j] = true;
                     }
                 }
