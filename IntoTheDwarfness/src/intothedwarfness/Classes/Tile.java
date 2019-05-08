@@ -3,7 +3,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package intothedwarfness.Classes;
 
-public class TileMap {
+public class Tile {
     
     /*------------------------------------------------------------------------*
      *------------------------ Class Variables -------------------------------*
@@ -13,7 +13,7 @@ public class TileMap {
     /*------------------------------------------------------------------------*
      *----------------------- Class Constructor ------------------------------*
      *------------------------------------------------------------------------*/
-    public TileMap(int srcX1, int srcY1, int srcX2, int srcY2, int id) {
+    public Tile(int srcX1, int srcY1, int srcX2, int srcY2, int id) {
         this.srcX1 = srcX1;
         this.srcY1 = srcY1;
         this.srcX2 = srcX2;

@@ -1,27 +1,27 @@
-/******************************************************************************/
-/**Class Window: This class is responsible for creating the game window,     **/
-/**within this window will be created and drawn the objects of the game      **/
-/**(Player, Enemy and Map), collected the events of the keyboard and where   **/
-/**will be the game loop.                                                    **/
-/******************************************************************************/
+/******************************************************************************
+ ** Class Window: This class is responsible for creating the game window,    **
+ ** within this window will be created and drawn the objects of the game     **
+ ** (Player, Enemy and Map), collected the events of the keyboard and where  **
+ ** will be the game loop.                                                   **
+ ******************************************************************************/
 package intothedwarfness.Classes;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JFrame;
+import java.util.ArrayList;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.BufferStrategy;
 import intothedwarfness.Classes.States.PlayState;
 import intothedwarfness.Classes.States.GameState;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
 import intothedwarfness.Interfaces.Drawable;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public class Window extends JFrame implements KeyListener {
-/*****************************Class Variables**********************************/
+/* ***************************Class Variables******************************** */
     private GameStateManager gsm;
     
     private final int WIDTH, HEIGHT;
@@ -37,7 +37,7 @@ public class Window extends JFrame implements KeyListener {
         
         this.sprites = sprites;
         this.player = new Player(sprites.get(0));
-        this.map = new Map(loadTile(), sprites.get(18));
+        this.map = new Map(sprites.get(18));
         this.WIDTH = 1024;
         this.HEIGHT = 768;
         this.drawables = loadDrawables();
@@ -57,20 +57,6 @@ public class Window extends JFrame implements KeyListener {
     }
 
 /* ********************Auxiliary methods of the Constructor****************** */
-    private ArrayList<TileMap> loadTile() {
-        ArrayList<TileMap> mapTiles = new ArrayList();
-        int x, y, srcX1, srcY1, srcX2, srcY2, id = -1;
-        for (y = 0; y < 20; y++) {
-            srcY1 = 32 * y;
-            srcY2 = srcY1 + 32;
-            for (x = 0; x < 16; x++) {
-                srcX1 = 32 * x;
-                srcX2 = srcX1 + 32;
-                mapTiles.add(new TileMap(srcX1, srcY1, srcX2, srcY2, id += 1));
-            }
-        }
-        return mapTiles;
-    }
     private ArrayList<Drawable> loadDrawables() {
         ArrayList<Drawable> elements = new ArrayList();
         elements.add(this.map);
@@ -80,7 +66,6 @@ public class Window extends JFrame implements KeyListener {
     }
     
 /* ****************************Class Methods********************************* */
-    
     //Game Start
     public void initialize() {
         gsm = new GameStateManager();
@@ -90,10 +75,8 @@ public class Window extends JFrame implements KeyListener {
     //Game Loop
     public void run() throws InterruptedException {
         boolean isRunning = true;
-        
-        //Variable used to check the excess of delayed frames
+
         long excess = 0;
-        
         long noDelays = 0;
 
         final long DESIRED_UPDATE_TIME = 30;
@@ -101,7 +84,7 @@ public class Window extends JFrame implements KeyListener {
 
         // Cria double-buffering strategy genérico
         this.createBufferStrategy(2);
-        BufferStrategy strategy = this.getBufferStrategy();
+        //BufferStrategy strategy = this.getBufferStrategy();
 
         while (isRunning) {
             long beforeTime = System.currentTimeMillis();
@@ -141,6 +124,30 @@ public class Window extends JFrame implements KeyListener {
                 gsm.switchState(play);
             }
         }
+        if (e.getKeyChar() == '1'){
+            map.stage1();
+        }
+        if (e.getKeyChar() == '2'){
+            map.stage2();
+        } 
+        if (e.getKeyChar() == '3'){
+            map.stage3();
+        } 
+        if (e.getKeyChar() == '4'){
+            map.stage4();
+        } 
+        if (e.getKeyChar() == '5'){
+            map.stage5();
+        } 
+        if (e.getKeyChar() == '6'){
+            map.stage6();
+        } 
+        if (e.getKeyChar() == '7'){
+            map.stage7();
+        } 
+        if (e.getKeyChar() == '8'){
+            map.stage8();
+        } 
     }
     @Override
     public void keyPressed(KeyEvent e) {
@@ -157,17 +164,16 @@ public class Window extends JFrame implements KeyListener {
         do {
             do {
                 Graphics graphics = strategy.getDrawGraphics();
-                
+                //Clear the previous frame
                 graphics.clearRect(0, 0, this.WIDTH, this.HEIGHT);
+                //For each drawable object in list, paint
                 for(Drawable drawable: this.drawables){
                     drawable.paintComponent(graphics);
                 }
-                
+                //Disposes of this graphics context, it's no longer referenced.
                 graphics.dispose();
-            } while (strategy.contentsRestored());
-            
+            } while (strategy.contentsRestored());       
             strategy.show();
-            
         } while (strategy.contentsLost());
     }
         

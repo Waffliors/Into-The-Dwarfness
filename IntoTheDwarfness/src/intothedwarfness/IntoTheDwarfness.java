@@ -1,17 +1,17 @@
-/** ***************************************************************************/
-/** Centro Universitário SENAC                                               **/
-/** Tecnologia em jogos digitais - 1º Semestre de 2019                       **/
-/** Bruno Cavalcante de Souza Sanches                                        **/
-/**                                                                          **/
-/** Projeto Integrador III - Projeto Final                                   **/
-/** Arquivo: Into the Dwarfness                                              **/
-/**                                                                          **/
-/** Matheus Vicente Rodrigues da Silva                                       **/
-/** Nathan André da Silva                                                    **/
-/** Raphael Oliveira Melo                                                    **/
-/**                                                                          **/
-/** 30/05/2019                                                               **/
-/** ***************************************************************************/
+/** ***************************************************************************
+ ** Centro Universitário SENAC                                               **
+ ** Tecnologia em jogos digitais - 1º Semestre de 2019                       **
+ ** Bruno Cavalcante de Souza Sanches                                        **
+ **                                                                          **
+ ** Projeto Integrador III - Projeto Final                                   **
+ ** Arquivo: Into the Dwarfness                                              **
+ **                                                                          **
+ ** Matheus Vicente Rodrigues da Silva                                       **
+ ** Nathan André da Silva                                                    **
+ ** Raphael Oliveira Melo                                                    **
+ **                                                                          **
+ ** 30/05/2019                                                               **
+ ******************************************************************************/
 package intothedwarfness;
 
 import java.io.File;

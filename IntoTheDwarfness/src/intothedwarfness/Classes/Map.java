@@ -1,43 +1,54 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *  Class Map, where Map will be created with a TileMap list and where it will *
- *  be drawn based on three Matrices: one for the floor, one for the walls and *
- *  the last for objects                                                       *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/******************************************************************************
+ ** Class Map, where the map will be created with a tile list and where it   **
+ ** will be drawn based on three Matrices: one for the floor, one for the    **
+ ** walls and the last for objects, here you will also find the graph used   **
+ ** for the artificial intelligence of the enemies and for player movement   **
+ ******************************************************************************/
 package intothedwarfness.Classes;
 
-import intothedwarfness.Interfaces.Drawable;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import java.util.ArrayList;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import intothedwarfness.Interfaces.Drawable;
 
 public class Map extends JPanel implements Drawable {
-    
-/*-----------------------------------------------------------------------------*
- *                              Class Variables                                *
- *-----------------------------------------------------------------------------*/
+/* ***************************Class Variables******************************** */
     private int xPos, yPos;
     private final BufferedImage SSheet;
-    private final ArrayList<TileMap> TMList;
+    private final ArrayList<Tile> TMList;
     private  int gWallMap[][];
     private  int gFloorMap[][];
     private int gObjectMap[][];
 
-/*-----------------------------------------------------------------------------*
- *                             Class Contructor                                *
- *-----------------------------------------------------------------------------*/
-    public Map(ArrayList<TileMap> TilemapList, BufferedImage spriteSheet) {
+/* **************************Class Constructor******************************* */
+    public Map(BufferedImage spriteSheet) {
         this.xPos = 0;
         this.yPos = 0;
         this.SSheet = spriteSheet;
-        this.TMList = TilemapList;
+        this.TMList = loadTile();
+        this.stage1();
     }
 
-/*-----------------------------------------------------------------------------*
- *                              Class Methods                                  *
- *-----------------------------------------------------------------------------*/
+/* ********************Auxiliary methods of the Constructor****************** */
+    private ArrayList<Tile> loadTile() {
+        ArrayList<Tile> mapTiles = new ArrayList();
+        int x, y, srcX1, srcY1, srcX2, srcY2, id = -1;
+        for (y = 0; y < 20; y++) {
+            srcY1 = 32 * y;
+            srcY2 = srcY1 + 32;
+            for (x = 0; x < 16; x++) {
+                srcX1 = 32 * x;
+                srcX2 = srcX1 + 32;
+                mapTiles.add(new Tile(srcX1, srcY1, srcX2, srcY2, id += 1));
+            }
+        }
+        return mapTiles;
+    }
     
+/* ****************************Class Methods********************************* */
+    
+    //For each stage, all the three matrices are redrawn
     public void stage1() {
         this.gFloorMap = new int[][]{
             {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
@@ -383,12 +394,11 @@ public class Map extends JPanel implements Drawable {
             { 51,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  53},};
     }
 
+/* *************************Overridden Methods******************************* */
     @Override
     public void paintComponent(Graphics g) {
-        stage1();        
         for (int x = 0; x < gFloorMap[0].length; x++) {
             for (int y = 0; y < gFloorMap.length; y++) {
-                
                 g.drawImage(SSheet, 
                 		(x * 64) + xPos, (y * 64) + yPos, 
                 		(x * 64) + 64 + xPos, (y * 64) + 64 + yPos,     
