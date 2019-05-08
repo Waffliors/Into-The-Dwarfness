@@ -5,13 +5,14 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package intothedwarfness.Classes;
 
+import intothedwarfness.Interfaces.Drawable;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import java.util.ArrayList;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
-public class Map extends JPanel {
+public class Map extends JPanel implements Drawable {
     
 /*-----------------------------------------------------------------------------*
  *                              Class Variables                                *
@@ -19,7 +20,6 @@ public class Map extends JPanel {
     private int xPos, yPos;
     private final BufferedImage SSheet;
     private final ArrayList<TileMap> TMList;
-    private final ArrayList<ScreenPiece>screePieceList;
     private  int gWallMap[][];
     private  int gFloorMap[][];
     private int gObjectMap[][];
@@ -27,12 +27,11 @@ public class Map extends JPanel {
 /*-----------------------------------------------------------------------------*
  *                             Class Contructor                                *
  *-----------------------------------------------------------------------------*/
-    public Map(ArrayList<TileMap> TilemapList, BufferedImage spriteSheet, ArrayList<ScreenPiece> screenPieceList) {
+    public Map(ArrayList<TileMap> TilemapList, BufferedImage spriteSheet) {
         this.xPos = 0;
         this.yPos = 0;
         this.SSheet = spriteSheet;
         this.TMList = TilemapList;
-        this.screePieceList = screenPieceList;
     }
 
 /*-----------------------------------------------------------------------------*
@@ -386,7 +385,7 @@ public class Map extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
-        stage7();        
+        stage1();        
         for (int x = 0; x < gFloorMap[0].length; x++) {
             for (int y = 0; y < gFloorMap.length; y++) {
                 
