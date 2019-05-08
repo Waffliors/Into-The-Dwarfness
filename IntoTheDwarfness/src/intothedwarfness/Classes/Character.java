@@ -7,5 +7,5 @@ import javax.swing.JPanel;
 
 public abstract class Character extends JPanel {
     public abstract void update();
-    public abstract void collision(); 
+    public abstract boolean collision(int ref); 
 }

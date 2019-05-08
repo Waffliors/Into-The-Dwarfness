@@ -25,10 +25,10 @@ public class Tile {
      *------------------------- Class Methods --------------------------------*
      *------------------------------------------------------------------------*/
     public int getID(){return this.id;}
-	public int getSrcX1() {return srcX1;}
-	public int getSrcY1() {return srcY1;}
-	public int getSrcX2() {return srcX2;}
-	public int getSrcY2() {return srcY2;}
+    public int getSrcX1() {return srcX1;}
+    public int getSrcY1() {return srcY1;}
+    public int getSrcX2() {return srcX2;}
+    public int getSrcY2() {return srcY2;}
 
 	@Override
 	public String toString(){

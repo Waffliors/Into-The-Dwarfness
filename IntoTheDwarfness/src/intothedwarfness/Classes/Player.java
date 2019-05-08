@@ -19,16 +19,16 @@ public class Player extends Character implements Drawable {
     private final float speed;
     private int xPos, yPos;
     private final BufferedImage SpriteSheet;
-    private Dimension screenSize;
+    private boolean[][] collideMap;
 
     /*------------------------------------------------------------------------*
      *----------------------- Class Constructor ------------------------------*
      *------------------------------------------------------------------------*/
-    public Player(BufferedImage spriteSheet) {
+    public Player(BufferedImage spriteSheet, boolean [][]collideMap) {
         this.speed = (float) 0.5;
-        this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.xPos = 512;
-        this.yPos = 55;
+        this.yPos = 64;
+        this.collideMap = collideMap;
         this.SpriteSheet = spriteSheet;
     }
 
@@ -40,7 +40,29 @@ public class Player extends Character implements Drawable {
     }
 
     @Override
-    public void collision() {
+    public boolean collision(int ref) {
+        boolean resp = false;
+        switch(ref){
+            case 4: // left
+                System.out.println("Left");
+                resp = true;
+            break;
+            
+            case 6: // right
+                System.out.println("Right");
+                resp = true;
+            break;
+            
+            case 8: // up
+                System.out.println("Up");
+            break;
+            
+            case 2: // down
+                System.out.println("Down");
+            break;
+        }
+        
+        return resp;
     }
 
     @Override
@@ -50,16 +72,16 @@ public class Player extends Character implements Drawable {
     }
 
     public void move(KeyEvent e) {
-        if (e.getKeyChar() == 'a') {
+        if (e.getKeyChar() == 'a' && collision(4)) {
             this.xPos = this.xPos - 64;
         }
-        if (e.getKeyChar() == 'd') {
+        if (e.getKeyChar() == 'd' && collision(6)) {
             this.xPos = this.xPos + 64;
         }
-        if (e.getKeyChar() == 'w') {
+        if (e.getKeyChar() == 'w' && collision(8)) {
             this.yPos = this.yPos - 64;
         }
-        if (e.getKeyChar() == 's') {
+        if (e.getKeyChar() == 's' && collision(2)) {
             this.yPos = this.yPos + 64;
         }
     }

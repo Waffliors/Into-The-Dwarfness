@@ -463,4 +463,8 @@ public class Map extends JPanel implements Drawable {
             }
         }
     }
+
+    public boolean[][] getgUnblockedT() {
+        return gUnblockedT;
+    }
 }
