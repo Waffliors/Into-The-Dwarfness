@@ -24,7 +24,7 @@ public class Tile {
      /*------------------------------------------------------------------------*
      *------------------------- Class Methods --------------------------------*
      *------------------------------------------------------------------------*/
-        public int getID(){return this.id;}
+    public int getID(){return this.id;}
 	public int getSrcX1() {return srcX1;}
 	public int getSrcY1() {return srcY1;}
 	public int getSrcX2() {return srcX2;}

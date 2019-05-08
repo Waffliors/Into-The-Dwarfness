@@ -52,7 +52,7 @@ public class Window extends JFrame implements KeyListener {
         this.setFocusable(true);
         this.addKeyListener(this);
         this.setIgnoreRepaint(true);
-        this.setBackground(new Color(47, 47, 46));
+        this.setBackground(new Color(43, 43, 42));
 
     }
 

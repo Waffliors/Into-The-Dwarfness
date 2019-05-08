@@ -9,6 +9,8 @@ package intothedwarfness.Classes;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Interfaces.Drawable;
 
@@ -20,6 +22,7 @@ public class Map extends JPanel implements Drawable {
     private  int gWallMap[][];
     private  int gFloorMap[][];
     private int gObjectMap[][];
+    private boolean gUnblockedTile[][];
 
 /* **************************Class Constructor******************************* */
     public Map(BufferedImage spriteSheet) {
@@ -421,5 +424,33 @@ public class Map extends JPanel implements Drawable {
                         null);
             }
         }
+    }
+    
+    public void unblockedTile()
+    {
+    	List<Integer> unblockedFloorTile = Arrays.asList(88, 89, 90, 91, 92, 93, 95,
+														 101, 104, 105, 106, 107, 108,
+														 109, 133, 134, 135, 136, 137,
+														 138, 139, 140, 141, 142, 149,
+														 150, 152, 153, 154, 155, 156,
+														 157, 158, 160, 164, 165, 159,
+														 170, 171, 172, 173, 174, 176,
+														 177, 178, 179, 180, 181, 182,
+														 184, 185, 186, 187, 188, 189,
+														 190, 193, 194, 198, 199, 200,
+														 201, 202, 203, 204, 205, 206,
+														 213, 214, 216, 217, 218, 219,
+														 220, 221, 222, 229, 233, 234,
+														 235, 237, 238, 248, 250, 254,
+														 266, 267, 269, 270, 282, 283,
+														 284, 285, 286);
+    	
+    	gUnblockedTile = new boolean[gFloorMap.length][gFloorMap[0].length];
+    	
+    	for(int i = 0; i < gFloorMap.length; i++)
+    		for(int j = 0; j < gFloorMap[0].length; j++)
+    			for(int k = 0; k < unblockedFloorTile.size(); k++)
+    				if(gFloorMap[i][j] == unblockedFloorTile.get(k))
+    					gUnblockedTile[i][j] = true;
     }
 }
