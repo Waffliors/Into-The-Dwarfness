@@ -162,7 +162,7 @@ public class Window extends JFrame implements KeyListener {
     public void paint(Graphics g) {
         BufferStrategy strategy = this.getBufferStrategy();
         do {
-            do {
+            do{
                 Graphics graphics = strategy.getDrawGraphics();
                 //Clear the previous frame
                 graphics.clearRect(0, 0, this.WIDTH, this.HEIGHT);
@@ -176,5 +176,6 @@ public class Window extends JFrame implements KeyListener {
             strategy.show();
         } while (strategy.contentsLost());
     }
-        
+       
+    
 }
