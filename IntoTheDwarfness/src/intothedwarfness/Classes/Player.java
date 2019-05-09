@@ -27,7 +27,7 @@ public class Player extends Character implements Drawable {
     public Player(BufferedImage spriteSheet, boolean [][]collideMap) {
         this.speed = (float) 0.5;
         this.xPos = 512;
-        this.yPos = 64;
+        this.yPos = 128;
         this.collideMap = collideMap;
         this.SpriteSheet = spriteSheet;
     }
@@ -41,28 +41,37 @@ public class Player extends Character implements Drawable {
 
     @Override
     public boolean collision(int ref) {
-        boolean resp = false;
+        int x = 0, y = 0;
+        
         switch(ref){
             case 4: // left
                 System.out.println("Left");
-                resp = true;
+                x = (this.xPos - 64) / 64;
+                y = this.yPos / 64;
             break;
             
             case 6: // right
                 System.out.println("Right");
-                resp = true;
+                x = (this.xPos + 64) / 64;
+                y = this.yPos / 64;
             break;
             
             case 8: // up
                 System.out.println("Up");
+                x = this.xPos / 64;
+                y = (this.yPos - 64) / 64;
             break;
             
             case 2: // down
                 System.out.println("Down");
+                x = this.xPos / 64;
+                y = (this.yPos + 64) / 64;
             break;
         }
         
-        return resp;
+        System.out.println(x);
+        System.out.println(y);
+        return collideMap[y][x];
     }
 
     @Override

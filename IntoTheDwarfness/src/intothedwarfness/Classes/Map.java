@@ -75,7 +75,7 @@ public class Map extends JPanel implements Drawable {
     }
     private void loadUnblockedGraph() {
         this.gUnblockedT = new boolean[gFloorMap.length][gFloorMap[0].length];
-
+        
         for (int i = 0; i < gFloorMap.length; i++) {
             for (int j = 0; j < gFloorMap[0].length; j++) {
                 for (int k = 0; k < unblockedFloorTile.size(); k++) {
@@ -132,6 +132,7 @@ public class Map extends JPanel implements Drawable {
             {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
             {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
             {  6,   6, 112,  52,  52,  52, 113,   6,   6, 114,  52,  52,  52, 115,   6,   6},};
+        	this.loadUnblockedGraph();
     }
     public void stage2() {
         this.gFloorMap = new int[][]{
@@ -175,6 +176,7 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  99,   6},
             {  6, 112,  52,  52,  52,  52, 113,   6,   6, 114,  52,  52,  52,  52, 115,   6},
             {  6,   6,   6,   6,   6,   6,  18,   6,   6,  16,   6,   6,   6,   6,   6,   6},};
+        	this.loadUnblockedGraph();
     }
     public void stage3() {
         this.gFloorMap = new int[][]{
@@ -218,6 +220,7 @@ public class Map extends JPanel implements Drawable {
             {  6,  18, 272,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},};
+        	this.loadUnblockedGraph();
    }
     public void stage4() {
         this.gFloorMap = new int[][]{
@@ -261,6 +264,7 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},};
+        	this.loadUnblockedGraph();
    }
     public void stage5() {
         this.gFloorMap = new int[][]{
@@ -304,6 +308,7 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6, 112,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52, 115,   6},
             {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
+        	this.loadUnblockedGraph();
    }
     public void stage6() {
         this.gFloorMap = new int[][]{
@@ -347,6 +352,7 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6, 112,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52, 115,   6},};
+        	this.loadUnblockedGraph();
    }
     public void stage7() {
         this.gFloorMap = new int[][]{
@@ -390,6 +396,7 @@ public class Map extends JPanel implements Drawable {
             {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
             {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
             {  6,   6, 112,  52,  52,  52, 113,   6,   6, 114,  52,  52,  52, 115,   6,   6},};
+        	this.loadUnblockedGraph();
     }
     public void stage8() {
         this.gFloorMap = new int[][]{
@@ -433,6 +440,7 @@ public class Map extends JPanel implements Drawable {
             { 18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16},
             { 35,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  37},
             { 51,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  53},};
+        	this.loadUnblockedGraph();
     }
 
 /* *************************Overridden Methods******************************* */

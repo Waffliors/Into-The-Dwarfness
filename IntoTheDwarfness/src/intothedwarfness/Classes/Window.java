@@ -153,6 +153,7 @@ public class Window extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if ("PlayState".equals(gsm.getType())) {
             player.move(e);
+            player.collision(e.getKeyCode());
         }
     }
     @Override
