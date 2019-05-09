@@ -96,6 +96,7 @@ public class Window extends JFrame implements KeyListener {
             }
 
             repaint();
+            System.out.println("x = "+player.getXPosition()+"y = "+player.getYPosition());
 
             long afterTime = System.currentTimeMillis();
             long sleepTime = afterTime - beforeTime;
@@ -154,8 +155,11 @@ public class Window extends JFrame implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if ("PlayState".equals(gsm.getType())) {
-            player.move(e);
+            player.move(e, map);
             player.collision(e.getKeyCode());
+        }
+        if (this.player.getYPosition()>704 && this.player.getXPosition() == 448 || this.player.getXPosition() ==515){
+            System.out.println("Next Map");
         }
     }
     @Override

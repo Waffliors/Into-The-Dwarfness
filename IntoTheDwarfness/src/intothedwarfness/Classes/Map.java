@@ -35,7 +35,6 @@ public class Map extends JPanel implements Drawable {
 
         loadUblockedTiles();
         stage1();
-        loadUnblockedGraph();
     }
 
 /* ********************Auxiliary methods of the Constructor****************** */
@@ -56,11 +55,12 @@ public class Map extends JPanel implements Drawable {
     
     private void loadUblockedTiles (){
         this.unblockedFloorTile = Arrays.asList(
-        		 20,  23,  24,  25,  26,  27, 
-        		 28,  29,  30,  49,  55,  56,  
-        		 57,  58,  59,  60,  61,  62,
-                 88,  89,  90,  91,  92,  93, 
-                 95, 101, 104, 105, 106, 107, 
+                20,  23,  24,  25,  26,  27, 
+        	28,  29,  30,  48,  49,  50,
+                55,  56,  57,  58,  59,  60,
+                61,  62,  81, 82,
+                88,  89,  90,  91,  92,  93, 
+                95, 101, 104, 105, 106, 107, 
                 108, 109, 133, 134, 135, 136, 
                 137, 138, 139, 140, 141, 142, 
                 144, 148, 149, 150, 152, 153,
@@ -73,19 +73,13 @@ public class Map extends JPanel implements Drawable {
                 204, 205, 206, 208, 209, 213, 
                 214, 216, 217, 218, 219, 220, 
                 221, 222, 224, 225, 226, 229, 
-                233, 234, 235, 237, 238, 248, 
-                250, 254, 266, 267, 269, 270,
-                282, 283, 284, 285, 286);
+                233, 234, 235, 237, 238, 242,
+                248, 250, 254, 258, 259, 266,
+                267, 269, 270, 282, 283, 284, 285, 286);
     }
     public void loadUnblockedGraph() {
         this.gUnblockedT = new boolean[this.gFloorMap.length][this.gFloorMap[0].length];
-
-        for (int i = 0; i < this.gUnblockedT.length; i++) {
-        	for (int j = 0; j < this.gUnblockedT[0].length; j++) {
-            	this.gUnblockedT[i][j] = false;
-        	}
-        }
-                
+    
         for (int i = 0; i < this.gUnblockedT.length; i++) {
             for (int j = 0; j < this.gUnblockedT[0].length; j++) {
                 for (int k = 0; k < this.unblockedFloorTile.size(); k++) {
@@ -146,6 +140,7 @@ public class Map extends JPanel implements Drawable {
             {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
             {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
             {  6,   6, 112,  52,  52,  52, 113,   6,   6, 114,  52,  52,  52, 115,   6,   6},};
+        loadUnblockedGraph();
     }
     public void stage2() {
         this.gFloorMap = new int[][]{
@@ -189,6 +184,7 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  99,   6},
             {  6, 112,  52,  52,  52,  52, 113,   6,   6, 114,  52,  52,  52,  52, 115,   6},
             {  6,   6,   6,   6,   6,   6,  18,   6,   6,  16,   6,   6,   6,   6,   6,   6},};
+        loadUnblockedGraph();
     }
     public void stage3() {
         this.gFloorMap = new int[][]{
@@ -232,6 +228,7 @@ public class Map extends JPanel implements Drawable {
             {  6,  18, 272,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},};
+        loadUnblockedGraph();
    }
     public void stage4() {
         this.gFloorMap = new int[][]{
@@ -275,6 +272,7 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},};
+        loadUnblockedGraph();
    }
     public void stage5() {
         this.gFloorMap = new int[][]{
@@ -318,6 +316,7 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6, 112,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52, 115,   6},
             {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
+        loadUnblockedGraph();
    }
     public void stage6() {
         this.gFloorMap = new int[][]{
@@ -361,6 +360,7 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6, 112,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52, 115,   6},};
+        loadUnblockedGraph();
    }
     public void stage7() {
         this.gFloorMap = new int[][]{
@@ -404,6 +404,7 @@ public class Map extends JPanel implements Drawable {
             {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
             {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
             {  6,   6, 112,  52,  52,  52, 113,   6,   6, 114,  52,  52,  52, 115,   6,   6},};
+        loadUnblockedGraph();
     }
     public void stage8() {
         this.gFloorMap = new int[][]{
@@ -447,6 +448,7 @@ public class Map extends JPanel implements Drawable {
             { 18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16},
             { 35,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  37},
             { 51,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  53},};
+        loadUnblockedGraph();
     }
 
 /* *************************Overridden Methods******************************* */
