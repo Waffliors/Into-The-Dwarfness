@@ -17,20 +17,33 @@ public class Player extends Character implements Drawable {
      *------------------------ Class Variables -------------------------------*
      *------------------------------------------------------------------------*/
     private final float speed;
+    private boolean move;
+    private int moveMax;
     private int xPos, yPos, actualStage;
     private final BufferedImage SpriteSheet;
     private boolean[][] collideMap;
+    private int direction;
+    
+    private int contmove;
+    
+    private int xAnim, yAnim;
 
     /*------------------------------------------------------------------------*
      *----------------------- Class Constructor ------------------------------*
      *------------------------------------------------------------------------*/
     public Player(BufferedImage spriteSheet, boolean [][]collideMap) {
         this.speed = (float) 0.5;
+        this.moveMax = 0;
         this.xPos = 512;
         this.yPos = 128;
         this.actualStage = 1;
         this.collideMap = collideMap;
         this.SpriteSheet = spriteSheet;
+        this.move = false;
+        this.contmove = 0;
+        
+        this.xAnim = 0;
+        this.yAnim = 0;
     }
 
     /*------------------------------------------------------------------------*
@@ -38,6 +51,20 @@ public class Player extends Character implements Drawable {
     *------------------------------------------------------------------------*/
     @Override
     public void update() {
+        xAnim += 32;
+        if (move) {
+            inMove(direction);
+            if (xAnim == 256) {
+                xAnim = 0;
+            }
+        }
+
+        if (!move) {
+            if (xAnim == 160) {
+                xAnim = 0;
+            }
+        }
+
     }
 
     @Override
@@ -73,23 +100,65 @@ public class Player extends Character implements Drawable {
 
     @Override
     public void paintComponent(Graphics g) {
-        BufferedImage image = SpriteSheet.getSubimage(128, 0, 32, 32);
+        BufferedImage image = SpriteSheet.getSubimage(xAnim, yAnim, 32, 32);
         g.drawImage(image, getXPosition(), getYPosition(), 64, 64, null);
     }
 
     public void move(KeyEvent e, Map map) {
-        checkstage(e,map);
-        if (e.getKeyChar() == 'a' && collision(4)) {
-            this.xPos = this.xPos - 64;
+        checkstage(e,map);        
+        if (!move) {
+
+            if (e.getKeyChar() == 'a' && collision(4)) {
+                //this.xPos = this.xPos - 64;
+                this.xAnim = 0;
+                this.yAnim = 160;
+                this.move = true;
+                this.direction = 1;
+            }
+            if (e.getKeyChar() == 'd' && collision(6)) {
+                //this.xPos = this.xPos + 64;
+                this.xAnim = 0;
+                this.yAnim = 0;
+                this.move = true;
+                this.direction = 2;
+            }
+            if (e.getKeyChar() == 'w' && collision(8)) {
+                //this.yPos = this.yPos - 64;
+                this.move = true;
+                this.direction = 3;
+            }
+            if (e.getKeyChar() == 's' && collision(2)) {
+                //this.yPos = this.yPos + 64;
+                this.move = true;
+                this.direction = 4;
+            }
         }
-        if (e.getKeyChar() == 'd' && collision(6)) {
-            this.xPos = this.xPos + 64;
+    }
+    
+    private void inMove(int ref){
+        contmove+=1;
+        if(contmove > 8){
+        System.out.println("uma casa");
+        contmove=0;
+        this.move = false;
+        
+        System.out.println("x: "+this.xPos+" y: "+this.yPos);
+        return;
         }
-        if (e.getKeyChar() == 'w' && collision(8)) {
-            this.yPos = this.yPos - 64;
+            
+        
+
+        if (ref == 1) {
+            this.xPos = xPos-8;
         }
-        if (e.getKeyChar() == 's' && collision(2)) {
-            this.yPos = this.yPos + 64;
+        if (ref == 2) {
+            this.xPos+= 8;
+        }
+        if (ref == 3) {
+            this.yPos -= 8;
+        }
+        if (ref == 4) {
+            this.yPos += 8;
         }
     }
     

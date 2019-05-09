@@ -79,7 +79,7 @@ public class Window extends JFrame implements KeyListener {
         long excess = 0;
         long noDelays = 0;
 
-        final long DESIRED_UPDATE_TIME = 30;
+        final long DESIRED_UPDATE_TIME = 80;
         final long NO_DELAYS_PER_YIELD = 16;
 
         // Cria double-buffering strategy genérico
@@ -92,11 +92,11 @@ public class Window extends JFrame implements KeyListener {
             // Pula os quadros enquanto o tempo for em excesso.
             while (excess > DESIRED_UPDATE_TIME) {
                 //game.processLogics();
+                player.update();
                 excess -= DESIRED_UPDATE_TIME;
             }
-
+            player.update();
             repaint();
-            System.out.println("x = "+player.getXPosition()+"y = "+player.getYPosition());
 
             long afterTime = System.currentTimeMillis();
             long sleepTime = afterTime - beforeTime;
@@ -157,9 +157,6 @@ public class Window extends JFrame implements KeyListener {
         if ("PlayState".equals(gsm.getType())) {
             player.move(e, map);
             player.collision(e.getKeyCode());
-        }
-        if (this.player.getYPosition()>704 && this.player.getXPosition() == 448 || this.player.getXPosition() ==515){
-            System.out.println("Next Map");
         }
     }
     @Override
