@@ -54,7 +54,7 @@ public class Player extends Character implements Drawable {
         xAnim += 32;
         if (move) {
             inMove(direction);
-            if (xAnim == 256) {
+            if (xAnim == 160) {
                 xAnim = 0;
             }
         }
@@ -138,7 +138,6 @@ public class Player extends Character implements Drawable {
     private void inMove(int ref){
         contmove+=1;
         if(contmove > 8){
-        System.out.println("uma casa");
         contmove=0;
         this.move = false;
         
@@ -149,7 +148,7 @@ public class Player extends Character implements Drawable {
         
 
         if (ref == 1) {
-            this.xPos = xPos-8;
+            this.xPos -= 8;
         }
         if (ref == 2) {
             this.xPos+= 8;
