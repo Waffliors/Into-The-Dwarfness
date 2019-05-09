@@ -45,32 +45,26 @@ public class Player extends Character implements Drawable {
         
         switch(ref){
             case 4: // left
-                System.out.println("Left");
                 x = (this.xPos - 64) / 64;
                 y = this.yPos / 64;
             break;
             
             case 6: // right
-                System.out.println("Right");
                 x = (this.xPos + 64) / 64;
                 y = this.yPos / 64;
             break;
             
             case 8: // up
-                System.out.println("Up");
                 x = this.xPos / 64;
                 y = (this.yPos - 64) / 64;
             break;
             
             case 2: // down
-                System.out.println("Down");
                 x = this.xPos / 64;
                 y = (this.yPos + 64) / 64;
             break;
         }
         
-        System.out.println(x);
-        System.out.println(y);
         return collideMap[y][x];
     }
 

@@ -20,8 +20,8 @@ public class Map extends JPanel implements Drawable {
     private final BufferedImage SSheet;
     private final ArrayList<Tile> TMList;
     private List<Integer> unblockedFloorTile;
-    private  int gWallMap[][];
-    private  int gFloorMap[][];
+    private int gWallMap[][];
+    private int gFloorMap[][];
     private int gObjectMap[][];
     private boolean gUnblockedT[][];
     
@@ -32,10 +32,10 @@ public class Map extends JPanel implements Drawable {
         this.yPos = 0;
         this.SSheet = spriteSheet;
         this.TMList = loadTile();
-        
-        this.loadUblockedTiles();
-        this.stage1();
-        this.loadUnblockedGraph();
+
+        loadUblockedTiles();
+        stage1();
+        loadUnblockedGraph();
     }
 
 /* ********************Auxiliary methods of the Constructor****************** */
@@ -53,38 +53,52 @@ public class Map extends JPanel implements Drawable {
         }
         return mapTiles;
     }
+    
     private void loadUblockedTiles (){
         this.unblockedFloorTile = Arrays.asList(
-                88, 89, 90, 91, 92, 93, 95,
-                101, 104, 105, 106, 107, 108,
-                109, 133, 134, 135, 136, 137,
-                138, 139, 140, 141, 142, 149,
-                150, 152, 153, 154, 155, 156,
-                157, 158, 160, 164, 165, 159,
-                170, 171, 172, 173, 174, 176,
-                177, 178, 179, 180, 181, 182,
-                184, 185, 186, 187, 188, 189,
-                190, 193, 194, 198, 199, 200,
-                201, 202, 203, 204, 205, 206,
-                208, 209, 213, 214, 216, 217, 
-                218, 219, 220, 221, 222, 224, 
-                225, 226, 229, 233, 234, 235, 
-                237, 238, 248, 250, 254, 266, 
-                267, 269, 270, 282, 283, 284, 
-                285, 286);
+        		 20,  23,  24,  25,  26,  27, 
+        		 28,  29,  30,  49,  55,  56,  
+        		 57,  58,  59,  60,  61,  62,
+                 88,  89,  90,  91,  92,  93, 
+                 95, 101, 104, 105, 106, 107, 
+                108, 109, 133, 134, 135, 136, 
+                137, 138, 139, 140, 141, 142, 
+                144, 148, 149, 150, 152, 153,
+                154, 155, 156, 157, 158, 160, 
+                164, 165, 159, 170, 171, 172, 
+                173, 174, 176, 177, 178, 179, 
+                180, 181, 182, 184, 185, 186, 
+                187, 188, 189, 190, 193, 194, 
+                198, 199, 200, 201, 202, 203, 
+                204, 205, 206, 208, 209, 213, 
+                214, 216, 217, 218, 219, 220, 
+                221, 222, 224, 225, 226, 229, 
+                233, 234, 235, 237, 238, 248, 
+                250, 254, 266, 267, 269, 270,
+                282, 283, 284, 285, 286);
     }
-    private void loadUnblockedGraph() {
-        this.gUnblockedT = new boolean[gFloorMap.length][gFloorMap[0].length];
-        
-        for (int i = 0; i < gFloorMap.length; i++) {
-            for (int j = 0; j < gFloorMap[0].length; j++) {
-                for (int k = 0; k < unblockedFloorTile.size(); k++) {
-                    if (gFloorMap[i][j] == unblockedFloorTile.get(k) && gWallMap[i][j] == 6 || gObjectMap[i][j] == unblockedFloorTile.get(k) && gWallMap[i][j] == 6) {
-                        gUnblockedT[i][j] = true;
+    public void loadUnblockedGraph() {
+        this.gUnblockedT = new boolean[this.gFloorMap.length][this.gFloorMap[0].length];
+
+        for (int i = 0; i < this.gUnblockedT.length; i++) {
+        	for (int j = 0; j < this.gUnblockedT[0].length; j++) {
+            	this.gUnblockedT[i][j] = false;
+        	}
+        }
+                
+        for (int i = 0; i < this.gUnblockedT.length; i++) {
+            for (int j = 0; j < this.gUnblockedT[0].length; j++) {
+                for (int k = 0; k < this.unblockedFloorTile.size(); k++) {
+                    if ((this.gFloorMap[i][j] == this.unblockedFloorTile.get(k) && this.gWallMap[i][j] == 6 ) || this.gWallMap[i][j] == this.unblockedFloorTile.get(k)) {
+                    	this.gUnblockedT[i][j] = true;
+                    }
+                    if(this.gObjectMap[i][j] == this.unblockedFloorTile.get(k))
+                    {
+                    	this.gUnblockedT[i][j] = false;
                     }
                 }
             }
-        }
+        }        
     }
     
 /* ****************************Class Methods********************************* */
@@ -132,7 +146,6 @@ public class Map extends JPanel implements Drawable {
             {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
             {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
             {  6,   6, 112,  52,  52,  52, 113,   6,   6, 114,  52,  52,  52, 115,   6,   6},};
-        	this.loadUnblockedGraph();
     }
     public void stage2() {
         this.gFloorMap = new int[][]{
@@ -176,7 +189,6 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  99,   6},
             {  6, 112,  52,  52,  52,  52, 113,   6,   6, 114,  52,  52,  52,  52, 115,   6},
             {  6,   6,   6,   6,   6,   6,  18,   6,   6,  16,   6,   6,   6,   6,   6,   6},};
-        	this.loadUnblockedGraph();
     }
     public void stage3() {
         this.gFloorMap = new int[][]{
@@ -220,7 +232,6 @@ public class Map extends JPanel implements Drawable {
             {  6,  18, 272,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},};
-        	this.loadUnblockedGraph();
    }
     public void stage4() {
         this.gFloorMap = new int[][]{
@@ -264,7 +275,6 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},};
-        	this.loadUnblockedGraph();
    }
     public void stage5() {
         this.gFloorMap = new int[][]{
@@ -308,7 +318,6 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6, 112,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52, 115,   6},
             {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
-        	this.loadUnblockedGraph();
    }
     public void stage6() {
         this.gFloorMap = new int[][]{
@@ -352,7 +361,6 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6, 112,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52, 115,   6},};
-        	this.loadUnblockedGraph();
    }
     public void stage7() {
         this.gFloorMap = new int[][]{
@@ -396,7 +404,6 @@ public class Map extends JPanel implements Drawable {
             {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
             {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
             {  6,   6, 112,  52,  52,  52, 113,   6,   6, 114,  52,  52,  52, 115,   6,   6},};
-        	this.loadUnblockedGraph();
     }
     public void stage8() {
         this.gFloorMap = new int[][]{
@@ -440,33 +447,32 @@ public class Map extends JPanel implements Drawable {
             { 18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16},
             { 35,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  37},
             { 51,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  53},};
-        	this.loadUnblockedGraph();
     }
 
 /* *************************Overridden Methods******************************* */
     @Override
     public void paintComponent(Graphics g) {
-        for (int x = 0; x < gFloorMap[0].length; x++) {
-            for (int y = 0; y < gFloorMap.length; y++) {
+        for (int x = 0; x < this.gFloorMap[0].length; x++) {
+            for (int y = 0; y < this.gFloorMap.length; y++) {
                 g.drawImage(SSheet, 
                 		(x * 64) + xPos, (y * 64) + yPos, 
                 		(x * 64) + 64 + xPos, (y * 64) + 64 + yPos,     
-                        TMList.get(gFloorMap[y][x]).getSrcX1(), TMList.get(gFloorMap[y][x]).getSrcY1(),        
-                        TMList.get(gFloorMap[y][x]).getSrcX2(), TMList.get(gFloorMap[y][x]).getSrcY2(),       
+                        TMList.get(this.gFloorMap[y][x]).getSrcX1(), TMList.get(this.gFloorMap[y][x]).getSrcY1(),        
+                        TMList.get(this.gFloorMap[y][x]).getSrcX2(), TMList.get(this.gFloorMap[y][x]).getSrcY2(),       
                         null);        
                                
                 g.drawImage(SSheet, 
                         (x * 64) + xPos, (y * 64) + yPos, 
                         (x * 64) + 64 + xPos, (y * 64) + 64 + yPos,
-                        TMList.get(gObjectMap[y][x]).getSrcX1(), TMList.get(gObjectMap[y][x]).getSrcY1(),
-                        TMList.get(gObjectMap[y][x]).getSrcX2(), TMList.get(gObjectMap[y][x]).getSrcY2(), 
+                        TMList.get(this.gObjectMap[y][x]).getSrcX1(), TMList.get(this.gObjectMap[y][x]).getSrcY1(),
+                        TMList.get(this.gObjectMap[y][x]).getSrcX2(), TMList.get(this.gObjectMap[y][x]).getSrcY2(), 
                         null);
                 
                 g.drawImage(SSheet,
                         (x * 64) + xPos, (y * 64) + yPos,
                         (x * 64) + 64 + xPos, (y * 64) + 64 + yPos, 
-                        TMList.get(gWallMap[y][x]).getSrcX1(), TMList.get(gWallMap[y][x]).getSrcY1(),
-                        TMList.get(gWallMap[y][x]).getSrcX2(), TMList.get(gWallMap[y][x]).getSrcY2(), 
+                        TMList.get(this.gWallMap[y][x]).getSrcX1(), TMList.get(this.gWallMap[y][x]).getSrcY1(),
+                        TMList.get(this.gWallMap[y][x]).getSrcX2(), TMList.get(this.gWallMap[y][x]).getSrcY2(), 
                         null);
             }
         }

@@ -148,6 +148,8 @@ public class Window extends JFrame implements KeyListener {
         if (e.getKeyChar() == '8'){
             map.stage8();
         } 
+        
+        map.loadUnblockedGraph();
     }
     @Override
     public void keyPressed(KeyEvent e) {
