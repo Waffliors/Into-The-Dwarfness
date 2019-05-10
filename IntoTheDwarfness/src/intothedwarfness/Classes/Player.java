@@ -23,6 +23,7 @@ public class Player extends Character implements Drawable {
     private final BufferedImage SpriteSheet;
     private boolean[][] collideMap;
     private int direction;
+    private int life;
     
     private int contmove;
     
@@ -32,6 +33,7 @@ public class Player extends Character implements Drawable {
      *----------------------- Class Constructor ------------------------------*
      *------------------------------------------------------------------------*/
     public Player(BufferedImage spriteSheet, boolean [][]collideMap) {
+        this.life = 4;
         this.speed = (float) 0.5;
         this.moveMax = 0;
         this.xPos = 512;

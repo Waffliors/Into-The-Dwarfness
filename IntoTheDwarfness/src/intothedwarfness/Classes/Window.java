@@ -91,7 +91,6 @@ public class Window extends JFrame implements KeyListener {
 
             // Pula os quadros enquanto o tempo for em excesso.
             while (excess > DESIRED_UPDATE_TIME) {
-                //game.processLogics();
                 player.update();
                 excess -= DESIRED_UPDATE_TIME;
             }
