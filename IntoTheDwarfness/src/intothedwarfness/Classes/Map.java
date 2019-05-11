@@ -24,6 +24,7 @@ public class Map extends JPanel implements Drawable {
     private int gFloorMap[][];
     private int gObjectMap[][];
     private boolean gUnblockedT[][];
+    public int actualStage;
     
 
 /* **************************Class Constructor******************************* */
@@ -32,6 +33,7 @@ public class Map extends JPanel implements Drawable {
         this.yPos = 0;
         this.SSheet = spriteSheet;
         this.TMList = loadTile();
+        this.actualStage = 1;
 
         loadUblockedTiles();
         stage1();
@@ -141,6 +143,7 @@ public class Map extends JPanel implements Drawable {
             {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
             {  6,   6, 112,  52,  52,  52, 113,   6,   6, 114,  52,  52,  52, 115,   6,   6},};
         loadUnblockedGraph();
+        this.actualStage = 1;
     }
     public void stage2() {
         this.gFloorMap = new int[][]{
@@ -185,6 +188,7 @@ public class Map extends JPanel implements Drawable {
             {  6, 112,  52,  52,  52,  52, 113,   6,   6, 114,  52,  52,  52,  52, 115,   6},
             {  6,   6,   6,   6,   6,   6,  18,   6,   6,  16,   6,   6,   6,   6,   6,   6},};
         loadUnblockedGraph();
+        this.actualStage = 2;
     }
     public void stage3() {
         this.gFloorMap = new int[][]{
@@ -229,6 +233,7 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},};
         loadUnblockedGraph();
+        this.actualStage = 3;
    }
     public void stage4() {
         this.gFloorMap = new int[][]{
@@ -273,6 +278,7 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},};
         loadUnblockedGraph();
+       this.actualStage = 4;
    }
     public void stage5() {
         this.gFloorMap = new int[][]{
@@ -317,6 +323,7 @@ public class Map extends JPanel implements Drawable {
             {  6, 112,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52, 115,   6},
             {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
         loadUnblockedGraph();
+        this.actualStage = 5;
    }
     public void stage6() {
         this.gFloorMap = new int[][]{
@@ -361,6 +368,7 @@ public class Map extends JPanel implements Drawable {
             {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
             {  6, 112,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52, 115,   6},};
         loadUnblockedGraph();
+        this.actualStage = 6;
    }
     public void stage7() {
         this.gFloorMap = new int[][]{
@@ -405,6 +413,7 @@ public class Map extends JPanel implements Drawable {
             {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
             {  6,   6, 112,  52,  52,  52, 113,   6,   6, 114,  52,  52,  52, 115,   6,   6},};
         loadUnblockedGraph();
+        this.actualStage = 7;
     }
     public void stage8() {
         this.gFloorMap = new int[][]{
@@ -449,6 +458,7 @@ public class Map extends JPanel implements Drawable {
             { 35,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  37},
             { 51,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  53},};
         loadUnblockedGraph();
+        this.actualStage = 8;
     }
 
 /* *************************Overridden Methods******************************* */
@@ -482,5 +492,10 @@ public class Map extends JPanel implements Drawable {
 
     public boolean[][] getgUnblockedT() {
         return gUnblockedT;
+    }
+
+    @Override
+    public Boolean isStage(Map map) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
