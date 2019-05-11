@@ -5,8 +5,10 @@
  */
 package intothedwarfness.Interfaces;
 
+import intothedwarfness.Classes.Map;
 import java.awt.Graphics;
 
 public interface Drawable{
     public void paintComponent(Graphics g);
+    public Boolean isStage(Map map);
 }

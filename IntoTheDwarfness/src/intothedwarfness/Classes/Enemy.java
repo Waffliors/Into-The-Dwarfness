@@ -99,6 +99,13 @@ public class Enemy extends Character  implements Drawable {
         }
     }
     
+    public Boolean isStage(Map map) {
+        if (map.actualStage == this.actualStage) {
+            return true;
+        }
+        return false;
+    }
+    
     @Override
     public void paintComponent(Graphics g) {
         BufferedImage image = SpriteSheet.getSubimage(xAnim, yAnim, 32, 32);

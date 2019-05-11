@@ -267,4 +267,9 @@ public class Player extends Character implements Drawable {
         return this.yPos;
     }
 
+    @Override
+    public Boolean isStage(Map map) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

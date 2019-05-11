@@ -40,8 +40,8 @@ public class Window extends JFrame implements KeyListener {
         this.player = new Player(sprites.get(0), map.getgUnblockedT());
         this.WIDTH = 1024;
         this.HEIGHT = 768;
-        Enemy bat = new Enemy(512, 128, 2, sprites.get(15), map.getgUnblockedT());
-        this.enemies.add(bat);
+        Enemy spider = new Enemy(512, 128, 2, sprites.get(15), map.getgUnblockedT());
+        this.enemies.add(spider);
         this.drawables = loadDrawables();
         
         this.setSize(this.WIDTH, this.HEIGHT);
@@ -175,8 +175,14 @@ public class Window extends JFrame implements KeyListener {
                 graphics.clearRect(0, 0, this.WIDTH, this.HEIGHT);
                 //For each drawable object in list, paint
                 for(Drawable drawable: this.drawables){
-                    System.out.println(drawable.getClass() == this.enemies.get(0).getClass());
-                    drawable.paintComponent(graphics);
+                    System.out.println();
+                    if (drawable.getClass() == this.enemies.get(0).getClass()) {
+                        if (drawable.isStage(this.map)) {
+                            drawable.paintComponent(graphics);
+                        }
+                    } else {
+                        drawable.paintComponent(graphics);
+                    }
                 }
                 //Disposes of this graphics context, it's no longer referenced.
                 graphics.dispose();
