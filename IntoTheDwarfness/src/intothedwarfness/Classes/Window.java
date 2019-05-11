@@ -27,7 +27,7 @@ public class Window extends JFrame implements KeyListener {
     private final int WIDTH, HEIGHT;
     private final Map map;
     private final Player player;
-    private final ArrayList<Character> enemies;
+    private final ArrayList<Enemy> enemies = new ArrayList();
     private final ArrayList<BufferedImage> sprites;
     private ArrayList<Drawable> drawables;
     
@@ -40,8 +40,9 @@ public class Window extends JFrame implements KeyListener {
         this.player = new Player(sprites.get(0), map.getgUnblockedT());
         this.WIDTH = 1024;
         this.HEIGHT = 768;
+        Enemy bat = new Enemy(512, 128, 2, sprites.get(15), map.getgUnblockedT());
+        this.enemies.add(bat);
         this.drawables = loadDrawables();
-        this.enemies = null;
         
         this.setSize(this.WIDTH, this.HEIGHT);
         this.setLocationRelativeTo(null);
@@ -61,6 +62,9 @@ public class Window extends JFrame implements KeyListener {
         ArrayList<Drawable> elements = new ArrayList();
         elements.add(this.map);
         elements.add(this.player);
+        for (Enemy enemy : this.enemies) {
+            elements.add(enemy);
+        }
 
         return elements;
     }
@@ -171,6 +175,7 @@ public class Window extends JFrame implements KeyListener {
                 graphics.clearRect(0, 0, this.WIDTH, this.HEIGHT);
                 //For each drawable object in list, paint
                 for(Drawable drawable: this.drawables){
+                    System.out.println(drawable.getClass() == this.enemies.get(0).getClass());
                     drawable.paintComponent(graphics);
                 }
                 //Disposes of this graphics context, it's no longer referenced.

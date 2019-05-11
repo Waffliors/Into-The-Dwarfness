@@ -5,13 +5,15 @@
  */
 package intothedwarfness.Classes;
 
+import intothedwarfness.Interfaces.Drawable;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 /**
  *
  * @author matheus.vrsilva
  */
-public class Enemy extends Character {
+public class Enemy extends Character  implements Drawable {
 
     /*------------------------------------------------------------------------*
      *------------------------ Class Variables -------------------------------*
@@ -47,7 +49,15 @@ public class Enemy extends Character {
         this.xAnim = 0;
         this.yAnim = 0;
     }
-
+    
+    public int getXPosition() {
+        return this.xPos;
+    }
+    
+    public int getYPosition() {
+        return this.yPos;
+    }
+    
     @Override
     public void update() {
         xAnim += 32;
@@ -88,7 +98,13 @@ public class Enemy extends Character {
             this.yPos += 8;
         }
     }
-
+    
+    @Override
+    public void paintComponent(Graphics g) {
+        BufferedImage image = SpriteSheet.getSubimage(xAnim, yAnim, 32, 32);
+        g.drawImage(image, getXPosition(), getYPosition(), 64, 64, null);
+    }
+    
     @Override
     public boolean collision(int ref) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
