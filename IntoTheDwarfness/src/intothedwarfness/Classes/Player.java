@@ -24,15 +24,15 @@ public class Player extends Character implements Drawable {
     private boolean[][] collideMap;
     private int direction;
     private int life;
-    
+
     private int contmove;
-    
+
     private int xAnim, yAnim;
 
     /*------------------------------------------------------------------------*
      *----------------------- Class Constructor ------------------------------*
      *------------------------------------------------------------------------*/
-    public Player(BufferedImage spriteSheet, boolean [][]collideMap) {
+    public Player(BufferedImage spriteSheet, boolean[][] collideMap) {
         this.life = 4;
         this.speed = (float) 0.5;
         this.moveMax = 0;
@@ -43,7 +43,7 @@ public class Player extends Character implements Drawable {
         this.SpriteSheet = spriteSheet;
         this.move = false;
         this.contmove = 0;
-        
+
         this.xAnim = 0;
         this.yAnim = 0;
     }
@@ -56,15 +56,9 @@ public class Player extends Character implements Drawable {
         xAnim += 32;
         if (move) {
             inMove(direction);
-            if (xAnim == 160) {
-                xAnim = 0;
-            }
         }
-
-        if (!move) {
-            if (xAnim == 160) {
-                xAnim = 0;
-            }
+        if (xAnim == 160) {
+            xAnim = 0;
         }
 
     }
@@ -72,31 +66,32 @@ public class Player extends Character implements Drawable {
     @Override
     public boolean collision(int ref) {
         int x = 0, y = 0;
-        
-        switch(ref){
+
+        switch (ref) {
             case 4: // left
                 x = (this.xPos - 64) / 64;
                 y = this.yPos / 64;
-            break;
-            
+                break;
+
             case 6: // right
                 x = (this.xPos + 64) / 64;
                 y = this.yPos / 64;
-            break;
-            
+                break;
+
             case 8: // up
                 x = this.xPos / 64;
                 y = (this.yPos - 64) / 64;
-            break;
-            
+                break;
+
             case 2: // down
                 x = this.xPos / 64;
                 y = (this.yPos + 64) / 64;
-            break;
+                break;
         }
-        
-        if (y < collideMap.length && x < collideMap[0].length)
+
+        if (y < collideMap.length && x < collideMap[0].length) {
             return collideMap[y][x];
+        }
         return false;
     }
 
@@ -107,7 +102,7 @@ public class Player extends Character implements Drawable {
     }
 
     public void move(KeyEvent e, Map map) {
-        checkstage(e,map);        
+        checkstage(e, map);
         if (!move) {
 
             if (e.getKeyChar() == 'a' && collision(4)) {
@@ -136,24 +131,22 @@ public class Player extends Character implements Drawable {
             }
         }
     }
-    
-    private void inMove(int ref){
-        contmove+=1;
-        if(contmove > 8){
-        contmove=0;
-        this.move = false;
-        
-        System.out.println("x: "+this.xPos+" y: "+this.yPos);
-        return;
+
+    private void inMove(int ref) {
+        contmove += 1;
+        if (contmove > 8) {
+            contmove = 0;
+            this.move = false;
+
+            System.out.println("x: " + this.xPos + " y: " + this.yPos);
+            return;
         }
-            
-        
 
         if (ref == 1) {
             this.xPos -= 8;
         }
         if (ref == 2) {
-            this.xPos+= 8;
+            this.xPos += 8;
         }
         if (ref == 3) {
             this.yPos -= 8;
@@ -162,7 +155,7 @@ public class Player extends Character implements Drawable {
             this.yPos += 8;
         }
     }
-    
+
     private void checkstage(KeyEvent e, Map map) {
 
         //Check the entries in stage 1
@@ -236,26 +229,23 @@ public class Player extends Character implements Drawable {
             this.actualStage = 5;
         }
         //Check the entries in stage 7
-         if (e.getKeyChar() == 's' && yPos == 704 && (xPos == 448 || xPos == 512) && actualStage == 7) {
+        if (e.getKeyChar() == 's' && yPos == 704 && (xPos == 448 || xPos == 512) && actualStage == 7) {
             this.yPos = 0;
             map.stage4();
             this.actualStage = 4;
         }
-         if (e.getKeyChar() == 'w' && yPos == 256 && xPos == 512 && actualStage == 7) {
+        if (e.getKeyChar() == 'w' && yPos == 256 && xPos == 512 && actualStage == 7) {
             this.yPos = 384;
             this.xPos = 768;
             map.stage8();
             this.actualStage = 8;
         }
-         if (e.getKeyChar() == 'w' && yPos == 64 && (xPos == 448 || xPos == 512) && actualStage == 8) {
+        if (e.getKeyChar() == 'w' && yPos == 64 && (xPos == 448 || xPos == 512) && actualStage == 8) {
             this.yPos = 768;
             map.stage2();
             this.actualStage = 2;
         }
-         
-         
-         
-        
+
         this.collideMap = map.getgUnblockedT();
     }
 
