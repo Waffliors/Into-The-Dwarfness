@@ -63,15 +63,10 @@ public class Enemy extends Character  implements Drawable {
         xAnim += 32;
         if (move) {
             inMove(direction);
-            if (xAnim == 160) {
-                xAnim = 0;
-            }
         }
-
-        if (!move) {
-            if (xAnim == 160) {
-                xAnim = 0;
-            }
+        
+        if (xAnim == 160) {
+            xAnim = 0;
         }
     }
 
