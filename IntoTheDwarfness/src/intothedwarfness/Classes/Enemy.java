@@ -13,14 +13,14 @@ import java.awt.image.BufferedImage;
  *
  * @author matheus.vrsilva
  */
-public class Enemy extends Character  implements Drawable {
+public class Enemy extends Character implements Drawable {
 
     /*------------------------------------------------------------------------*
      *------------------------ Class Variables -------------------------------*
      *------------------------------------------------------------------------*/
     private int life;
     private int moveMax;
-    private boolean move;
+    private boolean move, turn;
     private int direction;
     private final float speed;
     private boolean[][] collideMap;
@@ -40,7 +40,9 @@ public class Enemy extends Character  implements Drawable {
         this.xPos = xPos;
         this.moveMax = 0;
         this.contmove = 0;
-        this.move = false;
+        this.move = true;
+        this.turn = false;
+        this.direction = 1; // esquerda
         this.actualStage = stage;
         this.speed = (float) 0.5;
         this.collideMap = collideMap;
@@ -49,24 +51,29 @@ public class Enemy extends Character  implements Drawable {
         this.xAnim = 0;
         this.yAnim = 0;
     }
-    
+
     public int getXPosition() {
         return this.xPos;
     }
-    
+
     public int getYPosition() {
         return this.yPos;
     }
-    
+
     @Override
     public void update() {
         xAnim += 32;
         if (move) {
             inMove(direction);
         }
-        
-        if (xAnim == 160) {
+
+        if (!turn) {
             xAnim = 0;
+            direction = 2;
+            turn = true;
+        } else {
+            direction = 1;
+            turn = false;
         }
     }
 
@@ -74,9 +81,8 @@ public class Enemy extends Character  implements Drawable {
         contmove += 1;
         if (contmove > 8) {
             contmove = 0;
-            this.move = false;
+            //this.move = false;
 
-            System.out.println("x: " + this.xPos + " y: " + this.yPos);
             return;
         }
 
@@ -93,20 +99,20 @@ public class Enemy extends Character  implements Drawable {
             this.yPos += 8;
         }
     }
-    
+
     public Boolean isStage(Map map) {
         if (map.actualStage == this.actualStage) {
             return true;
         }
         return false;
     }
-    
+
     @Override
     public void paintComponent(Graphics g) {
         BufferedImage image = SpriteSheet.getSubimage(xAnim, yAnim, 32, 32);
         g.drawImage(image, getXPosition(), getYPosition(), 64, 64, null);
     }
-    
+
     @Override
     public boolean collision(int ref) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
