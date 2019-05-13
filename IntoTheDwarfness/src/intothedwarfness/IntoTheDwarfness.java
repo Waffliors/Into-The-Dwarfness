@@ -27,7 +27,7 @@ public class IntoTheDwarfness {
 
         //Loading the images of the game
         ArrayList<BufferedImage> sprites = new ArrayList();
-        for (int i = 1; i <= 19; i++) {
+        for (int i = 1; i <= 9; i++) {
             sprites.add(ImageIO.read(new File("images/" + i + ".png")));
         }
 
@@ -35,6 +35,5 @@ public class IntoTheDwarfness {
         Window screen = new Window(sprites);
         screen.initialize();
         screen.run();
-
     }
 }

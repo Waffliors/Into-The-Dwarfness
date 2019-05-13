@@ -24,7 +24,7 @@ public class Window extends JFrame implements KeyListener {
 /* ***************************Class Variables******************************** */
     private GameStateManager gsm;
     
-    private final int WIDTH, HEIGHT;
+    private final int width, height;
     private final Map map;
     private final Player player;
     private final ArrayList<Character> enemies;
@@ -36,14 +36,14 @@ public class Window extends JFrame implements KeyListener {
         super("Into The Dwarfness");
         
         this.sprites = sprites;
-        this.map = new Map(sprites.get(18));
-        this.player = new Player(sprites.get(0), map.getgUnblockedT());
-        this.WIDTH = 1024;
-        this.HEIGHT = 768;
+        this.map = new Map(sprites.get(8));
+        this.player = new Player(sprites.get(0), map.getgUnblockedT(), map);
+        this.width = 1024;
+        this.height = 768;
         this.drawables = loadDrawables();
         this.enemies = null;
         
-        this.setSize(this.WIDTH, this.HEIGHT);
+        this.setSize(this.width, this.height);
         this.setLocationRelativeTo(null);
         this.setUndecorated(false);
         this.setResizable(false);
@@ -53,7 +53,6 @@ public class Window extends JFrame implements KeyListener {
         this.addKeyListener(this);
         this.setIgnoreRepaint(true);
         this.setBackground(new Color(43, 43, 42));
-
     }
 
 /* ********************Auxiliary methods of the Constructor****************** */
@@ -61,7 +60,6 @@ public class Window extends JFrame implements KeyListener {
         ArrayList<Drawable> elements = new ArrayList();
         elements.add(this.map);
         elements.add(this.player);
-
         return elements;
     }
     
@@ -71,7 +69,6 @@ public class Window extends JFrame implements KeyListener {
         gsm = new GameStateManager();
         gsm.init();
     }
-    
     //Game Loop
     public void run() throws InterruptedException {
         boolean isRunning = true;
@@ -123,43 +120,18 @@ public class Window extends JFrame implements KeyListener {
                 GameState play = new PlayState();
                 gsm.switchState(play);
             }
-        }
-        if (e.getKeyChar() == '1'){
-            map.stage1();
-        }
-        if (e.getKeyChar() == '2'){
-            map.stage2();
         } 
-        if (e.getKeyChar() == '3'){
-            map.stage3();
-        } 
-        if (e.getKeyChar() == '4'){
-            map.stage4();
-        } 
-        if (e.getKeyChar() == '5'){
-            map.stage5();
-        } 
-        if (e.getKeyChar() == '6'){
-            map.stage6();
-        } 
-        if (e.getKeyChar() == '7'){
-            map.stage7();
-        } 
-        if (e.getKeyChar() == '8'){
-            map.stage8();
-        } 
-        
-        map.loadUnblockedGraph();
     }
     @Override
     public void keyPressed(KeyEvent e) {
         if ("PlayState".equals(gsm.getType())) {
-            player.move(e, map);
-            player.collision(e.getKeyCode());
+            player.setCurrentMove(e.getKeyChar());
         }
     }
     @Override
     public void keyReleased(KeyEvent e) {
+        player.setCurrentMove('.');
+        player.setLook(e.getKeyChar());
     }
     @Override
     public void paint(Graphics g) {
@@ -168,7 +140,7 @@ public class Window extends JFrame implements KeyListener {
             do{
                 Graphics graphics = strategy.getDrawGraphics();
                 //Clear the previous frame
-                graphics.clearRect(0, 0, this.WIDTH, this.HEIGHT);
+                graphics.clearRect(0, 0, this.width, this.height);
                 //For each drawable object in list, paint
                 for(Drawable drawable: this.drawables){
                     drawable.paintComponent(graphics);
@@ -178,7 +150,5 @@ public class Window extends JFrame implements KeyListener {
             } while (strategy.contentsRestored());       
             strategy.show();
         } while (strategy.contentsLost());
-    }
-       
-    
+    }   
 }

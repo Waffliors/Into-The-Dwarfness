@@ -1,266 +1,220 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * Class player, responsible for creating the character of the player and all  *
- * the tasks that the corresponding                                            *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/******************************************************************************
+ ** Class Player, here the player will be created and all operations related **
+ ** to him like walking, detecting collision and drawing will meet.          **
+ ******************************************************************************/
 package intothedwarfness.Classes;
 
-import intothedwarfness.Interfaces.Drawable;
-import java.awt.Dimension;
+
 import java.awt.Graphics;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import intothedwarfness.Interfaces.Drawable;
 
 public class Player extends Character implements Drawable {
-
-    /*------------------------------------------------------------------------*
-     *------------------------ Class Variables -------------------------------*
-     *------------------------------------------------------------------------*/
-    private final float speed;
+/* ***************************Class Variables******************************** */
     private boolean move;
-    private int moveMax;
     private int xPos, yPos, actualStage;
     private final BufferedImage SpriteSheet;
     private boolean[][] collideMap;
     private int direction;
     private int life;
-
     private int contmove;
+    private char currentMove;
+    private Map map;
+    private int look;
 
     private int xAnim, yAnim;
 
-    /*------------------------------------------------------------------------*
-     *----------------------- Class Constructor ------------------------------*
-     *------------------------------------------------------------------------*/
-    public Player(BufferedImage spriteSheet, boolean[][] collideMap) {
+/* **************************Class Constructor******************************* */
+    public Player(BufferedImage spriteSheet, boolean[][] collideMap, Map map) {
         this.life = 4;
-        this.speed = (float) 0.5;
-        this.moveMax = 0;
-        this.xPos = 512;
-        this.yPos = 128;
+        this.xPos = 480;
+        this.yPos = 114;
         this.actualStage = 1;
         this.collideMap = collideMap;
         this.SpriteSheet = spriteSheet;
         this.move = false;
-        this.contmove = 0;
-
-        this.xAnim = 0;
-        this.yAnim = 0;
+        this.map = map;
+        this.currentMove = '.';
+        this.look = 2;
     }
 
-    /*------------------------------------------------------------------------*
-    *------------------------- Class Methods --------------------------------*
-    *------------------------------------------------------------------------*/
+    public void setLook(char view) {
+        if(view == 'a'){
+            this.look = 1;
+            
+        }
+        if(view == 'd'){
+            this.look = 2;
+        }
+    }
+
+/* ****************************Class Methods********************************* */
+    public void move(char key) {
+        //checkstage(key, map);
+        if (key == 'a' && collision(key)) {
+            this.xPos = this.xPos - 8;
+        }
+        if (key == 'd' && collision(key)) {
+            this.xPos = this.xPos + 8;
+        }
+        if (key == 'w' && collision(key)) {
+            this.yPos = this.yPos - 8;
+        }
+        if (key == 's' && collision(key)) {
+            this.yPos = this.yPos + 8;
+        }
+    }
+    public void setCurrentMove(char currentMove) {
+        if(currentMove == 'd'){
+            look = 2;
+        }
+        if(currentMove == 'a'){
+            look = 1;
+        }
+        this.currentMove = currentMove;
+    }
+
+    
+/* *************************Overridden Methods******************************* */
     @Override
     public void update() {
-        xAnim += 32;
-        if (move) {
-            inMove(direction);
-            if (xAnim == 160) {
-                xAnim = 0;
+        move(this.currentMove);
+        checkStage(this.currentMove, map);
+        this.xAnim += 32;
+        
+        //If the player is looking to the Right
+        if (look == 2) {
+            System.out.println("here");
+            if (currentMove == 'a' || currentMove == 'w' || currentMove == 's' || currentMove == 'd') {
+                if (xAnim >= 256) {
+                    xAnim = 0;
+                }
+                this.yAnim = 32;
+            }
+            //System.out.println("X: "+xPos+" Y: "+yPos);
+            if (currentMove == '.') {
+                if (xAnim >= 160) {
+                    xAnim = 0;
+                }
+                yAnim = 0;
             }
         }
-
-        if (!move) {
-            if (xAnim == 160) {
-                xAnim = 0;
+        //If the player is looking to the Left
+        if (look == 1) {
+            if (currentMove == 'a' || currentMove == 'w' || currentMove == 's' || currentMove == 'd') {
+                if (xAnim >= 256) {
+                    xAnim = 0;
+                }
+                this.yAnim = 192;
+            }
+            //System.out.println("X: "+xPos+" Y: "+yPos);
+            if (currentMove == '.') {
+                if (xAnim >= 160) {
+                    xAnim = 0;
+                }
+                yAnim = 160;
             }
         }
-
-    }
-
-    @Override
-    public boolean collision(int ref) {
-        int x = 0, y = 0;
-
-        switch (ref) {
-            case 4: // left
-                x = (this.xPos - 64) / 64;
-                y = this.yPos / 64;
-                break;
-
-            case 6: // right
-                x = (this.xPos + 64) / 64;
-                y = this.yPos / 64;
-                break;
-
-            case 8: // up
-                x = this.xPos / 64;
-                y = (this.yPos - 64) / 64;
-                break;
-
-            case 2: // down
-                x = this.xPos / 64;
-                y = (this.yPos + 64) / 64;
-                break;
-        }
-
-        if (y < collideMap.length && x < collideMap[0].length) {
-            return collideMap[y][x];
-        }
-        return false;
+        
+        
     }
 
     @Override
     public void paintComponent(Graphics g) {
         BufferedImage image = SpriteSheet.getSubimage(xAnim, yAnim, 32, 32);
-        g.drawImage(image, getXPosition(), getYPosition(), 64, 64, null);
+        g.drawImage(image, xPos, yPos, 64, 64, null);
     }
-
-    public void move(KeyEvent e, Map map) {
-        checkstage(e, map);
-        if (!move) {
-
-            if (e.getKeyChar() == 'a' && collision(4)) {
-                //this.xPos = this.xPos - 64;
-                this.xAnim = 0;
-                this.yAnim = 160;
-                this.move = true;
-                this.direction = 1;
-            }
-            if (e.getKeyChar() == 'd' && collision(6)) {
-                //this.xPos = this.xPos + 64;
-                this.xAnim = 0;
-                this.yAnim = 0;
-                this.move = true;
-                this.direction = 2;
-            }
-            if (e.getKeyChar() == 'w' && collision(8)) {
-                //this.yPos = this.yPos - 64;
-                this.move = true;
-                this.direction = 3;
-            }
-            if (e.getKeyChar() == 's' && collision(2)) {
-                //this.yPos = this.yPos + 64;
-                this.move = true;
-                this.direction = 4;
-            }
-        }
+    public boolean collision(char key) {
+        return true;
     }
-
-    private void inMove(int ref) {
-        contmove += 1;
-        if (contmove > 8) {
-            contmove = 0;
-            this.move = false;
-
-            System.out.println("x: " + this.xPos + " y: " + this.yPos);
-            return;
-        }
-
-        if (ref == 1) {
-            this.xPos -= 8;
-        }
-        if (ref == 2) {
-            this.xPos += 8;
-        }
-        if (ref == 3) {
-            this.yPos -= 8;
-        }
-        if (ref == 4) {
-            this.yPos += 8;
-        }
-    }
-
-    private void checkstage(KeyEvent e, Map map) {
-
+    private void checkStage(char key, Map map) {
         //Check the entries in stage 1
-        if (e.getKeyChar() == 's' && yPos == 704 && (xPos == 448 || xPos == 512) && actualStage == 1) {
-            this.yPos = 0;
-            map.stage2();
-            this.actualStage = 2;
+        if (actualStage == 1) {
+            if (key == 's' && yPos == 698 && (xPos >= 424 && xPos <= 536)){
+                this.yPos = 18;
+                this.actualStage = 2;
+            }
         }
-
         //Check the entries in stage 2
-        if (e.getKeyChar() == 'w' && yPos == 64 && (xPos == 448 || xPos == 512) && actualStage == 2) {
-            this.yPos = 768;
-            map.stage1();
-            this.actualStage = 1;
-        }
-        if (e.getKeyChar() == 's' && yPos == 704 && (xPos == 448 || xPos == 512) && actualStage == 2) {
-            this.yPos = -64;
-            map.stage8();
-            this.actualStage = 8;
-        }
-        if (e.getKeyChar() == 'd' && xPos == 960 && (yPos == 320 || yPos == 384) && actualStage == 2) {
-            this.xPos = -64;
-            map.stage3();
-            this.actualStage = 3;
-
+        if (actualStage == 2) {
+            if (key == 'w' && yPos == 10 && (xPos >= 424 && xPos <= 536)){
+                this.yPos = 690;
+                this.actualStage = 1;
+            }
+            if (key == 's' && yPos == 706 && (xPos >= 424 && xPos <= 536)){
+                this.yPos = 26;
+                this.actualStage = 8;
+            }
+            if (key == 'd' && xPos == 960 && (yPos >= 256 && yPos <= 384)){
+                this.xPos = 16;
+                this.actualStage = 3;
+            }
         }
         //Check the entries in stage 3
-        if (e.getKeyChar() == 'a' && xPos == 0 && (yPos == 320 || yPos == 384) && actualStage == 3) {
-            this.xPos = 1024;
-            map.stage2();
-            this.actualStage = 2;
-
-        }
-        if (e.getKeyChar() == 's' && yPos == 704 && (xPos >= 128 && xPos <= 834) && actualStage == 3) {
-            this.yPos = -64;
-            map.stage5();
-            this.actualStage = 5;
-        }
-        if (e.getKeyChar() == 'w' && yPos == 0 && (xPos >= 128 && xPos <= 834) && actualStage == 3) {
-            this.yPos = 768;
-            map.stage4();
-            this.actualStage = 4;
+        if (actualStage == 3){
+            if (key == 'a' && xPos == 8 && (yPos >= 256 && yPos <= 384)){
+                this.xPos = 952;
+                this.actualStage = 2;
+            }
+            if (key == 's' && yPos == 698 && (xPos >= 128 && xPos <= 834)){
+                this.yPos = 18;
+                this.actualStage = 5;
+            }
+            if (key == 'w' && yPos == 10 && (xPos >= 128 && xPos <= 834)){
+                this.yPos = 690;
+                this.actualStage = 4;
+            }
         }
         //Check the entries in stage 4
-        if (e.getKeyChar() == 's' && yPos == 704 && (xPos >= 128 && xPos <= 834) && actualStage == 4) {
-            this.yPos = -64;
-            map.stage3();
-            this.actualStage = 3;
-        }
-        if (e.getKeyChar() == 'w' && yPos == 64 && (xPos == 448 || xPos == 512) && actualStage == 4) {
-            this.yPos = 768;
-            map.stage7();
-            this.actualStage = 7;
+        if (actualStage == 4) {
+            if (key == 's' && yPos == 698 && (xPos >= 128 && xPos <= 834)){
+                this.yPos = 18;
+                this.actualStage = 3;
+            }
+            if (key == 'w' && yPos == 58 && (xPos >=464 && xPos <= 486)){
+                this.yPos = 682;
+                this.actualStage = 7;
+            }
         }
         //Check the entries in stage 5
-        if (e.getKeyChar() == 'w' && yPos == 0 && (xPos >= 128 && xPos <= 834) && actualStage == 5) {
-            this.yPos = 768;
-            map.stage3();
-            this.actualStage = 3;
-        }
-
-        if (e.getKeyChar() == 'd' && xPos == 960 && (yPos == 320 || yPos == 384) && actualStage == 5) {
-            this.xPos = -64;
-            map.stage6();
-            this.actualStage = 6;
+        if (actualStage == 5) {
+            if (key == 'w' && yPos == 10 && (xPos >= 128 && xPos <= 834)){
+                this.yPos = 690;
+                this.actualStage = 3;
+            }
+            if (key == 'd' && xPos == 960 && (yPos >= 258 && yPos <= 386)){
+                this.xPos = 10;
+                this.actualStage = 6;
+            }
         }
         //Check the entries in stage 6
-        if (e.getKeyChar() == 'a' && xPos == 0 && (yPos == 320 || yPos == 384) && actualStage == 6) {
-            this.xPos = 1024;
-            map.stage5();
-            this.actualStage = 5;
+        if (actualStage == 6) {
+            if (key == 'a' && xPos == 2 && (yPos >= 258 && yPos <= 386)){
+                this.xPos = 952;
+                this.actualStage = 5;
+            }
         }
         //Check the entries in stage 7
-        if (e.getKeyChar() == 's' && yPos == 704 && (xPos == 448 || xPos == 512) && actualStage == 7) {
-            this.yPos = 0;
-            map.stage4();
-            this.actualStage = 4;
+        if(actualStage == 7){
+            if (key == 's' && yPos == 690 && (xPos >= 464 && xPos <= 488)){
+                this.yPos = 74;
+                this.actualStage = 4;
+            }
+            if (key == 'w' && yPos == 258 && xPos == 480) {
+                this.yPos = 384;
+                this.xPos = 768;
+                this.actualStage = 8;
+            }
         }
-        if (e.getKeyChar() == 'w' && yPos == 256 && xPos == 512 && actualStage == 7) {
-            this.yPos = 384;
-            this.xPos = 768;
-            map.stage8();
-            this.actualStage = 8;
+        //Check the entries in stage 8
+        if (actualStage == 8) {
+            if (key == 'w' && yPos == 18 && (xPos >= 424 && xPos <= 528)){
+                this.yPos = 698;
+                this.actualStage = 2;
+            }
         }
-        if (e.getKeyChar() == 'w' && yPos == 64 && (xPos == 448 || xPos == 512) && actualStage == 8) {
-            this.yPos = 768;
-            map.stage2();
-            this.actualStage = 2;
-        }
-
+        map.stageCreator(actualStage);
         this.collideMap = map.getgUnblockedT();
     }
-
-    public int getXPosition() {
-        return this.xPos;
-    }
-
-    public int getYPosition() {
-        return this.yPos;
-    }
-
 }

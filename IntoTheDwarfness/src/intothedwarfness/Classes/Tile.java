@@ -9,7 +9,7 @@ public class Tile {
      *------------------------ Class Variables -------------------------------*
      *------------------------------------------------------------------------*/
     private final int srcX1, srcY1, srcX2, srcY2, id;
-    
+    private boolean blocked;
     /*------------------------------------------------------------------------*
      *----------------------- Class Constructor ------------------------------*
      *------------------------------------------------------------------------*/
@@ -19,6 +19,16 @@ public class Tile {
         this.srcX2 = srcX2;
         this.srcY2 = srcY2;
         this.id = id;
+        this.blocked = false;
+        
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
     }
 
      /*------------------------------------------------------------------------*
