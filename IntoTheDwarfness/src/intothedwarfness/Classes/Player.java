@@ -138,7 +138,6 @@ public class Player extends Character implements Drawable {
             contmove = 0;
             this.move = false;
 
-            System.out.println("x: " + this.xPos + " y: " + this.yPos);
             return;
         }
 
