@@ -1,9 +1,9 @@
-/******************************************************************************
+/** ****************************************************************************
  ** Class Window: This class is responsible for creating the game window,    **
  ** within this window will be created and drawn the objects of the game     **
  ** (Player, Enemy and Map), collected the events of the keyboard and where  **
  ** will be the game loop.                                                   **
- ******************************************************************************/
+ ***************************************************************************** */
 package intothedwarfness.Classes;
 
 import java.awt.Color;
@@ -21,28 +21,32 @@ import intothedwarfness.Classes.States.GameStateManager;
 import intothedwarfness.Interfaces.Drawable;
 
 public class Window extends JFrame implements KeyListener {
-/* ***************************Class Variables******************************** */
+    /* ***************************Class Variables******************************** */
     private GameStateManager gsm;
     
     private final int width, height;
     private final Map map;
     private final Player player;
-    private final ArrayList<Character> enemies;
+    private final ArrayList<Enemy> enemies = new ArrayList();
     private final ArrayList<BufferedImage> sprites;
     private ArrayList<Drawable> drawables;
-    
-/* **************************Class Constructor******************************* */
+
+    /* **************************Class Constructor******************************* */
     public Window(ArrayList<BufferedImage> sprites) {
         super("Into The Dwarfness");
-        
+
         this.sprites = sprites;
-        this.map = new Map(sprites.get(8));
+        this.map = new Map(sprites.get(7));
         this.player = new Player(sprites.get(0), map.getgUnblockedT(), map);
         this.width = 1024;
         this.height = 768;
         this.drawables = loadDrawables();
-        this.enemies = null;
+        Enemy spider = new Enemy(512, 128, 2, sprites.get(15), map.getgUnblockedT());
+        this.enemies.add(spider);
+        this.setSize(this.width, this.height);
         
+        this.drawables = loadDrawables();
+
         this.setSize(this.width, this.height);
         this.setLocationRelativeTo(null);
         this.setUndecorated(false);
@@ -55,20 +59,25 @@ public class Window extends JFrame implements KeyListener {
         this.setBackground(new Color(43, 43, 42));
     }
 
-/* ********************Auxiliary methods of the Constructor****************** */
+    /* ********************Auxiliary methods of the Constructor****************** */
     private ArrayList<Drawable> loadDrawables() {
         ArrayList<Drawable> elements = new ArrayList();
         elements.add(this.map);
         elements.add(this.player);
+        for (Enemy enemy : this.enemies) {
+            elements.add(enemy);
+        }
+
         return elements;
     }
-    
-/* ****************************Class Methods********************************* */
+
+    /* ****************************Class Methods********************************* */
     //Game Start
     public void initialize() {
         gsm = new GameStateManager();
         gsm.init();
     }
+    
     //Game Loop
     public void run() throws InterruptedException {
         boolean isRunning = true;
@@ -89,9 +98,19 @@ public class Window extends JFrame implements KeyListener {
             // Pula os quadros enquanto o tempo for em excesso.
             while (excess > DESIRED_UPDATE_TIME) {
                 player.update();
+                for (Enemy enemy : this.enemies) {
+                    enemy.update();
+                }
                 excess -= DESIRED_UPDATE_TIME;
             }
-            player.update();
+            if ("PlayState".equals(gsm.getType())) {
+                player.update();
+                for (Enemy enemy : this.enemies) {
+                    if (enemy.isStage(this.map)) {
+                        enemy.update();                        
+                    }
+                }
+            }
             repaint();
 
             long afterTime = System.currentTimeMillis();
@@ -109,7 +128,8 @@ public class Window extends JFrame implements KeyListener {
             }
         }
     }
-/* *************************Overridden Methods******************************* */
+
+    /* *************************Overridden Methods******************************* */
     @Override
     public void keyTyped(KeyEvent e) {
         if (e.getKeyChar() == 'p') {
@@ -122,33 +142,43 @@ public class Window extends JFrame implements KeyListener {
             }
         } 
     }
+
     @Override
     public void keyPressed(KeyEvent e) {
         if ("PlayState".equals(gsm.getType())) {
             player.setCurrentMove(e.getKeyChar());
         }
     }
+
     @Override
     public void keyReleased(KeyEvent e) {
         player.setCurrentMove('.');
         player.setLook(e.getKeyChar());
     }
+
     @Override
     public void paint(Graphics g) {
         BufferStrategy strategy = this.getBufferStrategy();
         do {
-            do{
+            do {
                 Graphics graphics = strategy.getDrawGraphics();
                 //Clear the previous frame
                 graphics.clearRect(0, 0, this.width, this.height);
                 //For each drawable object in list, paint
-                for(Drawable drawable: this.drawables){
-                    drawable.paintComponent(graphics);
+                for (Drawable drawable : this.drawables) {
+                    System.out.println();
+                    if (drawable.getClass() == this.enemies.get(0).getClass()) {
+                        if (drawable.isStage(this.map)) {
+                            drawable.paintComponent(graphics);
+                        }
+                    } else {
+                        drawable.paintComponent(graphics);
+                    }
                 }
                 //Disposes of this graphics context, it's no longer referenced.
                 graphics.dispose();
-            } while (strategy.contentsRestored());       
+            } while (strategy.contentsRestored());
             strategy.show();
         } while (strategy.contentsLost());
-    }   
+    }
 }

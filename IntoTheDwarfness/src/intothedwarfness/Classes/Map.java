@@ -24,7 +24,7 @@ public class Map extends JPanel implements Drawable {
     private int gFloorMap[][];
     private int gObjectMap[][];
     private boolean gUnblockedT[][];
-    
+    public int actualStage;
 
 /* **************************Class Constructor******************************* */
     public Map(BufferedImage spriteSheet) {
@@ -32,6 +32,7 @@ public class Map extends JPanel implements Drawable {
         this.yPos = 0;
         this.SSheet = spriteSheet;
         this.TMList = loadTile();
+        this.actualStage = 1;
 
         loadUblockedTiles();
         stageCreator(1);
@@ -99,8 +100,8 @@ public class Map extends JPanel implements Drawable {
 /* ****************************Class Methods********************************* */
     
     //For each stage, all the three matrices are redrawn
-    public void stageCreator(int actualStage) {
-        
+    public void stageCreator(int ref) {
+        this.actualStage = ref;
         //Create stage 1
         if (actualStage == 1) {
             this.gFloorMap = new int[][]{
@@ -486,5 +487,10 @@ public class Map extends JPanel implements Drawable {
     }
     public boolean[][] getgUnblockedT() {
         return gUnblockedT;
+    }
+
+    @Override
+    public Boolean isStage(Map map) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

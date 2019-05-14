@@ -18,9 +18,8 @@ public class Player extends Character implements Drawable {
     private boolean[][] collideMap;
     private int direction;
     private int life;
-    private int contmove;
-    private char currentMove;
     private Map map;
+    private char currentMove;
     private int look;
 
     private int xAnim, yAnim;
@@ -47,6 +46,9 @@ public class Player extends Character implements Drawable {
         if(view == 'd'){
             this.look = 2;
         }
+
+        this.xAnim = 0;
+        this.yAnim = 0;
     }
 
 /* ****************************Class Methods********************************* */
@@ -75,7 +77,6 @@ public class Player extends Character implements Drawable {
         this.currentMove = currentMove;
     }
 
-    
 /* *************************Overridden Methods******************************* */
     @Override
     public void update() {
@@ -116,8 +117,6 @@ public class Player extends Character implements Drawable {
                 yAnim = 160;
             }
         }
-        
-        
     }
 
     @Override
@@ -216,5 +215,18 @@ public class Player extends Character implements Drawable {
         }
         map.stageCreator(actualStage);
         this.collideMap = map.getgUnblockedT();
+    }
+
+    public int getXPosition() {
+        return this.xPos;
+    }
+
+    public int getYPosition() {
+        return this.yPos;
+    }
+
+    @Override
+    public Boolean isStage(Map map) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
