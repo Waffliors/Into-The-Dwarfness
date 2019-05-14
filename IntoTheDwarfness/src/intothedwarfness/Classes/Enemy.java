@@ -113,7 +113,6 @@ public class Enemy extends Character implements Drawable {
         g.drawImage(image, getXPosition(), getYPosition(), 64, 64, null);
     }
 
-    @Override
     public boolean collision(int ref) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

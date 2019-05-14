@@ -36,12 +36,12 @@ public class Window extends JFrame implements KeyListener {
         super("Into The Dwarfness");
 
         this.sprites = sprites;
-        this.map = new Map(sprites.get(7));
+        this.map = new Map(sprites.get(8));
         this.player = new Player(sprites.get(0), map.getgUnblockedT(), map);
         this.width = 1024;
         this.height = 768;
         this.drawables = loadDrawables();
-        Enemy spider = new Enemy(512, 128, 2, sprites.get(15), map.getgUnblockedT());
+        Enemy spider = new Enemy(512, 128, 2, sprites.get(3), map.getgUnblockedT());
         this.enemies.add(spider);
         this.setSize(this.width, this.height);
         
