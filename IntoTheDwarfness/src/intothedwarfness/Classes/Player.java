@@ -1,132 +1,67 @@
 /******************************************************************************
  ** Class Player, here the player will be created and all operations related **
- ** to him like walking, detecting collision and drawing will meet.          **
+ ** to him like walking, detecting animationlision and drawing will meet.    **
  ******************************************************************************/
 package intothedwarfness.Classes;
 
-
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Interfaces.Drawable;
 
 public class Player extends Character implements Drawable {
 /* ***************************Class Variables******************************** */
-    private boolean move;
-    private int xPos, yPos, actualStage;
-    private final BufferedImage SpriteSheet;
-    private boolean[][] collideMap;
-    private int direction;
-    private int life;
+    //Player's settings
     private Map map;
     private char currentMove;
-    private int look;
-
-    private int xAnim, yAnim;
+    private boolean[][] collideMap;
+    private final BufferedImage SpriteSheet;
+    private int xPos, yPos, actualStage, life;
+    
+    //Player's animation
+    private int drawRef, startLine, line, animation, endLine;
+    private int idleCont, runCont, atkCont, hitCont, deadCont;
+    private boolean looking2Right, attacking, gotHit, stopped, running, died;
 
 /* **************************Class Constructor******************************* */
-    public Player(BufferedImage spriteSheet, boolean[][] collideMap, Map map) {
+    public Player(BufferedImage spriteSheet, Map map) {
+        //Player's settings
         this.life = 4;
+        this.map = map;
         this.xPos = 480;
         this.yPos = 114;
         this.actualStage = 1;
-        this.collideMap = collideMap;
-        this.SpriteSheet = spriteSheet;
-        this.move = false;
-        this.map = map;
         this.currentMove = '.';
-        this.look = 2;
-    }
-
-    public void setLook(char view) {
-        if(view == 'a'){
-            this.look = 1;
-            
-        }
-        if(view == 'd'){
-            this.look = 2;
-        }
-
-        this.xAnim = 0;
-        this.yAnim = 0;
+        this.SpriteSheet = spriteSheet;
+        
+        //Player's animation
+        this.died = false;
+        this.stopped = true;
+        this.gotHit = false;
+        this.running = false;
+        this.attacking = false;
+        this.looking2Right = true;
     }
 
 /* ****************************Class Methods********************************* */
-    public void move(char key) {
-        //checkstage(key, map);
-        if (key == 'a' && collision(key)) {
-            this.xPos = this.xPos - 8;
-        }
-        if (key == 'd' && collision(key)) {
-            this.xPos = this.xPos + 8;
-        }
-        if (key == 'w' && collision(key)) {
-            this.yPos = this.yPos - 8;
-        }
-        if (key == 's' && collision(key)) {
-            this.yPos = this.yPos + 8;
-        }
-    }
-    public void setCurrentMove(char currentMove) {
-        if(currentMove == 'd'){
-            look = 2;
-        }
-        if(currentMove == 'a'){
-            look = 1;
-        }
-        this.currentMove = currentMove;
-    }
-
-/* *************************Overridden Methods******************************* */
-    @Override
-    public void update() {
-        move(this.currentMove);
-        checkStage(this.currentMove, map);
-        this.xAnim += 32;
-        
-        //If the player is looking to the Right
-        if (look == 2) {
-            System.out.println("here");
-            if (currentMove == 'a' || currentMove == 'w' || currentMove == 's' || currentMove == 'd') {
-                if (xAnim >= 256) {
-                    xAnim = 0;
-                }
-                this.yAnim = 32;
-            }
-            //System.out.println("X: "+xPos+" Y: "+yPos);
-            if (currentMove == '.') {
-                if (xAnim >= 160) {
-                    xAnim = 0;
-                }
-                yAnim = 0;
-            }
-        }
-        //If the player is looking to the Left
-        if (look == 1) {
-            if (currentMove == 'a' || currentMove == 'w' || currentMove == 's' || currentMove == 'd') {
-                if (xAnim >= 256) {
-                    xAnim = 0;
-                }
-                this.yAnim = 192;
-            }
-            //System.out.println("X: "+xPos+" Y: "+yPos);
-            if (currentMove == '.') {
-                if (xAnim >= 160) {
-                    xAnim = 0;
-                }
-                yAnim = 160;
-            }
+    //Method that moves the player by 8 pixels
+    private void move(char key) {
+        //Only made if it's not dead or collide with the stage objects
+        if (!died) {
+            if (key == 'a' && collision(key))
+                this.xPos = this.xPos - 8;       
+            if (key == 'd' && collision(key))
+                this.xPos = this.xPos + 8;           
+            if (key == 'w' && collision(key))
+                this.yPos = this.yPos - 8;          
+            if (key == 's' && collision(key))
+                this.yPos = this.yPos + 8;
         }
     }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        BufferedImage image = SpriteSheet.getSubimage(xAnim, yAnim, 32, 32);
-        g.drawImage(image, xPos, yPos, 64, 64, null);
-    }
-    public boolean collision(char key) {
+    //Method that check the collisions
+    private boolean collision(char key) {
         return true;
     }
+    //Method that verifies if the player will change the stage
     private void checkStage(char key, Map map) {
         //Check the entries in stage 1
         if (actualStage == 1) {
@@ -213,20 +148,201 @@ public class Player extends Character implements Drawable {
                 this.actualStage = 2;
             }
         }
+        //After check, create the stage and the collide matrix
         map.stageCreator(actualStage);
         this.collideMap = map.getgUnblockedT();
     }
+    //Method that defines the settings of the current animation
+    private void startAnimation(int animation, int startLine, int endLine){
+        this.startLine = startLine;
+        this.animation = animation;
+        this.endLine = endLine;
+    }
+    //Method that checks the conditions to defines the animations to be drawn
+    private void animate() {
+        if (!died) {
+            //Idle and Run animations
+            if (!attacking && !gotHit) {
+                if (looking2Right) {
+                    if (currentMove == 'a' || currentMove == 'w' || currentMove == 's' || currentMove == 'd') {
+                        startAnimation(1, 0, 8);
+                        if (line == this.endLine) {
+                            line = this.startLine;
+                        }
+                    }
+                    if (currentMove == '.') {
+                        startAnimation(0, 0, 5);
+                        if (line == this.endLine) {
+                            line = this.startLine;
+                        }
+                    }
+                }
+                
+                
+                if(!looking2Right){
+                    if (currentMove == 'a' || currentMove == 'w' || currentMove == 's' || currentMove == 'd') {
+                        startAnimation(6,0,8);
+                        if(line == this.endLine){
+                            line = this.startLine;
+                        }
+                    }
+                    if (currentMove == '.') {
+                        startAnimation(5,0,5);
+                        if (line == this.endLine) {
+                            line = this.startLine;
+                        }
+                    } 
+                }
+                this.drawRef = line;
+            }
+            
+            
+            
+            if (attacking) {
+                if (looking2Right) {
+                    startAnimation(2, 0, 7);
+                    if (atkCont == this.endLine) {
+                        atkCont = 0;
+                        line = 0;
+                        attacking = false;
+                    }
+                }
+                if (!looking2Right) {
+                    startAnimation(7, 0, 7);
+                    if (atkCont == this.endLine) {
+                        atkCont = 0;
+                        line = 0;
+                        attacking = false;
+                    }
+                }
+                this.drawRef = atkCont;
+            }
 
+            
+            
+            //Got hit
+            if (gotHit) {
+                if (looking2Right) {
+                    startAnimation(3, 0, 4);
+                }
+                if (hitCont == endLine) {
+                    line = 0;
+                    hitCont = 0;
+                    gotHit = false;
+                    life -= 1;
+                    System.out.println(life);
+                    if (life == 0) {
+                        died = true;
+                    }
+                }
+                if (!looking2Right) {
+                    startAnimation(8, 0, 4);
+                }
+                if (hitCont == endLine) {
+                    line = 0;
+                    hitCont = 0;
+                    gotHit = false;
+                    life -= 1;
+                }
+                this.drawRef = hitCont;
+            }
+        }
+        
+        
+        if (died){
+            System.out.println("here");
+            if (looking2Right){
+                startAnimation(4,0,7);
+            }
+            if (deadCont == this.endLine){
+                deadCont = endLine-1;
+            }
+            if (!looking2Right){
+                startAnimation(9,0,7);
+            }
+            if (deadCont == this.endLine){
+                deadCont = endLine-1;
+            }
+            this.drawRef = deadCont;
+        }
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     public int getXPosition() {
         return this.xPos;
     }
-
     public int getYPosition() {
         return this.yPos;
     }
+    
+    
+    
+    public void setLook(char view) {
+        if(view == 'a'){
+            this.looking2Right = false;
+            
+        }
+        if(view == 'd'){
+            this.looking2Right = true;
+        }
+
+        this.line = 0;
+        this.animation = 0;
+    }
+    public void setCurrentMove(char currentMove) {
+        if (currentMove == 'd') {
+            looking2Right = true;
+        }
+        if (currentMove == 'a') {
+            looking2Right = false;
+        }
+        if (currentMove == ' ') {
+            this.attacking = true;
+        }
+        if (currentMove == 'h') {
+            this.gotHit = true;
+        }
+
+        this.currentMove = currentMove;
+    }
+
+
+/* *************************Overridden Methods******************************* */
+    @Override
+    public void update() {
+        //Moves the player to the saved position
+        move(this.currentMove);
+        //Check if the player has to change stage
+        checkStage(this.currentMove, map);
+        //Do the animations
+        if(!attacking)
+            this.line = line + 1;
+        if(attacking)
+            atkCont += 1;
+        if(gotHit)
+            hitCont+=1;
+        if (died)
+            deadCont +=1;
+        animate();
+        
+
+
+    }
 
     @Override
+    public void paintComponent(Graphics g) {
+        BufferedImage image = SpriteSheet.getSubimage(super.spriteTiles[drawRef][animation].getSrcX1(), super.spriteTiles[drawRef][animation].getSrcY1(), 32, 32);
+        g.drawImage(image, xPos, yPos, 64, 64, null);
+    }
+    @Override
     public Boolean isStage(Map map) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

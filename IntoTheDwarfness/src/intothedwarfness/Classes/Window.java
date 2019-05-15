@@ -37,7 +37,7 @@ public class Window extends JFrame implements KeyListener {
 
         this.sprites = sprites;
         this.map = new Map(sprites.get(8));
-        this.player = new Player(sprites.get(0), map.getgUnblockedT(), map);
+        this.player = new Player(sprites.get(0), map);
         this.width = 1024;
         this.height = 768;
         this.drawables = loadDrawables();
@@ -166,7 +166,6 @@ public class Window extends JFrame implements KeyListener {
                 graphics.clearRect(0, 0, this.width, this.height);
                 //For each drawable object in list, paint
                 for (Drawable drawable : this.drawables) {
-                    System.out.println();
                     if (drawable.getClass() == this.enemies.get(0).getClass()) {
                         if (drawable.isStage(this.map)) {
                             drawable.paintComponent(graphics);
