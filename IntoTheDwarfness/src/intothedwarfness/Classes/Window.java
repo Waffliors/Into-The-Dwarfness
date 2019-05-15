@@ -41,8 +41,8 @@ public class Window extends JFrame implements KeyListener {
         this.width = 1024;
         this.height = 768;
         this.drawables = loadDrawables();
-        Enemy spider = new Enemy(512, 128, 2, sprites.get(3), map.getgUnblockedT());
-        this.enemies.add(spider);
+        Enemy gladiator = new Enemy(512, 128, 2, sprites.get(3), map.getgUnblockedT());
+        this.enemies.add(gladiator);
         this.setSize(this.width, this.height);
         
         this.drawables = loadDrawables();
