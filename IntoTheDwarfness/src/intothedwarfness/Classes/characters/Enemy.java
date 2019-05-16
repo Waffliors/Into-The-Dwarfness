@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package intothedwarfness.Classes;
+package intothedwarfness.Classes.characters;
 
+import intothedwarfness.Classes.Map;
 import intothedwarfness.Interfaces.Drawable;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
