@@ -166,7 +166,11 @@ public class Window extends JFrame implements KeyListener {
 
     @Override
     public void paint(Graphics g) {
+        
         BufferStrategy strategy = this.getBufferStrategy();
+        if (strategy == null) {
+            return;
+        }
         do {
             do {
                 Graphics graphics = strategy.getDrawGraphics();
