@@ -21,6 +21,7 @@ import intothedwarfness.Classes.States.GameState;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
 import intothedwarfness.Classes.characters.Spider;
+import intothedwarfness.IA.StarSearch;
 import intothedwarfness.Interfaces.Drawable;
 
 public class Window extends JFrame implements KeyListener {
@@ -92,6 +93,10 @@ public class Window extends JFrame implements KeyListener {
     //Game Loop
     public void run() throws InterruptedException {
         songs.get(0).playSound();
+        
+        
+       StarSearch.aEstrela(map.getTMList().get(23), map.getTMList().get(190), map);
+        
         boolean isRunning = true;
 
         long excess = 0;
@@ -119,7 +124,6 @@ public class Window extends JFrame implements KeyListener {
             if ("PlayState".equals(gsm.getType())) {
                 player.update();
                 spider1.update();
-                player.calculatePlayerPosition();
                 
                 for (Enemy enemy : this.enemies) {
                     if (enemy.isStage(this.map)) {

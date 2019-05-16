@@ -26,16 +26,34 @@ public class Map extends JPanel implements Drawable {
     private boolean gUnblockedT[][];
     public int actualStage;
 
+    //For IA
+    private int lines;
+    private int columns;
 /* **************************Class Constructor******************************* */
     public Map(BufferedImage spriteSheet) {
         this.xPos = 0;
         this.yPos = 0;
+        this.lines = 12;
+        this.columns = 16;
         this.SSheet = spriteSheet;
         this.TMList = loadTile();
         this.actualStage = 1;
-
         loadUblockedTiles();
         stageCreator(1);
+        blockTiles();
+
+        //For IA
+        mapConfig();
+        this.lines = gWallMap.length;
+        this.columns = gWallMap[0].length;
+    }
+
+    public int getLines() {
+        return lines;
+    }
+
+    public int getColumns() {
+        return columns;
     }
 
     public ArrayList<Tile> getTMList() {
@@ -57,7 +75,6 @@ public class Map extends JPanel implements Drawable {
         }
         return mapTiles;
     }
-    
     private void loadUblockedTiles (){
         this.unblockedFloorTile = Arrays.asList(
                 20,  23,  24,  25,  26,  27, 
@@ -83,12 +100,15 @@ public class Map extends JPanel implements Drawable {
                 267, 269, 270, 282, 283, 284);
     }
     public void loadUnblockedGraph() {
-        
-        
         this.gUnblockedT = new boolean[this.gFloorMap.length][this.gFloorMap[0].length];
+        
+        //Anda na Matriz
         for (int i = 0; i < this.gUnblockedT.length; i++) {
             for (int j = 0; j < this.gUnblockedT[0].length; j++) {
+                
+                //Anda na lista das referências bloqueadas
                 for (int k = 0; k < this.unblockedFloorTile.size(); k++) {
+                   
                     if ((this.gFloorMap[i][j] == this.unblockedFloorTile.get(k) && this.gWallMap[i][j] == 6 ) || this.gWallMap[i][j] == this.unblockedFloorTile.get(k)) {
                     	this.gUnblockedT[i][j] = true;
                     }
@@ -102,7 +122,45 @@ public class Map extends JPanel implements Drawable {
     }
     
 /* ****************************Class Methods********************************* */
-    
+    //For IA
+    private void blockTiles(){
+
+    }
+    private void mapConfig(){
+        for(Tile tile: TMList){
+            tile.neighbors.addAll(searchNeighbors(tile));
+        }
+    }  
+    private List<Tile> searchNeighbors(Tile tile){
+        //create the temporary list
+        List<Tile> list = new ArrayList();
+        //get the Tile ID
+        int tileID = tile.getId();
+        //calculate the line
+        int tileLine = (tile.getId()/lines) + 1;
+        //calculate the columns
+        int tileColumn = (tile.getId()%columns) + 1;
+        
+        
+        //get the left neighbors
+        if (tileColumn > 1) {
+            list.add(TMList.get(tileID - 1));
+        }
+        //get the right neighbors
+        if (tileColumn < columns) {
+            list.add(TMList.get(tileID + 1));
+        }
+        //get the up neighbors
+        if (tileLine > 1) {
+            list.add(TMList.get((tileID - lines) + 1));
+        }
+        //get the down neighbors
+        if (tileLine < TMList.size() / lines) {
+            list.add(TMList.get(tileID + columns));
+        }
+        
+        return list;        
+    } 
     //For each stage, all the three matrices are redrawn
     public void stageCreator(int ref) {
         this.actualStage = ref;
@@ -492,9 +550,10 @@ public class Map extends JPanel implements Drawable {
     public boolean[][] getgUnblockedT() {
         return gUnblockedT;
     }
-
     @Override
     public Boolean isStage(Map map) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
+
+

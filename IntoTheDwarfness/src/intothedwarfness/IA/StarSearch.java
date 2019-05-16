@@ -1,60 +1,62 @@
 
 package intothedwarfness.IA;
 
+import intothedwarfness.Classes.Map;
+import intothedwarfness.Classes.Tile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 public class StarSearch {
-    public static List<Node> listaFechada = new ArrayList();
-    public static List<Node> listaAberta = new ArrayList();
-    public static List<Node> caminho = new ArrayList();    
+    public static List<Tile> listaFechada = new ArrayList();
+    public static List<Tile> listaAberta = new ArrayList();
+    public static List<Tile> caminho = new ArrayList();    
     public static int colunasDoMapa = 0;
     public static int linhasDoMapa = 0;
     public static int tamanhoDoMapa = 0;
    
-    public static List<Node> aEstrela(Node noInicial, Node noDestino, iaMap mapa)
+    public static List<Tile> aEstrela(Tile tileInicial, Tile tileDestitile, Map mapa)
     {
-        colunasDoMapa = mapa.getColunas();
-        linhasDoMapa = mapa.getLinhas();
-        tamanhoDoMapa = mapa.getMapa().size();
+        colunasDoMapa = mapa.getColumns();
+        linhasDoMapa = mapa.getLines();
+        tamanhoDoMapa = mapa.getTMList().size();
         
         listaFechada.clear();
         listaAberta.clear();
         caminho.clear();
         boolean achouCaminho = false;
     
-        Node noAtual = noInicial;
-        listaAberta.add(noInicial);
+        Tile tileAtual = tileInicial;
+        listaAberta.add(tileInicial);
         
         while(!achouCaminho)
         {
-            noAtual = procularMenorF();
-            listaAberta.remove(noAtual);
-            listaFechada.add(noAtual);
-            achouCaminho = noAtual.equals(noDestino);
+            tileAtual = procularMetilerF();
+            listaAberta.remove(tileAtual);
+            listaFechada.add(tileAtual);
+            achouCaminho = tileAtual.equals(tileDestitile);
             
             
-            for(Node no: noAtual.getVizinhos())
+            for(Tile tile: tileAtual.getNeighbors())
             {
-                if(no.estaBloqueado() || listaFechada.contains(no))
+                if(tile.isBlocked()|| listaFechada.contains(tile))
                 {
                     continue;
                 }else{
-                    if(!listaAberta.contains(no))
+                    if(!listaAberta.contains(tile))
                     {
-                        listaAberta.add(no);
-                        no.setPai(noAtual);
-                        no.setH(calcularH(no, noDestino));
-                        no.setG(calcularG(no, noAtual));
-                        no.setF(calcularF(no));
+                        listaAberta.add(tile);
+                        tile.setFather(tileAtual);
+                        tile.setH(calcularH(tile, tileDestitile));
+                        tile.setG(calcularG(tile, tileAtual));
+                        tile.setF(calcularF(tile));
                     }else{
-                        if(no.getG()<noAtual.getG())
+                        if(tile.getG()<tileAtual.getG())
                         {
-                            no.setPai(noAtual);
-                            no.setG(calcularG(noAtual, no));
-                            no.setF(calcularF(no));
+                            tile.setFather(tileAtual);
+                            tile.setG(calcularG(tileAtual, tile));
+                            tile.setF(calcularF(tile));
                         }
                     
                     }
@@ -68,60 +70,62 @@ public class StarSearch {
             }
         }
         
-        return montaCaminho(noInicial, noDestino, mapa);
+        return montaCaminho(tileInicial, tileDestitile, mapa);
     }
     
-    public static Node procularMenorF() {
-        Collections.sort(listaAberta, Comparator.comparing(Node::getF));
+    public static Tile procularMetilerF() {
+        Collections.sort(listaAberta, Comparator.comparing(Tile::getF));
         return listaAberta.get(0);
         
     }
     
     
        
-    public static float calcularF(Node no)
+    public static float calcularF(Tile tile)
     {
-        return no.getG()+ no.getH();
+        return tile.getG()+ tile.getH();
 
     }
     
-    public static float calcularG(Node noAtual, Node noVizinho)
+    public static float calcularG(Tile tileAtual, Tile tileVizinho)
     {
-        if (noVizinho.getId() % colunasDoMapa == noAtual.getId() % colunasDoMapa || noVizinho.getId() + 1 == noAtual.getId() || noVizinho.getId() - 1 == noAtual.getId()) {
-            return noVizinho.getG() + 10;
+        if (tileVizinho.getId() % colunasDoMapa == tileAtual.getId() % colunasDoMapa || tileVizinho.getId() + 1 == tileAtual.getId() || tileVizinho.getId() - 1 == tileAtual.getId()) {
+            return tileVizinho.getG() + 10;
         } else {
-            return noVizinho.getG() + 14;
+            return tileVizinho.getG() + 14;
         }
         
     }
  
     
-    public static float calcularH(Node noAtual, Node noDestino)
+    public static float calcularH(Tile tileAtual, Tile tileDestitile)
     {
-        int posicaoDestinoX = (noDestino.getId()%colunasDoMapa)+1;
-        int posicaoNoAtualX = (noAtual.getId()%colunasDoMapa)+1;
+        int posicaoDestitileX = (tileDestitile.getId()%colunasDoMapa)+1;
+        int posicaoNoAtualX = (tileAtual.getId()%colunasDoMapa)+1;
         
-        int distanciaX = posicaoDestinoX > posicaoNoAtualX ? posicaoDestinoX - posicaoNoAtualX : posicaoNoAtualX - posicaoDestinoX;
+        int distanciaX = posicaoDestitileX > posicaoNoAtualX ? posicaoDestitileX - posicaoNoAtualX : posicaoNoAtualX - posicaoDestitileX;
         
-        int posicaoDestinoY = (noDestino.getId()/linhasDoMapa)+1;
-        int posicaoNoAtualY = (noAtual.getId()/linhasDoMapa)+1;
+        int posicaoDestitileY = (tileDestitile.getId()/linhasDoMapa)+1;
+        int posicaoNoAtualY = (tileAtual.getId()/linhasDoMapa)+1;
         
-        int distanciaY = posicaoDestinoY > posicaoNoAtualY ? posicaoDestinoY - posicaoNoAtualY : posicaoNoAtualY - posicaoDestinoY;
+        int distanciaY = posicaoDestitileY > posicaoNoAtualY ? posicaoDestitileY - posicaoNoAtualY : posicaoNoAtualY - posicaoDestitileY;
         
         float distanciaTotal = (float)Math.sqrt((Math.pow(distanciaX, 2)+Math.pow(distanciaY, 2)))*10;
                 
         return distanciaTotal;
     }
 
-    private static List<Node> montaCaminho(Node noInicial, Node noDestino, iaMap mapa) {
-        List<Node> listaAuxiliar = new ArrayList();
-        Node noAtual = noDestino;
+    
+    
+    private static List<Tile> montaCaminho(Tile tileInicial, Tile tileDestitile, Map mapa) {
+        List<Tile> listaAuxiliar = new ArrayList();
+        Tile tileAtual = tileDestitile;
         int contador = 0;
-        while (!listaAuxiliar.contains(noInicial) || contador > tamanhoDoMapa)
+        while (!listaAuxiliar.contains(tileInicial) || contador > tamanhoDoMapa)
         {
-            listaAuxiliar.add(noAtual);
+            listaAuxiliar.add(tileAtual);
             
-            noAtual = noAtual.getPai();
+            tileAtual = tileAtual.getFather();
                         
             contador++;
         }
@@ -130,14 +134,14 @@ public class StarSearch {
         
         //imprimir caminho
         System.out.println("Caminho: ");
-        for(Node no: listaAuxiliar)
+        for(Tile tile: listaAuxiliar)
         {
-            System.out.print(" -> " + no.getId());
+            System.out.print(" -> " + tile.getId());
         }
         //inicio artificio apenas para printar caminho
-        for(Node no: mapa.getMapa())
+        for(Tile tile: mapa.getTMList())
         {
-          if(!listaAuxiliar.contains(no))  no.setPai(null);
+          if(!listaAuxiliar.contains(tile))  tile.setFather(null);
           
         }
         //fim do artificio
@@ -146,20 +150,20 @@ public class StarSearch {
         desenha(mapa);
         System.out.println("Fim ! ");
         
-        //retorno do caminho
+        //retortile do caminho
         return listaAuxiliar;
     }
     
-    public static void desenha(iaMap mapa){
+    public static void desenha(Map mapa){
       System.out.println("");
-      for (int i = 0; i<mapa.getLinhas(); i++)
+      for (int i = 0; i<mapa.getLines(); i++)
         {
-            for (int j = 0; j<mapa.getColunas(); j++)
+            for (int j = 0; j<mapa.getColumns(); j++)
             {
-              Node no = mapa.getMapa().get((i*mapa.getColunas())+j);
-              if(no.getPai() != null ){
+              Tile tile = mapa.getTMList().get((i*mapa.getColumns())+j);
+              if(tile.getFather()!= null ){
                 System.out.print("[-]");
-              }else if(no.estaBloqueado()){
+              }else if(tile.isBlocked()){
                 System.out.print("[X]");
               }else{
                 System.out.print("[ ]");

@@ -66,6 +66,9 @@ public class Tile {
     public Tile getFather(){
         return this.father;
     }
+    public List<Tile> getNeighbors(){
+        return this.neighbors;
+    }
     public float getF(){
         return this.F;
     }

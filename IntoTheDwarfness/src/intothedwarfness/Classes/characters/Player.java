@@ -351,22 +351,6 @@ public class Player extends Character implements Drawable {
     public int getYPosition() {
         return this.yPos;
     }
-    
-    public int calculatePlayerPosition(){
-        //Pega o ponto X e Y do player
-        int x = this.getXPosition()/64;
-        int y = this.getYPosition()/64;
-        
-        System.out.println("Posição do player na Matriz: "+x+" - "+y);
-        if(!map.getgUnblockedT()[y][x]){
-            System.out.println("Blocked");
-        }
-        
-
-        int resp = 0;
-        return resp;  
-    }
-
 /* *************************Overridden Methods******************************* */
     @Override
     public void update() {
