@@ -2,8 +2,10 @@
  ** Class Player, here the player will be created and all operations related **
  ** to him like walking, detecting animationlision and drawing will meet.    **
  ******************************************************************************/
-package intothedwarfness.Classes;
+package intothedwarfness.Classes.characters;
 
+import intothedwarfness.Classes.Map;
+import intothedwarfness.Classes.Song;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.awt.image.BufferedImage;
@@ -62,6 +64,7 @@ public class Player extends Character implements Drawable {
     }
     //Method that check the collisions
     private boolean collision(char key) {
+
         return true;
     }
     //Method that verifies if the player will change the stage
@@ -347,6 +350,21 @@ public class Player extends Character implements Drawable {
     //Method that get the player's y position on the screen
     public int getYPosition() {
         return this.yPos;
+    }
+    
+    public int calculatePlayerPosition(){
+        //Pega o ponto X e Y do player
+        int x = this.getXPosition()/64;
+        int y = this.getYPosition()/64;
+        
+        System.out.println("Posição do player na Matriz: "+x+" - "+y);
+        if(!map.getgUnblockedT()[y][x]){
+            System.out.println("Blocked");
+        }
+        
+
+        int resp = 0;
+        return resp;  
     }
 
 /* *************************Overridden Methods******************************* */

@@ -38,6 +38,10 @@ public class Map extends JPanel implements Drawable {
         stageCreator(1);
     }
 
+    public ArrayList<Tile> getTMList() {
+        return TMList;
+    }
+
 /* ********************Auxiliary methods of the Constructor****************** */
     private ArrayList<Tile> loadTile() {
         ArrayList<Tile> mapTiles = new ArrayList();

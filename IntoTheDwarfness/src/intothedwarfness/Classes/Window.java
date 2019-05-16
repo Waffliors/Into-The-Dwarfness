@@ -6,6 +6,8 @@
  ***************************************************************************** */
 package intothedwarfness.Classes;
 
+import intothedwarfness.Classes.characters.Enemy;
+import intothedwarfness.Classes.characters.Player;
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JFrame;
@@ -18,8 +20,8 @@ import intothedwarfness.Classes.States.PlayState;
 import intothedwarfness.Classes.States.GameState;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
+import intothedwarfness.Classes.characters.Spider;
 import intothedwarfness.Interfaces.Drawable;
-import java.net.MalformedURLException;
 
 public class Window extends JFrame implements KeyListener {
     /* ***************************Class Variables******************************** */
@@ -44,7 +46,6 @@ public class Window extends JFrame implements KeyListener {
         this.width = 1024;
         this.height = 768;
         this.drawables = loadDrawables();
-<<<<<<< HEAD
         Enemy gladiator = new Enemy(512, 128, 2, sprites.get(3), map.getgUnblockedT());
         this.enemies.add(gladiator);
         this.setSize(this.width, this.height);
@@ -52,14 +53,8 @@ public class Window extends JFrame implements KeyListener {
         
         Enemy spider = new Enemy(512, 128, 2, sprites.get(3), map.getgUnblockedT());
         this.enemies.add(spider);
-=======
-        Enemy spider = new Enemy(512, 128, 2, sprites.get(3), map.getgUnblockedT());
-        this.enemies.add(spider);
-        this.setSize(this.width, this.height);
->>>>>>> parent of 93b018a... IA bases
         
         this.drawables = loadDrawables();
-
         this.setSize(this.width, this.height);
         this.setLocationRelativeTo(null);
         this.setUndecorated(false);
@@ -77,10 +72,7 @@ public class Window extends JFrame implements KeyListener {
         ArrayList<Drawable> elements = new ArrayList();
         elements.add(this.map);
         elements.add(this.player);
-<<<<<<< HEAD
         
-=======
->>>>>>> parent of 93b018a... IA bases
         for (Enemy enemy : this.enemies) {
             elements.add(enemy);
         }
@@ -123,11 +115,8 @@ public class Window extends JFrame implements KeyListener {
             }
             if ("PlayState".equals(gsm.getType())) {
                 player.update();
-<<<<<<< HEAD
                 player.calculatePlayerPosition();
                 
-=======
->>>>>>> parent of 93b018a... IA bases
                 for (Enemy enemy : this.enemies) {
                     if (enemy.isStage(this.map)) {
                         enemy.update();                        
