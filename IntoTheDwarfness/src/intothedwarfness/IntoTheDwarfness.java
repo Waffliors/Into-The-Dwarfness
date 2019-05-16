@@ -14,26 +14,40 @@
  ******************************************************************************/
 package intothedwarfness;
 
+import intothedwarfness.Classes.Song;
 import java.io.File;
 import java.util.ArrayList;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Classes.Window;
+import java.net.MalformedURLException;
 
 public class IntoTheDwarfness {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException{
 
         //Loading the images of the game
         ArrayList<BufferedImage> sprites = new ArrayList();
         for (int i = 1; i <= 9; i++) {
             sprites.add(ImageIO.read(new File("images/" + i + ".png")));
         }
+        //Loading the songs of the game
+        ArrayList<Song> songs = loadSong();
 
         //Creating the window of the game
-        Window screen = new Window(sprites);
+        Window screen = new Window(sprites, songs);
         screen.initialize();
         screen.run();
+    }
+    
+    public static ArrayList<Song> loadSong() throws MalformedURLException{
+        ArrayList<Song> songs = new ArrayList();
+        songs.add(new Song("songs/music/DungeonRun80bpm.wav"));
+        songs.add(new Song("songs/sfx/melee sounds/sword sound.wav"));
+        songs.add(new Song("songs/sfx/hurt/pain2.wav"));
+        songs.add(new Song("songs/sfx/hurt/die2.wav"));
+        songs.add(new Song("songs/sfx/footsteps/gravel.wav"));
+        return songs;
     }
 }

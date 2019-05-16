@@ -5,36 +5,34 @@
 package intothedwarfness.Classes;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Interfaces.Drawable;
-import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Player extends Character implements Drawable {
 /* ***************************Class Variables******************************** */
     //Player's settings
     private Map map;
-    private Song song;
     private char currentMove;
     private boolean[][] collideMap;
+    private ArrayList<Song> songs;
     private final BufferedImage SpriteSheet;
     private int xPos, yPos, actualStage, life, IMGSIZE;
     
     //Player's animation
     private int cont, atkCont, hitCont, deadCont;
     private int drawRef, startLine, animation, endLine;
-    private boolean looking2Right, attacking, gotHit, died;
+    private boolean looking2Right, attacking, gotHit, died, running;
 
 /* **************************Class Constructor******************************* */
-    public Player(BufferedImage spriteSheet, Map map) {
+    public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map) {
         //Player's settings
         this.life = 4;
         this.map = map;
         this.xPos = 480;
         this.yPos = 114;
-        this.song = null;
         this.IMGSIZE = 32;
+        this.songs = songs;
         this.actualStage = 1;
         this.currentMove = '.';
         this.SpriteSheet = spriteSheet;
@@ -42,6 +40,7 @@ public class Player extends Character implements Drawable {
         //Player's animation
         this.died = false;
         this.gotHit = false;
+        this.running = false;
         this.attacking = false;
         this.looking2Right = true;
     }
@@ -208,6 +207,10 @@ public class Player extends Character implements Drawable {
                         startAnimation(5,0,5);
                     } 
                 }
+                //Play the song of this animation
+                if((cont%2 == 1 ) && running){
+                    playsong(4);
+                }
                 //Stop condition of animations of the type "movement"
                 if (cont == this.endLine) {
                     cont = this.startLine;
@@ -285,25 +288,7 @@ public class Player extends Character implements Drawable {
     }
     //Method that play the player's songs
     private void playsong(int ref){
-        //play melee sfx
-        if (ref == 1){
-            try {
-                song = new Song("songs/sfx/melee sounds/sword sound.wav");
-            } catch (MalformedURLException ex) {}
-        }
-        //play hurt sfx
-        if (ref == 2){
-            try {
-                song = new Song("songs/sfx/hurt/pain2.wav");
-            } catch (MalformedURLException ex) {}
-        }
-        //play dead sfx
-        if (ref == 3){
-            try {
-                song = new Song("songs/sfx/hurt/die2.wav");
-            } catch (MalformedURLException ex) {}
-        }
-        song.playSoundOnce();
+        songs.get(ref).playSoundOnce();
     }
     //Method called in the window that says where the player is looking
     public void setLook(char view) {
@@ -323,6 +308,7 @@ public class Player extends Character implements Drawable {
             }
         }
         //Also resets the motion animations counter
+        running = false;
         this.cont = 0;
     }
     //Method that receives the char of the window's KeyEvent and set the 
@@ -336,6 +322,9 @@ public class Player extends Character implements Drawable {
             return;
         }
         if (!died) {
+            if (currentMove == 'd' || currentMove == 'a' || currentMove == 's' || currentMove == 'w') {
+                running = true;
+            }
             if (currentMove == 'd') {
                 looking2Right = true;
             }
@@ -373,7 +362,12 @@ public class Player extends Character implements Drawable {
     }
     @Override
     public void paintComponent(Graphics g) {
-        BufferedImage image = SpriteSheet.getSubimage(super.spriteTiles[drawRef][animation].getSrcX1(), super.spriteTiles[drawRef][animation].getSrcY1(), IMGSIZE, IMGSIZE);
+        //Get a piece of the Image
+        BufferedImage image = SpriteSheet.getSubimage(
+                super.spriteTiles[drawRef][animation].getSrcX1(), 
+                super.spriteTiles[drawRef][animation].getSrcY1(),
+                IMGSIZE, IMGSIZE);
+        //Draw in the player's position
         g.drawImage(image, xPos, yPos, 64, 64, null);
     }
     @Override

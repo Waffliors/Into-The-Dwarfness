@@ -3,14 +3,14 @@
  * creation of the player, the enemies and the bosses of the phases            *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package intothedwarfness.Classes;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 
-public abstract class Character extends JPanel {
-    Tile[][] spriteTiles = loadTile();
-    
+public abstract class Character  extends JPanel {
+    Tile[][] spriteTiles = loadTile();    
     
     public abstract void update();
-    //public abstract boolean collision(int ref); 
     private Tile[][] loadTile() {
         Tile[][] spriteT = new Tile [20][20];
         int x, y, srcX1, srcY1, srcX2, srcY2, id = -1;

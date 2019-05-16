@@ -7,7 +7,6 @@ package intothedwarfness.Classes;
 
 import java.io.File;
 import javax.swing.*;
-//import java.io.*;
 import java.net.*;
 
 public class Song extends JApplet {
@@ -19,6 +18,7 @@ public class Song extends JApplet {
     public Song(String path) throws MalformedURLException {
         songPath = new File(path).toURI().toURL();
         song = java.applet.Applet.newAudioClip(songPath);
+        
     }
 
 /* ****************************Class Methods********************************* */

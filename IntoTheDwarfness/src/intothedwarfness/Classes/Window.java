@@ -20,8 +20,6 @@ import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
 import intothedwarfness.Interfaces.Drawable;
 import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Window extends JFrame implements KeyListener {
     /* ***************************Class Variables******************************** */
@@ -32,16 +30,17 @@ public class Window extends JFrame implements KeyListener {
     private final Player player;
     private final ArrayList<Enemy> enemies = new ArrayList();
     private final ArrayList<BufferedImage> sprites;
-    private Song song;
+    private final ArrayList<Song> songs;
     private ArrayList<Drawable> drawables;
 
     /* **************************Class Constructor******************************* */
-    public Window(ArrayList<BufferedImage> sprites) {
+    public Window(ArrayList<BufferedImage> sprites, ArrayList<Song> songs) {
         super("Into The Dwarfness");
 
         this.sprites = sprites;
+        this.songs = songs;
         this.map = new Map(sprites.get(8));
-        this.player = new Player(sprites.get(0), map);
+        this.player = new Player(sprites.get(0),songs, map);
         this.width = 1024;
         this.height = 768;
         this.drawables = loadDrawables();
@@ -78,17 +77,13 @@ public class Window extends JFrame implements KeyListener {
     /* ****************************Class Methods********************************* */
     //Game Start
     public void initialize() {
-        try {
-            song = new Song("songs/music/DungeonRun80bpm.wav");
-        } catch (MalformedURLException ex) {
-        }
         gsm = new GameStateManager();
         gsm.init();
     }
     
     //Game Loop
     public void run() throws InterruptedException {
-        song.playSound();
+        songs.get(0).playSound();
         boolean isRunning = true;
 
         long excess = 0;
