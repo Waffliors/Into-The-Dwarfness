@@ -7,20 +7,24 @@ package intothedwarfness.Classes;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Interfaces.Drawable;
+import java.net.MalformedURLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Player extends Character implements Drawable {
 /* ***************************Class Variables******************************** */
     //Player's settings
     private Map map;
+    private Song song;
     private char currentMove;
     private boolean[][] collideMap;
     private final BufferedImage SpriteSheet;
-    private int xPos, yPos, actualStage, life;
+    private int xPos, yPos, actualStage, life, IMGSIZE;
     
     //Player's animation
-    private int drawRef, startLine, line, animation, endLine;
-    private int idleCont, runCont, atkCont, hitCont, deadCont;
-    private boolean looking2Right, attacking, gotHit, stopped, running, died;
+    private int cont, atkCont, hitCont, deadCont;
+    private int drawRef, startLine, animation, endLine;
+    private boolean looking2Right, attacking, gotHit, died;
 
 /* **************************Class Constructor******************************* */
     public Player(BufferedImage spriteSheet, Map map) {
@@ -29,15 +33,15 @@ public class Player extends Character implements Drawable {
         this.map = map;
         this.xPos = 480;
         this.yPos = 114;
+        this.song = null;
+        this.IMGSIZE = 32;
         this.actualStage = 1;
         this.currentMove = '.';
         this.SpriteSheet = spriteSheet;
         
         //Player's animation
         this.died = false;
-        this.stopped = true;
         this.gotHit = false;
-        this.running = false;
         this.attacking = false;
         this.looking2Right = true;
     }
@@ -86,52 +90,52 @@ public class Player extends Character implements Drawable {
             }
         }
         //Check the entries in stage 3
-        if (actualStage == 3){
-            if (key == 'a' && xPos == 8 && (yPos >= 256 && yPos <= 384)){
+        if (actualStage == 3) {
+            if (key == 'a' && xPos == 8 && (yPos >= 256 && yPos <= 384)) {
                 this.xPos = 952;
                 this.actualStage = 2;
             }
-            if (key == 's' && yPos == 698 && (xPos >= 128 && xPos <= 834)){
+            if (key == 's' && yPos == 698 && (xPos >= 128 && xPos <= 834)) {
                 this.yPos = 18;
                 this.actualStage = 5;
             }
-            if (key == 'w' && yPos == 10 && (xPos >= 128 && xPos <= 834)){
+            if (key == 'w' && yPos == 10 && (xPos >= 128 && xPos <= 834)) {
                 this.yPos = 690;
                 this.actualStage = 4;
             }
         }
         //Check the entries in stage 4
         if (actualStage == 4) {
-            if (key == 's' && yPos == 698 && (xPos >= 128 && xPos <= 834)){
+            if (key == 's' && yPos == 698 && (xPos >= 128 && xPos <= 834)) {
                 this.yPos = 18;
                 this.actualStage = 3;
             }
-            if (key == 'w' && yPos == 58 && (xPos >=464 && xPos <= 486)){
+            if (key == 'w' && yPos == 58 && (xPos >= 464 && xPos <= 486)) {
                 this.yPos = 682;
                 this.actualStage = 7;
             }
         }
         //Check the entries in stage 5
         if (actualStage == 5) {
-            if (key == 'w' && yPos == 10 && (xPos >= 128 && xPos <= 834)){
+            if (key == 'w' && yPos == 10 && (xPos >= 128 && xPos <= 834)) {
                 this.yPos = 690;
                 this.actualStage = 3;
             }
-            if (key == 'd' && xPos == 960 && (yPos >= 258 && yPos <= 386)){
+            if (key == 'd' && xPos == 960 && (yPos >= 258 && yPos <= 386)) {
                 this.xPos = 10;
                 this.actualStage = 6;
             }
         }
         //Check the entries in stage 6
         if (actualStage == 6) {
-            if (key == 'a' && xPos == 2 && (yPos >= 258 && yPos <= 386)){
+            if (key == 'a' && xPos == 2 && (yPos >= 258 && yPos <= 386)) {
                 this.xPos = 952;
                 this.actualStage = 5;
             }
         }
         //Check the entries in stage 7
-        if(actualStage == 7){
-            if (key == 's' && yPos == 690 && (xPos >= 464 && xPos <= 488)){
+        if (actualStage == 7) {
+            if (key == 's' && yPos == 690 && (xPos >= 464 && xPos <= 488)) {
                 this.yPos = 74;
                 this.actualStage = 4;
             }
@@ -143,7 +147,7 @@ public class Player extends Character implements Drawable {
         }
         //Check the entries in stage 8
         if (actualStage == 8) {
-            if (key == 'w' && yPos == 18 && (xPos >= 424 && xPos <= 528)){
+            if (key == 'w' && yPos == 18 && (xPos >= 424 && xPos <= 528)) {
                 this.yPos = 698;
                 this.actualStage = 2;
             }
@@ -153,166 +157,208 @@ public class Player extends Character implements Drawable {
         this.collideMap = map.getgUnblockedT();
     }
     //Method that defines the settings of the current animation
-    private void startAnimation(int animation, int startLine, int endLine){
-        this.startLine = startLine;
+    private void startAnimation(int animation, int startLine, int endLine) {
+        this.startLine= startLine;
         this.animation = animation;
-        this.endLine = endLine;
+        this.endLine= endLine;
     }
     //Method that checks the conditions to defines the animations to be drawn
     private void animate() {
+        //Counters of animations
+        //There are two standard animations that are continuously being 
+        //incremented: Idle and Running, they use the same counters
+        this.cont+= 1;
+        //The others animations need another's counters because of when called, 
+        //they have to start from 0
+        if (attacking) {
+            atkCont += 1;
+        }
+        if (gotHit) {
+            hitCont += 1;
+        }
+        if (died) {
+            deadCont += 1;
+        }
+        
+        //The animations begin to divide by categories, starting in: 
+        //alive player or dead player
+        
+        //Alive player
         if (!died) {
-            //Idle and Run animations
+            //Then it is divided by:
+            //is looking to the right, movement and action
             if (!attacking && !gotHit) {
+                //Idle and Running while looking to the Right
                 if (looking2Right) {
-                    if (currentMove == 'a' || currentMove == 'w' || currentMove == 's' || currentMove == 'd') {
+                    if (currentMove == 'a' || currentMove == 'w' || 
+                        currentMove == 's' || currentMove == 'd') {
                         startAnimation(1, 0, 8);
-                        if (line == this.endLine) {
-                            line = this.startLine;
-                        }
                     }
                     if (currentMove == '.') {
                         startAnimation(0, 0, 5);
-                        if (line == this.endLine) {
-                            line = this.startLine;
-                        }
                     }
                 }
-                
-                
+                //Idle and Running while looking to the Left
                 if(!looking2Right){
-                    if (currentMove == 'a' || currentMove == 'w' || currentMove == 's' || currentMove == 'd') {
+                    if (currentMove == 'a' || currentMove == 'w' || 
+                        currentMove == 's' || currentMove == 'd') {
                         startAnimation(6,0,8);
-                        if(line == this.endLine){
-                            line = this.startLine;
-                        }
                     }
                     if (currentMove == '.') {
                         startAnimation(5,0,5);
-                        if (line == this.endLine) {
-                            line = this.startLine;
-                        }
                     } 
                 }
-                this.drawRef = line;
+                //Stop condition of animations of the type "movement"
+                if (cont == this.endLine) {
+                    cont = this.startLine;
+                }
+                //All the animations of moving types use the same counter
+                this.drawRef = cont;
             }
             
-            
-            
+            //Attack animations
             if (attacking) {
                 if (looking2Right) {
                     startAnimation(2, 0, 7);
-                    if (atkCont == this.endLine) {
-                        atkCont = 0;
-                        line = 0;
-                        attacking = false;
-                    }
                 }
                 if (!looking2Right) {
                     startAnimation(7, 0, 7);
-                    if (atkCont == this.endLine) {
-                        atkCont = 0;
-                        line = 0;
-                        attacking = false;
-                    }
+                }
+                //Play the song of this animation
+                if (atkCont == 1){
+                    playsong(1);
+                }
+                //Stop condition of animations of the type "atatck"
+                if (atkCont == this.endLine) {
+                    atkCont = 0;
+                    cont = 0;
+                    attacking = false;
                 }
                 this.drawRef = atkCont;
             }
-
             
-            
-            //Got hit
+            //Animations to get hit
             if (gotHit) {
                 if (looking2Right) {
                     startAnimation(3, 0, 4);
                 }
-                if (hitCont == endLine) {
-                    line = 0;
-                    hitCont = 0;
-                    gotHit = false;
-                    life -= 1;
-                    System.out.println(life);
-                    if (life == 0) {
-                        died = true;
-                    }
-                }
                 if (!looking2Right) {
                     startAnimation(8, 0, 4);
                 }
+                //Play song of this animation
+                if(hitCont == 1){
+                    playsong(2);
+                }
+                //Stop condition of animations of the type "get hit", also 
+                //decrease the player's life
                 if (hitCont == endLine) {
-                    line = 0;
+                    cont= 0;
                     hitCont = 0;
                     gotHit = false;
                     life -= 1;
+                    if (life == 0){
+                        died = true;
+                    }
                 }
                 this.drawRef = hitCont;
             }
         }
         
-        
+        //Dead Player
         if (died){
-            System.out.println("here");
             if (looking2Right){
                 startAnimation(4,0,7);
-            }
-            if (deadCont == this.endLine){
-                deadCont = endLine-1;
             }
             if (!looking2Right){
                 startAnimation(9,0,7);
             }
+            //Play song of this animation
+                if(deadCont == 1){
+                    playsong(3);
+                }
+            //Stop condition of animations of the type "died" 
             if (deadCont == this.endLine){
                 deadCont = endLine-1;
             }
             this.drawRef = deadCont;
         }
-        
     }
-    
-    
-    
-    
-    
-    
-    
-    
+    //Method that play the player's songs
+    private void playsong(int ref){
+        //play melee sfx
+        if (ref == 1){
+            try {
+                song = new Song("songs/sfx/melee sounds/sword sound.wav");
+            } catch (MalformedURLException ex) {}
+        }
+        //play hurt sfx
+        if (ref == 2){
+            try {
+                song = new Song("songs/sfx/hurt/pain2.wav");
+            } catch (MalformedURLException ex) {}
+        }
+        //play dead sfx
+        if (ref == 3){
+            try {
+                song = new Song("songs/sfx/hurt/die2.wav");
+            } catch (MalformedURLException ex) {}
+        }
+        song.playSoundOnce();
+    }
+    //Method called in the window that says where the player is looking
+    public void setLook(char view) {
+        //Key filter
+        if(currentMove != 'a' && currentMove != 's' &&
+           currentMove != 'd' && currentMove != 'w' &&
+           currentMove != '.' && currentMove != ' ' &&
+           currentMove != 'h'){
+            return;
+        }
+        if (!died) {
+            if (view == 'a') {
+                this.looking2Right = false;
+            }
+            if (view == 'd') {
+                this.looking2Right = true;
+            }
+        }
+        //Also resets the motion animations counter
+        this.cont = 0;
+    }
+    //Method that receives the char of the window's KeyEvent and set the 
+    //player's actual state
+    public void setCurrentMove(char currentMove) {
+        //Key filter
+        if(currentMove != 'a' && currentMove != 's' &&
+           currentMove != 'd' && currentMove != 'w' &&
+           currentMove != '.' && currentMove != ' ' &&
+           currentMove != 'h'){
+            return;
+        }
+        if (!died) {
+            if (currentMove == 'd') {
+                looking2Right = true;
+            }
+            if (currentMove == 'a') {
+                looking2Right = false;
+            }
+            if (currentMove == ' ') {
+                this.attacking = true;
+            }
+            if (currentMove == 'h') {
+                this.gotHit = true;
+            }
+            this.currentMove = currentMove;
+        }
+    }
+    //Method that get the player's x position on the screen   
     public int getXPosition() {
         return this.xPos;
     }
+    //Method that get the player's y position on the screen
     public int getYPosition() {
         return this.yPos;
     }
-    
-    
-    
-    public void setLook(char view) {
-        if(view == 'a'){
-            this.looking2Right = false;
-            
-        }
-        if(view == 'd'){
-            this.looking2Right = true;
-        }
-
-        this.line = 0;
-        this.animation = 0;
-    }
-    public void setCurrentMove(char currentMove) {
-        if (currentMove == 'd') {
-            looking2Right = true;
-        }
-        if (currentMove == 'a') {
-            looking2Right = false;
-        }
-        if (currentMove == ' ') {
-            this.attacking = true;
-        }
-        if (currentMove == 'h') {
-            this.gotHit = true;
-        }
-
-        this.currentMove = currentMove;
-    }
-
 
 /* *************************Overridden Methods******************************* */
     @Override
@@ -322,23 +368,12 @@ public class Player extends Character implements Drawable {
         //Check if the player has to change stage
         checkStage(this.currentMove, map);
         //Do the animations
-        if(!attacking)
-            this.line = line + 1;
-        if(attacking)
-            atkCont += 1;
-        if(gotHit)
-            hitCont+=1;
-        if (died)
-            deadCont +=1;
         animate();
-        
-
-
+        //Play the current song
     }
-
     @Override
     public void paintComponent(Graphics g) {
-        BufferedImage image = SpriteSheet.getSubimage(super.spriteTiles[drawRef][animation].getSrcX1(), super.spriteTiles[drawRef][animation].getSrcY1(), 32, 32);
+        BufferedImage image = SpriteSheet.getSubimage(super.spriteTiles[drawRef][animation].getSrcX1(), super.spriteTiles[drawRef][animation].getSrcY1(), IMGSIZE, IMGSIZE);
         g.drawImage(image, xPos, yPos, 64, 64, null);
     }
     @Override
