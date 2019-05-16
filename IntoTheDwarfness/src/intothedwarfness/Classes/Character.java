@@ -2,8 +2,9 @@
  *  Abstract Class Character, responsible for serving as the basis for the     *
  * creation of the player, the enemies and the bosses of the phases            *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-package intothedwarfness.Classes.characters;
-import intothedwarfness.Classes.Tile;
+package intothedwarfness.Classes;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 
 public abstract class Character  extends JPanel {
