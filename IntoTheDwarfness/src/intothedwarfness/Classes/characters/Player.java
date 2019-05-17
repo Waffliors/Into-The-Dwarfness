@@ -52,21 +52,38 @@ public class Player extends Character implements Drawable {
     private void move(char key) {
         //Only made if it's not dead or collide with the stage objects
         if (!died) {
-            if (key == 'a' && collision(key))
+            if (key == 'a')
                 this.xPos = this.xPos - 8;       
-            if (key == 'd' && collision(key))
+            if (key == 'd')
                 this.xPos = this.xPos + 8;           
-            if (key == 'w' && collision(key))
+            if (key == 'w')
                 this.yPos = this.yPos - 8;          
-            if (key == 's' && collision(key))
+            if (key == 's')
                 this.yPos = this.yPos + 8;
+            
+            collision(key);
         }
     }
     //Method that check the collisions
     private boolean collision(char key) {
-
+        /* 
+            Se Player.X > Tile.X (Direita(d)) ou 
+            Se Player.X < Tile.X (Esquerda(a)) ou
+            Se Player.Y > Tile.Y (Baixo(s)) ou
+            Se Player.Y < Tile.Y (Cima(w)) então
+            Desfaz ultimo movimento
+        
+            TMList.get(this.gFloorMap[y][x]).getSrcX1(), TMList.get(this.gFloorMap[y][x]).getSrcY1(),        
+            TMList.get(this.gFloorMap[y][x]).getSrcX2(), TMList.get(this.gFloorMap[y][x]).getSrcY2(),  
+        */
+        if (key == 'd' && xPos/64+1 > map.getTMList().get(map.gFloorMap[yPos/64][xPos/64+1]).getSrcX1()) {
+            System.out.println(map.getTMList().get(map.gFloorMap[yPos/64][xPos/641+1]));
+        }
+        
+        map.getTMList();
         return true;
     }
+    
     //Method that verifies if the player will change the stage
     private void checkStage(char key, Map map) {
         //Check the entries in stage 1
@@ -356,8 +373,7 @@ public class Player extends Character implements Drawable {
         //Pega o ponto X e Y do player
         int x = this.getXPosition()/64;
         int y = this.getYPosition()/64;
-        
-        System.out.println("Posição do player na Matriz: "+x+" - "+y);
+
         if(!map.getgUnblockedT()[y][x]){
             System.out.println("Blocked");
         }

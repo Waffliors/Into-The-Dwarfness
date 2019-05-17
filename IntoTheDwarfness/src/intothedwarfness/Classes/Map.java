@@ -20,9 +20,9 @@ public class Map extends JPanel implements Drawable {
     private final BufferedImage SSheet;
     private final ArrayList<Tile> TMList;
     private List<Integer> unblockedFloorTile;
-    private int gWallMap[][];
-    private int gFloorMap[][];
-    private int gObjectMap[][];
+    public int gWallMap[][];
+    public int gFloorMap[][];
+    public int gObjectMap[][];
     private boolean gUnblockedT[][];
     public int actualStage;
 
