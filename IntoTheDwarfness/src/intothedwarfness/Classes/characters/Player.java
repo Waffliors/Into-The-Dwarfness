@@ -357,9 +357,7 @@ public class Player extends Character implements Drawable {
         int x = this.getXPosition()/64;
         int y = this.getYPosition()/64;
         
-        System.out.println("Posição do player na Matriz: "+x+" - "+y);
         if(!map.getgUnblockedT()[y][x]){
-            System.out.println("Blocked");
         }
         
 

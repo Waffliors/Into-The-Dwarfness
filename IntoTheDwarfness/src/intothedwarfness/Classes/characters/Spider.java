@@ -55,7 +55,6 @@ public class Spider extends Character implements Drawable{
 /* ****************************Class Methods********************************* */
     private void move(){
         temp+=1;
-        System.out.println("Temp atual: "+temp);
         
         if(temp < 75)
             this.xPos+=4;

@@ -44,7 +44,7 @@ public class iaMap {
             for (int j = 0; j<colunas; j++)
             {
                 
-                Node no = new Node(contador);
+                Node no = new Node(0,0);
                 mapa.add(no);
                 
                 contador++;

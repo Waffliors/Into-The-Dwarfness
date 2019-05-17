@@ -13,7 +13,8 @@ import java.util.List;
  * @author T-Gamer
  */
 public class Node {
-        private int id;
+    
+    private int x,y,id;
     private float h, g, f;
     private boolean bloqueado, visitado;
 
@@ -38,8 +39,10 @@ public class Node {
         return id;
     }
     
-    public Node(int id){
-        this.id = id;
+    public Node(int x, int y){
+        this.x = x;
+        this.y = y;
+        this.bloqueado = false;
     }
 
     public float getH() {
@@ -80,5 +83,12 @@ public class Node {
 
     public void setPai(Node pai) {
         this.pai = pai;
+    }
+    
+    @Override
+    public String toString(){
+        String resp = ("X: "+this.x+" Y: "+this.y);
+        return resp;
+        
     }
 }

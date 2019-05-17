@@ -42,7 +42,7 @@ public class Window extends JFrame implements KeyListener {
 
         this.sprites = sprites;
         this.songs = songs;
-        this.map = new Map(sprites.get(8));
+        this.map = new Map(sprites.get(8), 12, 16);
         this.player = new Player(sprites.get(0),songs, map);
         this.width = 1024;
         this.height = 768;
@@ -91,7 +91,7 @@ public class Window extends JFrame implements KeyListener {
     
     //Game Loop
     public void run() throws InterruptedException {
-        songs.get(0).playSound();
+        //songs.get(0).playSound();
         boolean isRunning = true;
 
         long excess = 0;
