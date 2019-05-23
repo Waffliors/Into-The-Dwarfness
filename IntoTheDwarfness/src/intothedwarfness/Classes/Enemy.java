@@ -5,6 +5,7 @@
  */
 package intothedwarfness.Classes;
 
+import intothedwarfness.Classes.characters.Character;
 import intothedwarfness.Interfaces.Drawable;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
