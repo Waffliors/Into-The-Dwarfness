@@ -113,9 +113,6 @@ public class Map extends JPanel implements Drawable {
                 }
             }
         }
-        
-
-        
         for (int i = 0; i < LINES; i++) {
             System.out.println();
             for (int j = 0; j < COLUMNS; j++) {
@@ -126,32 +123,7 @@ public class Map extends JPanel implements Drawable {
                     System.out.print("[0]");
             }
         }
-
-        
-
-        
         return RESP;
-    }
-    
-    
-    
-    
-    
-    public void loadUnblockedGraph() {
-        this.gUnblockedT = new boolean[this.floorMap.length][this.floorMap[0].length];
-        for (int i = 0; i < this.gUnblockedT.length; i++) {
-            for (int j = 0; j < this.gUnblockedT[0].length; j++) {
-                for (int k = 0; k < this.UNBLOCKEDTILES.size(); k++) {
-                    if ((this.floorMap[i][j] == this.UNBLOCKEDTILES.get(k) && this.wallMap[i][j] == 6 ) || this.wallMap[i][j] == this.UNBLOCKEDTILES.get(k)) {
-                    	this.gUnblockedT[i][j] = true;
-                    }
-                    if(this.objectMap[i][j] == this.UNBLOCKEDTILES.get(k))
-                    {
-                    	this.gUnblockedT[i][j] = false;
-                    }
-                }
-            }
-        }
     }
     
 /* ****************************Class Methods********************************* */
