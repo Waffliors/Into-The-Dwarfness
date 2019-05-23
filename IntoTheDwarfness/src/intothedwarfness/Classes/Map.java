@@ -483,7 +483,7 @@ public class Map extends JPanel implements Drawable {
                 { 51,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  53},};            
         }
         //After Create the new map, load the graph
-        loadUnblockedGraph();
+        loadNodeMap();
     }
 
 /* *************************Overridden Methods******************************* */
