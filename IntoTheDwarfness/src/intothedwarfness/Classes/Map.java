@@ -113,16 +113,17 @@ public class Map extends JPanel implements Drawable {
                 }
             }
         }
-        for (int i = 0; i < LINES; i++) {
-            System.out.println();
-            for (int j = 0; j < COLUMNS; j++) {
-                if(RESP[i][j].estaBloqueado()){
-                    System.out.print("[1]");
-                }
-                else
-                    System.out.print("[0]");
-            }
-        }
+        // PRINT DO MAPA EM GRAPHO
+//        for (int i = 0; i < LINES; i++) {
+//            System.out.println();
+//            for (int j = 0; j < COLUMNS; j++) {
+//                if(RESP[i][j].estaBloqueado()){
+//                    System.out.print("[1]");
+//                }
+//                else
+//                    System.out.print("[0]");
+//            }
+//        }
         return RESP;
     }
     
