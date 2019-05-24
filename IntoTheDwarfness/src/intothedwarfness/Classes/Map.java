@@ -102,27 +102,28 @@ public class Map extends JPanel implements Drawable {
                 int temp2 = objectMap[i][j];
                 int temp3 = floorMap[i][j];
                 
-                if (UNBLOCKEDTILES.contains(temp1) == false && temp1 != 6) {
+                if (!UNBLOCKEDTILES.contains(temp1) && temp1 != 6) {
                     RESP[i][j].setBloqueado(true);
                 }
-                if (UNBLOCKEDTILES.contains(temp2) == false && temp2 != 6) {
+                if (!UNBLOCKEDTILES.contains(temp2) && temp2 != 6) {
                     RESP[i][j].setBloqueado(true);
                 }
-                if (UNBLOCKEDTILES.contains(temp3) == false) {
+                if (!UNBLOCKEDTILES.contains(temp3)) {
                     RESP[i][j].setBloqueado(true);
                 }
             }
         }
-        for (int i = 0; i < LINES; i++) {
-            System.out.println();
-            for (int j = 0; j < COLUMNS; j++) {
-                if(RESP[i][j].estaBloqueado()){
-                    System.out.print("[1]");
-                }
-                else
-                    System.out.print("[0]");
-            }
-        }
+        // PRINT DO MAPA EM GRAPHO
+//        for (int i = 0; i < LINES; i++) {
+//            System.out.println();
+//            for (int j = 0; j < COLUMNS; j++) {
+//                if(RESP[i][j].estaBloqueado()){
+//                    System.out.print("[1]");
+//                }
+//                else
+//                    System.out.print("[0]");
+//            }
+//        }
         return RESP;
     }
     
@@ -514,8 +515,8 @@ public class Map extends JPanel implements Drawable {
             }
         }
     }
-    public boolean[][] getgUnblockedT() {
-        return gUnblockedT;
+    public Node[][] getNodeMap() {
+        return nodeMap;
     }
 
     @Override

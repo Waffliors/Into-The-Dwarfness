@@ -6,6 +6,8 @@ package intothedwarfness.Classes.characters;
 
 import intothedwarfness.Classes.Map;
 import intothedwarfness.Classes.Song;
+import intothedwarfness.IA.Node;
+
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.awt.image.BufferedImage;
@@ -16,7 +18,8 @@ public class Player extends Character implements Drawable {
     //Player's settings
     private Map map;
     private char currentMove;
-    private boolean[][] collideMap;
+    private Node[][] collideMap;
+    private ArrayList<Integer> pivot = new ArrayList();
     private ArrayList<Song> songs;
     private final BufferedImage SpriteSheet;
     private int xPos, yPos, actualStage, life, IMGSIZE;
@@ -31,8 +34,8 @@ public class Player extends Character implements Drawable {
         //Player's settings
         this.life = 4;
         this.map = map;
-        this.xPos = 480;
-        this.yPos = 114;
+        this.xPos = 512;
+        this.yPos = 128;
         this.IMGSIZE = 32;
         this.songs = songs;
         this.actualStage = 1;
@@ -45,27 +48,71 @@ public class Player extends Character implements Drawable {
         this.running = false;
         this.attacking = false;
         this.looking2Right = true;
+        
+        pivot.add(0);
+        pivot.add(0);
+        pivot.add(0);
+        pivot.add(0);
+        pivot.add(0);
+        pivot.add(0);
+        pivot.add(0);
+        pivot.add(0);
+        
+    }
+    
+    private void Pivot()
+    {
+    	/*
+    	 * LT = 0 (0, 0)
+    	 * RT = 1 (64, 0)
+    	 * LD = 2 (0, 64)
+    	 * RD = 3 (64, 64)   	
+    	*/
+    	
+    	pivot.set(0, this.xPos); // XLT
+    	pivot.set(1, this.yPos); // YLT
+    	
+    	pivot.set(2, this.xPos + 64); //XRT
+    	pivot.set(3, this.yPos); // YRT
+    	
+    	pivot.set(4, this.xPos); // XLD
+    	pivot.set(5, this.yPos + 64); //YLD
+    	
+    	pivot.set(6, this.xPos + 64); // XRD
+    	pivot.set(7, this.yPos + 64); // YRD
+    	
+    	System.out.println(pivot);
+    	
     }
 
 /* ****************************Class Methods********************************* */
     //Method that moves the player by 8 pixels
     private void move(char key) {
         //Only made if it's not dead or collide with the stage objects
+    	int antPosX = this.xPos;
+    	int antPosY = this.yPos;
+    	
         if (!died) {
-            if (key == 'a' && collision(key))
+        	Pivot();
+            if (key == 'a')
                 this.xPos = this.xPos - 8;       
-            if (key == 'd' && collision(key))
+            if (key == 'd')
                 this.xPos = this.xPos + 8;           
-            if (key == 'w' && collision(key))
+            if (key == 'w')
                 this.yPos = this.yPos - 8;          
-            if (key == 's' && collision(key))
+            if (key == 's')
                 this.yPos = this.yPos + 8;
+            collision(key, antPosX, antPosY);
         }
     }
     //Method that check the collisions
-    private boolean collision(char key) {
+    private void collision(char key,  int antPosX, int antPosY ) {
 
-        return true;
+    	if(key == 'a' && (collideMap[pivot.get(1) / 64][pivot.get(0) / 64].isBlocked() || collideMap[pivot.get(5) / 64][pivot.get(4) / 64].isBlocked())) {
+    		this.xPos = antPosX;
+    		this.yPos = antPosY;
+    	}
+    	
     }
     //Method that verifies if the player will change the stage
     private void checkStage(char key, Map map) {
@@ -156,7 +203,7 @@ public class Player extends Character implements Drawable {
         }
         //After check, create the stage and the collide matrix
         map.stageCreator(actualStage);
-        this.collideMap = map.getgUnblockedT();
+        this.collideMap = map.getNodeMap();
     }
     //Method that defines the settings of the current animation
     private void startAnimation(int animation, int startLine, int endLine) {
@@ -351,20 +398,6 @@ public class Player extends Character implements Drawable {
     public int getYPosition() {
         return this.yPos;
     }
-    
-    public int calculatePlayerPosition(){
-        //Pega o ponto X e Y do player
-        int x = this.getXPosition()/64;
-        int y = this.getYPosition()/64;
-        
-        if(!map.getgUnblockedT()[y][x]){
-        }
-        
-
-        int resp = 0;
-        return resp;  
-    }
-
 /* *************************Overridden Methods******************************* */
     @Override
     public void update() {

@@ -6,6 +6,7 @@
 package intothedwarfness.Classes.characters;
 
 import intothedwarfness.Classes.Map;
+import intothedwarfness.IA.Node;
 import intothedwarfness.Interfaces.Drawable;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -24,7 +25,7 @@ public class Enemy extends Character implements Drawable {
     private boolean move, turn;
     private int direction;
     private final float speed;
-    private boolean[][] collideMap;
+    private Node[][] collideMap;
     private int xPos, yPos, actualStage;
     private final BufferedImage SpriteSheet;
 
@@ -35,7 +36,7 @@ public class Enemy extends Character implements Drawable {
     /*------------------------------------------------------------------------*
      *----------------------- Class Constructor ------------------------------*
      *------------------------------------------------------------------------*/
-    public Enemy(int xPos, int yPos, int stage, BufferedImage spriteSheet, boolean[][] collideMap) {
+    public Enemy(int xPos, int yPos, int stage, BufferedImage spriteSheet, Node[][] collideMap) {
         this.life = 4;
         this.yPos = yPos;
         this.xPos = xPos;

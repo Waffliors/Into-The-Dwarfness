@@ -69,7 +69,7 @@ public class Node {
         this.f = f;
     }
 
-    public boolean estaBloqueado() {
+    public boolean isBlocked() {
         return bloqueado;
     }
 

@@ -4,6 +4,8 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package intothedwarfness.Classes.characters;
 import intothedwarfness.Classes.Tile;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 
 public abstract class Character  extends JPanel {
