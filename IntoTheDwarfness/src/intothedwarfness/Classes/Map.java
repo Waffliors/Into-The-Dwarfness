@@ -90,12 +90,14 @@ public class Map extends JPanel implements Drawable {
     
     //Method that load the NodeMap
     private Node[][] loadNodeMap(){
+        int x = 0;
+        int y = 0;
         Node RESP[][] = new Node[LINES][COLUMNS];
         
         for(int i = 0; i < LINES; i++){
             for (int j = 0; j < COLUMNS; j++){
                 //Cria o nó
-                RESP[i][j] = new Node(i,j);
+                RESP[i][j] = new Node(x,y);
                 //Se no nó atual, em todas as matrizes não houver um referencia da lista de tiles
                 //checar nas 3 matrizes 
                 int temp1 = wallMap[i][j];
@@ -111,7 +113,10 @@ public class Map extends JPanel implements Drawable {
                 if (!UNBLOCKEDTILES.contains(temp3)) {
                     RESP[i][j].setBloqueado(true);
                 }
+                x += 64;
             }
+            x = 0;
+            y +=64;
         }
         // PRINT DO MAPA EM GRAPHO
 //        for (int i = 0; i < LINES; i++) {

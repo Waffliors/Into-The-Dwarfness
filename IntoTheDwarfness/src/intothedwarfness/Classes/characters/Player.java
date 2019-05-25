@@ -5,24 +5,27 @@
 package intothedwarfness.Classes.characters;
 
 import intothedwarfness.Classes.Map;
+import intothedwarfness.Classes.Point;
 import intothedwarfness.Classes.Song;
 import intothedwarfness.IA.Node;
+import intothedwarfness.Interfaces.Collidable;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Interfaces.Drawable;
 
-public class Player extends Character implements Drawable {
+public class Player extends Character implements Drawable, Collidable {
 /* ***************************Class Variables******************************** */
     //Player's settings
     private Map map;
     private char currentMove;
     private Node[][] collideMap;
-    private ArrayList<Integer> pivot = new ArrayList();
     private ArrayList<Song> songs;
     private final BufferedImage SpriteSheet;
     private int xPos, yPos, actualStage, life, IMGSIZE;
+    private ArrayList<Point> pivot;
+    private ArrayList<Collidable> collidables;
     
     //Player's animation
     private int cont, atkCont, hitCont, deadCont;
@@ -30,7 +33,7 @@ public class Player extends Character implements Drawable {
     private boolean looking2Right, attacking, gotHit, died, running;
 
 /* **************************Class Constructor******************************* */
-    public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map) {
+    public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map, ArrayList<Collidable> collidables) {
         //Player's settings
         this.life = 4;
         this.map = map;
@@ -41,6 +44,7 @@ public class Player extends Character implements Drawable {
         this.actualStage = 1;
         this.currentMove = '.';
         this.SpriteSheet = spriteSheet;
+        this.collidables = collidables;
         
         //Player's animation
         this.died = false;
@@ -48,71 +52,90 @@ public class Player extends Character implements Drawable {
         this.running = false;
         this.attacking = false;
         this.looking2Right = true;
+        addPivot();
+        }
+/* ********************Auxiliary methods of the Constructor****************** */
+    private void addPivot(){
+        this.pivot = new ArrayList();
         
-        pivot.add(0);
-        pivot.add(0);
-        pivot.add(0);
-        pivot.add(0);
-        pivot.add(0);
-        pivot.add(0);
-        pivot.add(0);
-        pivot.add(0);
-        
+        //Adicionca o pivot 1: LT = 0 (0, 0)
+        this.pivot.add(new Point(this.xPos,this.yPos));
+        //Adicionca o pivot 2: RT = 1 (64, 0)
+        this.pivot.add(new Point(this.xPos+64,this.yPos));
+        //Adicionca o pivot 3: LD = 2 (0, 64)
+        this.pivot.add(new Point(this.xPos,this.yPos+64));
+        //Adicionca o pivot 4: RD = 3 (64, 64)
+        this.pivot.add(new Point(this.xPos+64,this.yPos+64));
     }
     
-    private void Pivot()
+    private void setPivot()
     {
-    	/*
-    	 * LT = 0 (0, 0)
-    	 * RT = 1 (64, 0)
-    	 * LD = 2 (0, 64)
-    	 * RD = 3 (64, 64)   	
-    	*/
-    	
-    	pivot.set(0, this.xPos); // XLT
-    	pivot.set(1, this.yPos); // YLT
-    	
-    	pivot.set(2, this.xPos + 64); //XRT
-    	pivot.set(3, this.yPos); // YRT
-    	
-    	pivot.set(4, this.xPos); // XLD
-    	pivot.set(5, this.yPos + 64); //YLD
-    	
-    	pivot.set(6, this.xPos + 64); // XRD
-    	pivot.set(7, this.yPos + 64); // YRD
-    	
-    	System.out.println(pivot);
-    	
+        //Adicionca o pivot 1: LT = 0 (0, 0)
+        this.pivot.set(0,(new Point(this.xPos,this.yPos)));
+        //Adicionca o pivot 2: RT = 1 (64, 0)
+        this.pivot.set(1,(new Point(this.xPos+64,this.yPos)));
+        //Adicionca o pivot 3: LD = 2 (0, 64)
+        this.pivot.set(2,(new Point(this.xPos,this.yPos+64)));
+        //Adicionca o pivot 4: RD = 3 (64, 64)
+        this.pivot.set(3,(new Point(this.xPos+64,this.yPos+64)));
     }
 
 /* ****************************Class Methods********************************* */
     //Method that moves the player by 8 pixels
     private void move(char key) {
-        //Only made if it's not dead or collide with the stage objects
-    	int antPosX = this.xPos;
-    	int antPosY = this.yPos;
-    	
+        int antXPos = this.getXPosition();
+        int antYPos = this.getYPosition();
+        
         if (!died) {
-        	Pivot();
-            if (key == 'a')
-                this.xPos = this.xPos - 8;       
-            if (key == 'd')
-                this.xPos = this.xPos + 8;           
-            if (key == 'w')
-                this.yPos = this.yPos - 8;          
-            if (key == 's')
+            setPivot();
+            if (key == 'a') {
+                this.xPos = this.xPos - 8;
+            }
+            if (key == 'd') {
+                this.xPos = this.xPos + 8;
+            }
+            if (key == 'w') {
+                this.yPos = this.yPos - 8;
+            }
+            if (key == 's') {
                 this.yPos = this.yPos + 8;
-            collision(key, antPosX, antPosY);
+            }
+
+            if (collision()) {
+                this.xPos = antXPos;
+                this.yPos = antYPos;
+            }
         }
     }
-    //Method that check the collisions
-    private void collision(char key,  int antPosX, int antPosY ) {
 
-    	if(key == 'a' && (collideMap[pivot.get(1) / 64][pivot.get(0) / 64].isBlocked() || collideMap[pivot.get(5) / 64][pivot.get(4) / 64].isBlocked())) {
-    		this.xPos = antPosX;
-    		this.yPos = antPosY;
-    	}
-    	
+    
+    //Method that check the collisions
+    private boolean collision() {
+        int bordaDireita = (this.getPivotRT().getX() + this.getPivotRD().getX());
+        int bordaEsquerda = (this.getPivotLT().getX() + this.getPivotLD().getX());
+        int bordaSuperior = (this.getPivotRT().getY() + this.getPivotLT().getY());
+        int bordaInferior = (this.getPivotRD().getY() + this.getPivotLD().getY());
+
+        for (Collidable collidable : this.collidables) {
+            int bordaDireitaO = (collidable.getPivotRT().getX() + collidable.getPivotRD().getX());
+            int bordaEsquerdaO = (collidable.getPivotLT().getX() + collidable.getPivotLD().getX());
+            int bordaSuperiorO = (collidable.getPivotRT().getY() + collidable.getPivotLT().getY());
+            int bordaInferiorO = (collidable.getPivotRD().getY() + collidable.getPivotLD().getY());
+            //A borda direita do player está à direita da borda esquerda do objeto?
+            //A borda esquerda do player está à esquerda da borda direita do objeto?
+            //A borda INFERIOR do player está ABAIXO da borda SUPERIOR do objeto?
+            //A borda SUPERIOR do player está ACIMA da borda INFERIOR dobjeto?
+            if (bordaDireita > bordaEsquerdaO ) {
+                if (bordaEsquerda < bordaDireitaO) {
+                    if (bordaInferior > bordaSuperiorO) {
+                        if (bordaSuperior < bordaInferiorO) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
     //Method that verifies if the player will change the stage
     private void checkStage(char key, Map map) {
@@ -423,4 +446,27 @@ public class Player extends Character implements Drawable {
     public Boolean isStage(Map map) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    
+    @Override
+    public Point getPivotLT() {
+        return this.pivot.get(0);
+    }
+
+    @Override
+    public Point getPivotRT() {
+        return this.pivot.get(1);
+    }
+
+    @Override
+    public Point getPivotLD() {
+        return this.pivot.get(2);
+    }
+
+    @Override
+    public Point getPivotRD() {
+        return this.pivot.get(3);
+    }
+
+
 }

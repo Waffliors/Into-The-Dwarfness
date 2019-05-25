@@ -21,6 +21,7 @@ import intothedwarfness.Classes.States.GameStateManager;
 import intothedwarfness.Classes.characters.Enemy;
 import intothedwarfness.Classes.characters.Player;
 import intothedwarfness.Classes.characters.Spider;
+import intothedwarfness.Interfaces.Collidable;
 import intothedwarfness.Interfaces.Drawable;
 import java.net.MalformedURLException;
 
@@ -37,26 +38,29 @@ public class Window extends JFrame implements KeyListener {
     private final ArrayList<BufferedImage> sprites;
     private final ArrayList<Song> songs;
     private ArrayList<Drawable> drawables;
+    private ArrayList<Collidable> collidables;
 
     /* **************************Class Constructor******************************* */
     public Window(ArrayList<BufferedImage> sprites, ArrayList<Song> songs) {
         super("Into The Dwarfness");
 
-        this.sprites = sprites;
-        this.songs = songs;
-        this.map = new Map(sprites.get(8), 12, 16);
-        this.player = new Player(sprites.get(0),songs, map);
         this.width = 1024;
         this.height = 768;
-        this.drawables = loadDrawables();
+        this.songs = songs;
+        this.sprites = sprites;
+        this.map = new Map(sprites.get(8), 12, 16);
         Enemy spider = new Enemy(512, 128, 2, sprites.get(3), map.getNodeMap());
         this.enemies.add(spider);
         this.setSize(this.width, this.height);
-        
         this.spider1 = new Spider(320, 448, 1, sprites.get(2), songs, map);
+        this.collidables = initializeCollidables();
+        this.player = new Player(sprites.get(0),songs, map, collidables);
+        
+        
         
         this.drawables = loadDrawables();
-
+        
+        
         this.setSize(this.width, this.height);
         this.setLocationRelativeTo(null);
         this.setUndecorated(false);
@@ -78,8 +82,20 @@ public class Window extends JFrame implements KeyListener {
         for (Enemy enemy : this.enemies) {
             elements.add(enemy);
         }
-
         return elements;
+    }
+    
+    private ArrayList<Collidable> initializeCollidables() {
+        ArrayList<Collidable> resp = new ArrayList();
+        map.getNodeMap();
+        for (int i = 0; i < map.getNodeMap().length; i++) {
+            for (int j = 0; j < map.getNodeMap()[0].length; j++) {
+                if(map.getNodeMap()[i][j].isBlocked()){
+                    resp.add(map.getNodeMap()[i][j]);
+                }
+            }
+        }
+        return resp;
     }
 
     /* ****************************Class Methods********************************* */
@@ -198,4 +214,6 @@ public class Window extends JFrame implements KeyListener {
             strategy.show();
         } while (strategy.contentsLost());
     }
+
+    
 }
