@@ -87,7 +87,6 @@ public class Player extends Character implements Drawable, Collidable {
         int antYPos = this.getYPosition();
         
         if (!died) {
-            setPivot();
             if (key == 'a') {
                 this.xPos = this.xPos - 8;
             }
@@ -101,6 +100,7 @@ public class Player extends Character implements Drawable, Collidable {
                 this.yPos = this.yPos + 8;
             }
 
+            setPivot();
             if (collision()) {
                 this.xPos = antXPos;
                 this.yPos = antYPos;
