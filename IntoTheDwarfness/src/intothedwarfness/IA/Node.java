@@ -1,48 +1,65 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package intothedwarfness.IA;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+import intothedwarfness.Classes.Point;
+import intothedwarfness.Interfaces.Collidable;
 
-/**
- *
- * @author T-Gamer
- */
-public class Node {
+public class Node implements Collidable{
     
-    private int x,y,id;
+    private Point LT,RT,LD, RD; 
+
+    private int ID;
+    private boolean blocked, visited, isTransition;
+    private Node father;
+    private List<Node> neighbors = new ArrayList();
+
+    //IA VARIABLES
     private float h, g, f;
-    private boolean bloqueado, visitado;
-
     
-    
-    
-    public boolean isVisitado() {
-        return visitado;
+    public Node(int x, int y){
+        //Initialize the pivot LT = (0, 0)
+        this.LT = new Point(x,y);
+        //Initialize the pivot RT = (64, 0)
+        this.RT = new Point(x+64,y);
+        //Initialize the pivot LD = (0, 64)
+        this.LD = new Point(x,y+64);
+        //Initialize the pivot RD = (64, 64)
+        this.RD = new Point(x+64,y+64);
+        this.isTransition = false;
     }
 
-    public void setVisitado(boolean visitado) {
-        this.visitado = visitado;
+    
+    public boolean isBlocked() {
+        return blocked;
     }
-    private Node pai;
-    public  List<Node> vizinhos = new ArrayList();
+    
+    public void setBloqueado(boolean blocked) {
+        this.blocked = blocked;
+    }
+    
+    public boolean isVisited() {
+        return visited;
+    }
 
-    public List<Node> getVizinhos() {
-        return vizinhos;
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+    
+    public List<Node> getNeighbors() {
+        return neighbors;
+    }
+    
+    public Node getFather() {
+        return father;
+    }
+
+    public void setFather(Node father) {
+        this.father = father;
     }
 
     public int getId() {
-        return id;
-    }
-    
-    public Node(int x, int y){
-        this.x = x;
-        this.y = y;
-        this.bloqueado = false;
+        return ID;
     }
 
     public float getH() {
@@ -68,27 +85,57 @@ public class Node {
     public void setF(float f) {
         this.f = f;
     }
-
-    public boolean estaBloqueado() {
-        return bloqueado;
+    
+    public void setTransition (boolean transition){
+        this.isTransition = transition;
+    }
+    
+    //Getters of the pivots
+    public Point getLT() {
+        return LT;
     }
 
-    public void setBloqueado(boolean bloqueado) {
-        this.bloqueado = bloqueado;
+    public Point getRT() {
+        return RT;
     }
 
-    public Node getPai() {
-        return pai;
+    public Point getLD() {
+        return LD;
     }
 
-    public void setPai(Node pai) {
-        this.pai = pai;
+    public Point getRD() {
+        return RD;
     }
     
     @Override
     public String toString(){
-        String resp = ("X: "+this.x+" Y: "+this.y);
-        return resp;
-        
+        return "Pivot LT: "+LT+
+               "\nPivot RT: "+RT+
+                "\nPivot LD: "+LD+
+                "\nPivot RD: "+RD+
+                "\nEstá bloqueado? "+this.isBlocked()+"\n\n";
+
     }
+
+    @Override
+    public Point getPivotLT() {
+        return LT;
+    }
+
+    @Override
+    public Point getPivotRT() {
+         return RT;
+    }
+
+    @Override
+    public Point getPivotLD() {
+        return LD;
+    }
+
+    @Override
+    public Point getPivotRD() {
+        return RD;
+    }
+
+
 }

@@ -27,7 +27,7 @@ public class Map extends JPanel implements Drawable {
     private int objectMap[][];
     
     private boolean gUnblockedT[][];
-    private final Node nodeMap[][];
+    private Node nodeMap[][];
     
     public int actualStage;
 
@@ -90,28 +90,41 @@ public class Map extends JPanel implements Drawable {
     
     //Method that load the NodeMap
     private Node[][] loadNodeMap(){
+        int x = 0;
+        int y = 0;
         Node RESP[][] = new Node[LINES][COLUMNS];
         
         for(int i = 0; i < LINES; i++){
             for (int j = 0; j < COLUMNS; j++){
                 //Cria o nó
-                RESP[i][j] = new Node(i,j);
+                RESP[i][j] = new Node(x,y);
                 //Se no nó atual, em todas as matrizes não houver um referencia da lista de tiles
                 //checar nas 3 matrizes 
                 int temp1 = wallMap[i][j];
                 int temp2 = objectMap[i][j];
                 int temp3 = floorMap[i][j];
                 
-                if (UNBLOCKEDTILES.contains(temp1) == false && temp1 != 6) {
+                if (!UNBLOCKEDTILES.contains(temp1) && temp1 != 6) {
                     RESP[i][j].setBloqueado(true);
                 }
-                if (UNBLOCKEDTILES.contains(temp2) == false && temp2 != 6) {
+                if (!UNBLOCKEDTILES.contains(temp2) && temp2 != 6) {
                     RESP[i][j].setBloqueado(true);
                 }
-                if (UNBLOCKEDTILES.contains(temp3) == false) {
+                if (!UNBLOCKEDTILES.contains(temp3)) {
                     RESP[i][j].setBloqueado(true);
                 }
+                
+                if(actualStage == 1){
+                    if(i == 11){
+                        if (j == 7 || j == 8){
+                            RESP[i][j].setTransition(true);
+                        }
+                    }
+                }
+                x += 64;
             }
+            x = 0;
+            y +=64;
         }
         // PRINT DO MAPA EM GRAPHO
 //        for (int i = 0; i < LINES; i++) {
@@ -288,7 +301,7 @@ public class Map extends JPanel implements Drawable {
                 {  6,   6,   6,   6,   6, 225,   6,   6,   6,   6, 225,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6, 240,   6,   6,   6,   6,   6,   6,   6,   6, 241,   6,   6,   6},
-                {  6,   6,   6,   6,   6, 209,   6,   6,   6,   6, 210,   6,   6,   6,   6,   6},
+                {  6,   6,   6,   6,   6, 209,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6, 225,   6,   6,   6,   6, 225,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
@@ -370,12 +383,12 @@ public class Map extends JPanel implements Drawable {
             this.objectMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
-                {  6,   6, 210,   6,   6,   6,   6,   6,   6, 209,   6,   6,   6,   6,   6,   6},
+                {  6,   6,   6,   6,   6,   6,   6,   6,   6, 209,   6,   6,   6,   6,   6,   6},
                 {  6,   6, 226,   6,   6,   6,   6,   6,   6, 225,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6, 209,   6,   6,   6,   6, 209,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6, 225,   6,   6,   6,   6, 225,   6,   6,   6,   6,   6,   6},
-                {  6,   6,   6,   6,   6,   6,   6, 210,   6,   6,   6,   6, 209,   6,   6,   6},
+                {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6, 209,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6, 226,   6,   6,   6,   6, 225,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
@@ -484,7 +497,7 @@ public class Map extends JPanel implements Drawable {
                 { 51,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  53},};            
         }
         //After Create the new map, load the graph
-        loadNodeMap();
+        this.nodeMap = loadNodeMap();
     }
 
 /* *************************Overridden Methods******************************* */
@@ -515,8 +528,8 @@ public class Map extends JPanel implements Drawable {
             }
         }
     }
-    public boolean[][] getgUnblockedT() {
-        return gUnblockedT;
+    public Node[][] getNodeMap() {
+        return nodeMap;
     }
 
     @Override
