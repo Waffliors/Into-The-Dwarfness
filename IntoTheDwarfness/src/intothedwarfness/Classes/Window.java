@@ -6,8 +6,6 @@
  ***************************************************************************** */
 package intothedwarfness.Classes;
 
-import intothedwarfness.Classes.characters.Enemy;
-import intothedwarfness.Classes.characters.Player;
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JFrame;
@@ -20,8 +18,13 @@ import intothedwarfness.Classes.States.PlayState;
 import intothedwarfness.Classes.States.GameState;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
+import intothedwarfness.Classes.characters.Enemy;
+import intothedwarfness.Classes.characters.Player;
 import intothedwarfness.Classes.characters.Spider;
+import intothedwarfness.Interfaces.Collidable;
 import intothedwarfness.Interfaces.Drawable;
+import java.net.MalformedURLException;
+
 
 public class Window extends JFrame implements KeyListener {
     /* ***************************Class Variables******************************** */
@@ -29,8 +32,8 @@ public class Window extends JFrame implements KeyListener {
     
     private final int width, height;
     private final Map map;
-    private final Player player;
     private final Spider spider1;
+    private final Player player;
     private final ArrayList<Enemy> enemies = new ArrayList();
     private final ArrayList<BufferedImage> sprites;
     private final ArrayList<Song> songs;
@@ -40,22 +43,22 @@ public class Window extends JFrame implements KeyListener {
     public Window(ArrayList<BufferedImage> sprites, ArrayList<Song> songs) {
         super("Into The Dwarfness");
 
-        this.sprites = sprites;
-        this.songs = songs;
-        this.map = new Map(sprites.get(8));
-        this.player = new Player(sprites.get(0),songs, map);
         this.width = 1024;
         this.height = 768;
-        this.drawables = loadDrawables();
-        this.setSize(this.width, this.height);
-        
-        
-        Enemy spider = new Enemy(512, 128, 2, sprites.get(3), map.getgUnblockedT());
+        this.songs = songs;
+        this.sprites = sprites;
+        this.map = new Map(sprites.get(8), 12, 16);
+        Enemy spider = new Enemy(512, 128, 2, sprites.get(3), map.getNodeMap());
         this.enemies.add(spider);
-        this.spider1 = new Spider(320, 448,1, sprites.get(2), songs, map);
+        this.setSize(this.width, this.height);
+        this.spider1 = new Spider(320, 448, 1, sprites.get(2), songs, map);
+        this.player = new Player(sprites.get(0),songs, map);
+        
         
         
         this.drawables = loadDrawables();
+        
+        
         this.setSize(this.width, this.height);
         this.setLocationRelativeTo(null);
         this.setUndecorated(false);
@@ -73,12 +76,10 @@ public class Window extends JFrame implements KeyListener {
         ArrayList<Drawable> elements = new ArrayList();
         elements.add(this.map);
         elements.add(this.player);
-        elements.add(spider1);
-        
+        elements.add(this.spider1);
         for (Enemy enemy : this.enemies) {
             elements.add(enemy);
         }
-
         return elements;
     }
 
@@ -91,7 +92,7 @@ public class Window extends JFrame implements KeyListener {
     
     //Game Loop
     public void run() throws InterruptedException {
-        songs.get(0).playSound();
+        //songs.get(0).playSound();
         boolean isRunning = true;
 
         long excess = 0;
@@ -119,8 +120,6 @@ public class Window extends JFrame implements KeyListener {
             if ("PlayState".equals(gsm.getType())) {
                 player.update();
                 spider1.update();
-                player.calculatePlayerPosition();
-                
                 for (Enemy enemy : this.enemies) {
                     if (enemy.isStage(this.map)) {
                         enemy.update();                        
@@ -194,10 +193,13 @@ public class Window extends JFrame implements KeyListener {
                         drawable.paintComponent(graphics);
                     }
                 }
+                graphics.drawImage(this.sprites.get(9), 0, 0, null);
                 //Disposes of this graphics context, it's no longer referenced.
                 graphics.dispose();
             } while (strategy.contentsRestored());
             strategy.show();
         } while (strategy.contentsLost());
     }
+
+    
 }
