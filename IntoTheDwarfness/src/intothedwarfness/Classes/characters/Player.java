@@ -49,6 +49,7 @@ public class Player extends Character implements Drawable, Collidable {
         this.actualStage = 1;
         this.currentMove = '.';
         this.SPRITE = spriteSheet;
+        this.pivots = new ArrayList();
         this.collidables = new ArrayList();
 
         //Player's animation
@@ -58,13 +59,13 @@ public class Player extends Character implements Drawable, Collidable {
         this.attacking = false;
         this.looking2Right = true;
 
-        addPivot();
+        setPivot();
         initializeCollidables();
     }
     
 /* ********************Auxiliary methods of the Constructor****************** */
-    private void addPivot(){
-        this.pivots = new ArrayList();
+    private void setPivot(){
+        this.pivots.clear();
         // Pivots position:
         // at 0: Left Top
         // at 1: Right Top 
@@ -78,8 +79,6 @@ public class Player extends Character implements Drawable, Collidable {
     
     private void initializeCollidables() {
         this.collidables.clear();
-        
-
         MAP.getNodeMap();
         for (int i = 0; i < MAP.getNodeMap().length; i++) {
             for (int j = 0; j < MAP.getNodeMap()[0].length; j++) {
@@ -207,15 +206,15 @@ public class Player extends Character implements Drawable, Collidable {
         }
         //Check the entries in stage 2
         if (actualStage == 2) {
-            if (key == 'w' && yPos <= 0 && (xPos >= 448 && xPos <= 512)){
+            if (key == 'w' && yPos <= 0 && (xPos >= 448 && xPos <= 512)) {
                 this.yPos = 704;
                 this.actualStage = 1;
             }
-            if (key == 's' && yPos >=  696 && (xPos >= 448 && xPos <= 512)){
+            if (key == 's' && yPos >= 696 && (xPos >= 448 && xPos <= 512)) {
                 this.yPos = 0;
                 this.actualStage = 8;
             }
-            if (key == 'd' && xPos >= 960 && (yPos >= 256 && yPos <= 384)){
+            if (key == 'd' && xPos >= 960 && (yPos >= 256 && yPos <= 384)) {
                 this.xPos = 0;
                 this.actualStage = 3;
             }
@@ -259,7 +258,7 @@ public class Player extends Character implements Drawable, Collidable {
         }
         //Check the entries in stage 6
         if (actualStage == 6) {
-            if (key == 'a' && xPos <=  0 && (yPos >= 256 && yPos <= 384)) {
+            if (key == 'a' && xPos <= 0 && (yPos >= 256 && yPos <= 384)) {
                 this.xPos = 960;
                 this.actualStage = 5;
             }
@@ -278,21 +277,28 @@ public class Player extends Character implements Drawable, Collidable {
         }
         //Check the entries in stage 8
         if (actualStage == 8) {
-            if (key == 'w' && yPos <= 0 && (xPos >= 448&& xPos <= 512)) {
+            if (key == 'w' && yPos <= 0 && (xPos >= 448 && xPos <= 512)) {
                 this.yPos = 704;
                 this.actualStage = 2;
             }
         }
-        //After check, create the stage and the collide matrix
+        //After check, create the stage and the collide list
         map.stageCreator(actualStage);
         initializeCollidables();
     }
+    
     //Method that defines the settings of the current animation
     private void startAnimation(int animation, int startLine, int endLine) {
         this.startLine= startLine;
         this.animation = animation;
         this.endLine= endLine;
     }
+    
+    //Method that play the player's songs
+    private void playsong(int ref){
+        SONGS.get(ref).playSoundOnce();
+    }
+    
     //Method that checks the conditions to defines the animations to be drawn
     private void animate() {
         //Counters of animations
@@ -417,12 +423,7 @@ public class Player extends Character implements Drawable, Collidable {
             }
             this.drawRef = deadCont;
         }
-    }
-    //Method that play the player's songs
-    private void playsong(int ref){
-        SONGS.get(ref).playSoundOnce();
-    }
-    
+    }  
     
     //Method called in the window that says where the player is looking
     public void setLook(char view) {
@@ -447,17 +448,6 @@ public class Player extends Character implements Drawable, Collidable {
     }
     
     
-    private void setPivot()
-    {
-        //Adicionca o pivot 1: LT = 0 (0, 0)
-        this.pivots.set(0,(new Point(this.xPos,this.yPos)));
-        //Adicionca o pivot 2: RT = 1 (64, 0)
-        this.pivots.set(1,(new Point(this.xPos+64,this.yPos)));
-        //Adicionca o pivot 3: LD = 2 (0, 64)
-        this.pivots.set(2,(new Point(this.xPos,this.yPos+64)));
-        //Adicionca o pivot 4: RD = 3 (64, 64)
-        this.pivots.set(3,(new Point(this.xPos+64,this.yPos+64)));
-    }
     
     //Method that get the player's x position on the screen   
     public int getXPosition() {
@@ -475,9 +465,8 @@ public class Player extends Character implements Drawable, Collidable {
         //Do the animations
         animate();
         //Play the current song
-        System.out.println("x: "+this.xPos+"y: "+this.yPos);
-        System.out.println(actualStage);
     }
+    
     @Override
     public void paintComponent(Graphics g) {
         //Get a piece of the Image
