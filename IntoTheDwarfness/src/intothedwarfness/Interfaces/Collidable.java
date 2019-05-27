@@ -11,4 +11,5 @@ public interface Collidable {
     public Point getPivotLD();
 
     public Point getPivotRD();
+    
 }

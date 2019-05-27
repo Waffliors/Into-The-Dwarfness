@@ -38,7 +38,6 @@ public class Window extends JFrame implements KeyListener {
     private final ArrayList<BufferedImage> sprites;
     private final ArrayList<Song> songs;
     private ArrayList<Drawable> drawables;
-    private ArrayList<Collidable> collidables;
 
     /* **************************Class Constructor******************************* */
     public Window(ArrayList<BufferedImage> sprites, ArrayList<Song> songs) {
@@ -53,8 +52,7 @@ public class Window extends JFrame implements KeyListener {
         this.enemies.add(spider);
         this.setSize(this.width, this.height);
         this.spider1 = new Spider(320, 448, 1, sprites.get(2), songs, map);
-        this.collidables = initializeCollidables();
-        this.player = new Player(sprites.get(0),songs, map, collidables);
+        this.player = new Player(sprites.get(0),songs, map);
         
         
         
@@ -83,19 +81,6 @@ public class Window extends JFrame implements KeyListener {
             elements.add(enemy);
         }
         return elements;
-    }
-    
-    private ArrayList<Collidable> initializeCollidables() {
-        ArrayList<Collidable> resp = new ArrayList();
-        map.getNodeMap();
-        for (int i = 0; i < map.getNodeMap().length; i++) {
-            for (int j = 0; j < map.getNodeMap()[0].length; j++) {
-                if(map.getNodeMap()[i][j].isBlocked()){
-                    resp.add(map.getNodeMap()[i][j]);
-                }
-            }
-        }
-        return resp;
     }
 
     /* ****************************Class Methods********************************* */
@@ -208,6 +193,7 @@ public class Window extends JFrame implements KeyListener {
                         drawable.paintComponent(graphics);
                     }
                 }
+                graphics.drawImage(this.sprites.get(9), 0, 0, null);
                 //Disposes of this graphics context, it's no longer referenced.
                 graphics.dispose();
             } while (strategy.contentsRestored());

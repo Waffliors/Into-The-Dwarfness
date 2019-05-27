@@ -10,7 +10,7 @@ public class Node implements Collidable{
     private Point LT,RT,LD, RD; 
 
     private int ID;
-    private boolean blocked, visited;
+    private boolean blocked, visited, isTransition;
     private Node father;
     private List<Node> neighbors = new ArrayList();
 
@@ -26,6 +26,7 @@ public class Node implements Collidable{
         this.LD = new Point(x,y+64);
         //Initialize the pivot RD = (64, 64)
         this.RD = new Point(x+64,y+64);
+        this.isTransition = false;
     }
 
     
@@ -85,6 +86,10 @@ public class Node implements Collidable{
         this.f = f;
     }
     
+    public void setTransition (boolean transition){
+        this.isTransition = transition;
+    }
+    
     //Getters of the pivots
     public Point getLT() {
         return LT;
@@ -107,7 +112,8 @@ public class Node implements Collidable{
         return "Pivot LT: "+LT+
                "\nPivot RT: "+RT+
                 "\nPivot LD: "+LD+
-                "\nPivot RD: "+RD+"\n\n";
+                "\nPivot RD: "+RD+
+                "\nEstá bloqueado? "+this.isBlocked()+"\n\n";
 
     }
 
@@ -130,5 +136,6 @@ public class Node implements Collidable{
     public Point getPivotRD() {
         return RD;
     }
+
 
 }

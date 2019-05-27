@@ -27,7 +27,7 @@ public class Map extends JPanel implements Drawable {
     private int objectMap[][];
     
     private boolean gUnblockedT[][];
-    private final Node nodeMap[][];
+    private Node nodeMap[][];
     
     public int actualStage;
 
@@ -112,6 +112,14 @@ public class Map extends JPanel implements Drawable {
                 }
                 if (!UNBLOCKEDTILES.contains(temp3)) {
                     RESP[i][j].setBloqueado(true);
+                }
+                
+                if(actualStage == 1){
+                    if(i == 11){
+                        if (j == 7 || j == 8){
+                            RESP[i][j].setTransition(true);
+                        }
+                    }
                 }
                 x += 64;
             }
@@ -293,7 +301,7 @@ public class Map extends JPanel implements Drawable {
                 {  6,   6,   6,   6,   6, 225,   6,   6,   6,   6, 225,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6, 240,   6,   6,   6,   6,   6,   6,   6,   6, 241,   6,   6,   6},
-                {  6,   6,   6,   6,   6, 209,   6,   6,   6,   6, 210,   6,   6,   6,   6,   6},
+                {  6,   6,   6,   6,   6, 209,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6, 225,   6,   6,   6,   6, 225,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
@@ -489,7 +497,7 @@ public class Map extends JPanel implements Drawable {
                 { 51,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  53},};            
         }
         //After Create the new map, load the graph
-        loadNodeMap();
+        this.nodeMap = loadNodeMap();
     }
 
 /* *************************Overridden Methods******************************* */
