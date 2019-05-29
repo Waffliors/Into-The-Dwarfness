@@ -7,17 +7,17 @@ import intothedwarfness.Interfaces.Collidable;
 
 public class Node implements Collidable{
     
+    private int x, y;
     private Point LT,RT,LD, RD; 
-
     private int ID;
     private boolean blocked, visited, isTransition;
     private Node father;
-    private List<Node> neighbors = new ArrayList();
+    private ArrayList<Node> neighbors = new ArrayList();
 
     //IA VARIABLES
     private float h, g, f;
     
-    public Node(int x, int y){
+    public Node(int x, int y, int xM, int yM){
         //Initialize the pivot LT = (0, 0)
         this.LT = new Point(x,y);
         //Initialize the pivot RT = (64, 0)
@@ -26,7 +26,16 @@ public class Node implements Collidable{
         this.LD = new Point(x,y+64);
         //Initialize the pivot RD = (64, 64)
         this.RD = new Point(x+64,y+64);
-        this.isTransition = false;
+        this.x = xM;
+        this.y = yM;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     
@@ -107,13 +116,24 @@ public class Node implements Collidable{
         return RD;
     }
     
+    public void showNeigh(){
+        System.out.println("Vizinhos do nó "+this.x+" "+ this.y+ ": "+this.neighbors);
+    }
+    
+    public void addNeighbor(Node no){
+        this.neighbors.add(no);
+        
+    }
+    
     @Override
     public String toString(){
-        return "Pivot LT: "+LT+
-               "\nPivot RT: "+RT+
-                "\nPivot LD: "+LD+
-                "\nPivot RD: "+RD+
-                "\nEstá bloqueado? "+this.isBlocked()+"\n\n";
+        return "(x: "+x+", y: "+y+") = " +this.isBlocked();
+
+        //return "Pivot LT: "+LT+
+        //       "\nPivot RT: "+RT+
+        //        "\nPivot LD: "+LD+
+        //        "\nPivot RD: "+RD+
+        //        "\nEstá bloqueado? "+this.isBlocked()+"\n\n";
 
     }
 
