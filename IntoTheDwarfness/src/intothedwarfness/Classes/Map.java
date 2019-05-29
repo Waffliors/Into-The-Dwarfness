@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import intothedwarfness.IA.Node;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Interfaces.Drawable;
+import java.util.LinkedList;
 
 public class Map extends JPanel implements Drawable {
 /* ***************************Class Variables******************************** */
@@ -522,6 +523,147 @@ public class Map extends JPanel implements Drawable {
         //nodeMap[lin][col].showNeigh();
     }
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+	 * @param start
+	 *            The first node on the path.
+	 * @param goal
+	 *            The last node on the path.
+	 * @return a list containing all of the visited nodes, from the goal to the
+	 *         start.
+	 */
+	private List<Node> calcPath(Node start, Node goal)
+	{
+		LinkedList<Node> path = new LinkedList<Node>();
+
+		Node node = goal;
+		boolean done = false;
+		while (!done)
+		{
+			path.addFirst(node);
+			node = node.getFather();
+			if (node.equals(start))
+			{
+				done = true;
+			}
+		}
+		return path;
+	}
+    /**
+     * @param list The list to be checked.
+     * @return The node with the lowest F score in the list.
+     */
+    private Node lowestFInList(List<Node> list) {
+        Node cheapest = list.get(0);
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getF() < cheapest.getF()) {
+                cheapest = list.get(i);
+            }
+        }
+        return cheapest;
+    }
+
+    public final List<Node> findPath(int startX, int startY, int goalX, int goalY) {
+        // If our start position is the same as our goal position ...
+        if (startX == goalX && startY == goalY) {
+            // Return an empty path, because we don't need to move at all.
+            return new LinkedList<Node>();
+        }
+
+        // The set of nodes already visited.
+        List<Node> openList = new LinkedList<Node>();
+        // The set of currently discovered nodes still to be visited.
+        List<Node> closedList = new LinkedList<Node>();
+
+        // Add starting node to open list.
+        openList.add(nodeMap[startX][startY]);
+
+        // This loop will be broken as soon as the current node position is
+        // equal to the goal position.
+        while (true) {
+            // Gets node with the lowest F score from open list.
+            Node current = lowestFInList(openList);
+            // Remove current node from open list.
+            openList.remove(current);
+            // Add current node to closed list.
+            closedList.add(current);
+
+            // If the current node position is equal to the goal position ...
+            if ((current.getX() == goalX) && (current.getY() == goalY)) {
+                // Return a LinkedList containing all of the visited nodes.
+                return calcPath(nodeMap[startX][startY], current);
+            }
+
+            List<Node> adjacentNodes = current.getNeighbors();
+            for (Node adjacent : adjacentNodes) {
+                if (!adjacent.isBlocked()) {
+                    // If node is not in the open list ...
+                    if (!openList.contains(adjacent)) {
+                        // Set current node as parent for this node.
+                        adjacent.setFather(current);
+                        // Set H costs of this node (estimated costs to goal).
+                        adjacent.setH(nodeMap[goalX][goalY]);
+                        // Set G costs of this node (costs from start to this node).
+                        adjacent.setG(current);
+                        // Add node to openList.
+                        openList.add(adjacent);
+                    } // Else if the node is in the open list and the G score from
+                    // current node is cheaper than previous costs ...
+                    else if (adjacent.getG() > adjacent.calculateG(current)) {
+                        // Set current node as parent for this node.
+                        adjacent.setFather(current);
+                        // Set G costs of this node (costs from start to this node).
+                        adjacent.setG(current);
+                    }
+                }
+
+                // If no path exists ...
+                if (openList.isEmpty()) {
+                    // Return an empty list.
+                    return new LinkedList<Node>();
+                }
+                // But if it does, continue the loop.
+            }
+        }
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     //Return a node of the Node Map
     public Node getNode(int x, int y) {
         if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
@@ -531,7 +673,12 @@ public class Map extends JPanel implements Drawable {
         }
     }
 
-    /* *************************Overridden Methods******************************* */
+    //Return the node map
+    public Node[][] getNodeMap() {
+        return nodeMap;
+    }
+    
+/* *************************Overridden Methods******************************* */
     @Override
     public void paintComponent(Graphics g) {
         for (int x = 0; x < this.floorMap[0].length; x++) {
@@ -558,10 +705,6 @@ public class Map extends JPanel implements Drawable {
                         null);
             }
         }
-    }
-
-    public Node[][] getNodeMap() {
-        return nodeMap;
     }
 
     @Override
