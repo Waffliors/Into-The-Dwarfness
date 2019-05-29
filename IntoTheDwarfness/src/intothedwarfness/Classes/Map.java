@@ -6,15 +6,14 @@
  ******************************************************************************/
 package intothedwarfness.Classes;
 
-import intothedwarfness.IA.Node;
 import java.util.List;
 import java.util.Arrays;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import java.util.ArrayList;
+import intothedwarfness.IA.Node;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Interfaces.Drawable;
-import java.util.LinkedList;
 
 public class Map extends JPanel implements Drawable {
 /* ***************************Class Variables******************************** */
@@ -23,13 +22,8 @@ public class Map extends JPanel implements Drawable {
     private final ArrayList<Tile> TILEMAP;
     private final List<Integer> UNBLOCKEDTILES;
     
-    private int wallMap[][];
-    private int floorMap[][];
-    private int objectMap[][];
-    
-    private boolean gUnblockedT[][];
+    private int wallMap[][], floorMap[][], objectMap[][];
     private Node nodeMap[][];
-    
     public int actualStage;
 
 /* **************************Class Constructor******************************* */
@@ -42,15 +36,9 @@ public class Map extends JPanel implements Drawable {
         this.TILEMAP = loadTile();
         this.actualStage = 1;
         this.UNBLOCKEDTILES = loadUblockedTiles();
-
-        loadUblockedTiles();
         stageCreator(1);
-        nodeMap = loadNodeMap();
-        achaVizinho();
-    }
-
-    public ArrayList<Tile> getTMList() {
-        return TILEMAP;
+        this.nodeMap = loadNodeMap();
+        findNeighobors();
     }
 
 /* ********************Auxiliary methods of the Constructor****************** */
@@ -91,21 +79,20 @@ public class Map extends JPanel implements Drawable {
     }
     
     //Method that load the NodeMap
-    private Node[][] loadNodeMap(){
+    private Node[][] loadNodeMap() {
         int x = 0;
         int y = 0;
         Node RESP[][] = new Node[LINES][COLUMNS];
-        
-        for(int i = 0; i < LINES; i++){
-            for (int j = 0; j < COLUMNS; j++){
-                //Cria o nó
-                RESP[i][j] = new Node(x,y,i,j);
-                //Se no nó atual, em todas as matrizes não houver um referencia da lista de tiles
-                //checar nas 3 matrizes 
+
+        for (int i = 0; i < LINES; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                //Create the node
+                RESP[i][j] = new Node(x, y, i, j);
+                //Checks if the node reference appears in one of the matrix
                 int temp1 = wallMap[i][j];
                 int temp2 = objectMap[i][j];
                 int temp3 = floorMap[i][j];
-                
+
                 if (!UNBLOCKEDTILES.contains(temp1) && temp1 != 6) {
                     RESP[i][j].setBloqueado(true);
                 }
@@ -115,35 +102,15 @@ public class Map extends JPanel implements Drawable {
                 if (!UNBLOCKEDTILES.contains(temp3)) {
                     RESP[i][j].setBloqueado(true);
                 }
-                
-                if(actualStage == 1){
-                    if(i == 11){
-                        if (j == 7 || j == 8){
-                            RESP[i][j].setTransition(true);
-                        }
-                    }
-                }
                 x += 64;
             }
             x = 0;
-            y +=64;
+            y += 64;
         }
-        // PRINT DO MAPA EM GRAPHO
-//        for (int i = 0; i < LINES; i++) {
-//            System.out.println();
-//            for (int j = 0; j < COLUMNS; j++) {
-//                if(RESP[i][j].estaBloqueado()){
-//                    System.out.print("[1]");
-//                }
-//                else
-//                    System.out.print("[0]");
-//            }
-//        } 
         return RESP;
     }
     
 /* ****************************Class Methods********************************* */
-    
     //For each stage, all the three matrices are redrawn
     public void stageCreator(int ref) {
         this.actualStage = ref;
@@ -303,7 +270,7 @@ public class Map extends JPanel implements Drawable {
                 {  6,   6,   6,   6,   6, 225,   6,   6,   6,   6, 225,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6, 240,   6,   6,   6,   6,   6,   6,   6,   6, 241,   6,   6,   6},
-                {  6,   6,   6,   6,   6, 209,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
+                {  6,   6,   6,   6,   6, 209,   6,   6,   6,   6, 209,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6, 225,   6,   6,   6,   6, 225,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
@@ -502,156 +469,57 @@ public class Map extends JPanel implements Drawable {
         this.nodeMap = loadNodeMap();
     }
     
-    //Method that find the nodes neighbors
-    private void findNeighobors(Node node, List<Node> neighbors) {
+    //Method that walks through the matrix of nodes and for each of them finds
+    //its orthogonal neighbors
+    private void findNeighobors() {
+        for (int i = 0; i < LINES; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                calculateNeighobors(nodeMap[i][j]);
+            }
+        }
+    }
+    
+    //Method that calculate the orthogonal neighbors
+    private void calculateNeighobors(Node node) {
         int lin = node.getX();
         int col = node.getY();
         
-
-        //Node adjLeft, adjRight, adjTop, adjDown;
-                
-        /*
-        System.out.println("adjLeft: "+(lin)+" "+(col-1)+";\n"+
-                           "adjRight: "+(lin)+"+"+(col+1)+";\n"+
-                           "adjTop: "+(lin-1)+"+"+(col)+";\n"+
-                           "adjDown: "+(lin+1)+"+"+(col)+";\n");
-        */
-        
-        
-        //Index na matriz do vizinho esquerda
+        //Index in the matrix of the left neighbor
         int adjLeft_lin = lin;
         int adjLeft_col = col-1;
+        //Index in matrix of the right neighbor
+        int adjRight_lin = lin;
+        int adjRight_col = col+1;
+        //Index in matrix of the top neighbor
+        int adjTop_lin = lin - 1;
+        int adjTop_col = col;
+        ////Index in matrix of the down neighbor
+        int adjDown_lin = lin + 1;
+        int adjDown_col = col;
+        
+        //Now check if the neighbors of the node are in the limits of the matrix
         if (adjLeft_lin >= 0 && adjLeft_lin <= LINES) {
             if (adjLeft_col >= 0 && adjLeft_col <= COLUMNS) {
                 nodeMap[lin][col].addNeighbor(nodeMap[adjLeft_lin][adjLeft_col]);
             }
         }
-        
-        int adjRight_lin = lin;
-        int adjRight_col = col+1;
         if (adjRight_lin >= 0 && adjRight_lin <= LINES) {
             if (adjRight_col >= 0 && adjRight_col <= COLUMNS-1) {
                 nodeMap[lin][col].addNeighbor(nodeMap[adjRight_lin][adjRight_col]);
             }
         }
-        
-        int adjTop_lin = lin - 1;
-        int adjTop_col = col;
         if (adjTop_lin >= 0 && adjTop_lin <= LINES) {
             if (adjTop_col >= 0 && adjTop_col <= COLUMNS) {
                 nodeMap[lin][col].addNeighbor(nodeMap[adjTop_lin][adjTop_col]);
             }
         }
-         
-        int adjDown_lin = lin + 1;
-        int adjDown_col = col;
         if (adjDown_lin >= 0 && adjDown_lin <= LINES-1) {
             if (adjDown_col >= 0 && adjDown_col <= COLUMNS) {
                 nodeMap[lin][col].addNeighbor(nodeMap[adjDown_lin][adjDown_col]);
             }
         }
-            //&& ( adjLeft_col >= 0 &&  adjLeft_col <= HEIGHT)
-              //  }){
-            
-        
-        
-        
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        /*
-        // Check left node
-        if (x >= 0) {
-            adjacent = getNode(x - 1, y);
-            if (adjacent != null && !adjacent.isBlocked()) {
-                nodeMap[x][y].addNeighbor(adjacent);
-                System.out.println("ADD");
-            }
-        }
-
-        // Check right node
-        if (x < WIDTH) {
-            adjacent = getNode(x + 1, y);
-            if (adjacent != null && !adjacent.isBlocked()) {
-                neighbors.add(adjacent);
-                System.out.println("ADD");
-            }
-        }
-
-        // Check top node
-        if (y > 0) {
-            adjacent = this.getNode(x, y - 1);
-            if (adjacent != null && !adjacent.isBlocked()) {
-                neighbors.add(adjacent);
-                System.out.println("ADD");
-            }
-        }
-
-        // Check bottom node
-        if (y < HEIGHT) {
-            adjacent = this.getNode(x, y + 1);
-            if (adjacent != null && !adjacent.isBlocked()) {
-                neighbors.add(adjacent);
-                System.out.println("ADD");
-            }
-        }*/
-        
-        nodeMap[lin][col].showNeigh();
-    }
-    
-    private void achaVizinho(){
-        //After load the Nodes, find their neighbors
-        for (int i = 0; i < LINES; i++) {
-            for (int j = 0; j < COLUMNS; j++) {
-                findNeighobors(nodeMap[i][j],nodeMap[i][j].getNeighbors());
-            }
-        }
-        //for (int i = 0; i < LINES; i++) {
-         //   for (int j = 0; j < COLUMNS; j++) {
-          //      nodeMap[i][j].mostraVizinho();
-           // }
-       // }
-    }
-
-/* *************************Overridden Methods******************************* */
-    @Override
-    public void paintComponent(Graphics g) {
-        for (int x = 0; x < this.floorMap[0].length; x++) {
-            for (int y = 0; y < this.floorMap.length; y++) {
-                g.drawImage(SPRITE, 
-                		(x * 64) + XPOS, (y * 64) + YPOS, 
-                		(x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS,     
-                        TILEMAP.get(this.floorMap[y][x]).getSrcX1(), TILEMAP.get(this.floorMap[y][x]).getSrcY1(),        
-                        TILEMAP.get(this.floorMap[y][x]).getSrcX2(), TILEMAP.get(this.floorMap[y][x]).getSrcY2(),       
-                        null);        
-                               
-                g.drawImage(SPRITE, 
-                        (x * 64) + XPOS, (y * 64) + YPOS, 
-                        (x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS,
-                        TILEMAP.get(this.objectMap[y][x]).getSrcX1(), TILEMAP.get(this.objectMap[y][x]).getSrcY1(),
-                        TILEMAP.get(this.objectMap[y][x]).getSrcX2(), TILEMAP.get(this.objectMap[y][x]).getSrcY2(), 
-                        null);
-                
-                g.drawImage(SPRITE,
-                        (x * 64) + XPOS, (y * 64) + YPOS,
-                        (x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS, 
-                        TILEMAP.get(this.wallMap[y][x]).getSrcX1(), TILEMAP.get(this.wallMap[y][x]).getSrcY1(),
-                        TILEMAP.get(this.wallMap[y][x]).getSrcX2(), TILEMAP.get(this.wallMap[y][x]).getSrcY2(), 
-                        null);
-            }
-        }
-    }
-    public Node[][] getNodeMap() {
-        return nodeMap;
+        //Print the neighbors
+        //nodeMap[lin][col].showNeigh();
     }
     
     //Return a node of the Node Map
@@ -661,6 +529,39 @@ public class Map extends JPanel implements Drawable {
         } else {
             return null;
         }
+    }
+
+    /* *************************Overridden Methods******************************* */
+    @Override
+    public void paintComponent(Graphics g) {
+        for (int x = 0; x < this.floorMap[0].length; x++) {
+            for (int y = 0; y < this.floorMap.length; y++) {
+                g.drawImage(SPRITE,
+                        (x * 64) + XPOS, (y * 64) + YPOS,
+                        (x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS,
+                        TILEMAP.get(this.floorMap[y][x]).getSrcX1(), TILEMAP.get(this.floorMap[y][x]).getSrcY1(),
+                        TILEMAP.get(this.floorMap[y][x]).getSrcX2(), TILEMAP.get(this.floorMap[y][x]).getSrcY2(),
+                        null);
+
+                g.drawImage(SPRITE,
+                        (x * 64) + XPOS, (y * 64) + YPOS,
+                        (x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS,
+                        TILEMAP.get(this.objectMap[y][x]).getSrcX1(), TILEMAP.get(this.objectMap[y][x]).getSrcY1(),
+                        TILEMAP.get(this.objectMap[y][x]).getSrcX2(), TILEMAP.get(this.objectMap[y][x]).getSrcY2(),
+                        null);
+
+                g.drawImage(SPRITE,
+                        (x * 64) + XPOS, (y * 64) + YPOS,
+                        (x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS,
+                        TILEMAP.get(this.wallMap[y][x]).getSrcX1(), TILEMAP.get(this.wallMap[y][x]).getSrcY1(),
+                        TILEMAP.get(this.wallMap[y][x]).getSrcX2(), TILEMAP.get(this.wallMap[y][x]).getSrcY2(),
+                        null);
+            }
+        }
+    }
+
+    public Node[][] getNodeMap() {
+        return nodeMap;
     }
 
     @Override
