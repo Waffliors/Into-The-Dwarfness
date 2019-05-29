@@ -506,7 +506,9 @@ public class Map extends JPanel implements Drawable {
     private void findNeighobors(Node node, List<Node> neighbors) {
         int lin = node.getX();
         int col = node.getY();
-        Node adjLeft, adjRight, adjTop, adjDown;
+        
+
+        //Node adjLeft, adjRight, adjTop, adjDown;
                 
         /*
         System.out.println("adjLeft: "+(lin)+" "+(col-1)+";\n"+
@@ -515,10 +517,43 @@ public class Map extends JPanel implements Drawable {
                            "adjDown: "+(lin+1)+"+"+(col)+";\n");
         */
         
-        //faz o esquerdo, mas antes verifica se o lado esquerdo sai da matriz
-        if((lin >= 0 && lin <= WIDTH) && (col-1 >= 0 && col-1 <= HEIGHT)){
-            nodeMap[lin][col].addNeighbor( nodeMap[lin][col-1]);
+        
+        //Index na matriz do vizinho esquerda
+        int adjLeft_lin = lin;
+        int adjLeft_col = col-1;
+        if (adjLeft_lin >= 0 && adjLeft_lin <= LINES) {
+            if (adjLeft_col >= 0 && adjLeft_col <= COLUMNS) {
+                nodeMap[lin][col].addNeighbor(nodeMap[adjLeft_lin][adjLeft_col]);
+            }
         }
+        
+        int adjRight_lin = lin;
+        int adjRight_col = col+1;
+        if (adjRight_lin >= 0 && adjRight_lin <= LINES) {
+            if (adjRight_col >= 0 && adjRight_col <= COLUMNS-1) {
+                nodeMap[lin][col].addNeighbor(nodeMap[adjRight_lin][adjRight_col]);
+            }
+        }
+        
+        int adjTop_lin = lin - 1;
+        int adjTop_col = col;
+        if (adjTop_lin >= 0 && adjTop_lin <= LINES) {
+            if (adjTop_col >= 0 && adjTop_col <= COLUMNS) {
+                nodeMap[lin][col].addNeighbor(nodeMap[adjTop_lin][adjTop_col]);
+            }
+        }
+         
+        int adjDown_lin = lin + 1;
+        int adjDown_col = col;
+        if (adjDown_lin >= 0 && adjDown_lin <= LINES-1) {
+            if (adjDown_col >= 0 && adjDown_col <= COLUMNS) {
+                nodeMap[lin][col].addNeighbor(nodeMap[adjDown_lin][adjDown_col]);
+            }
+        }
+            //&& ( adjLeft_col >= 0 &&  adjLeft_col <= HEIGHT)
+              //  }){
+            
+        
         
         
 

@@ -127,11 +127,13 @@ public class Node implements Collidable{
     
     @Override
     public String toString(){
-        return "Pivot LT: "+LT+
-               "\nPivot RT: "+RT+
-                "\nPivot LD: "+LD+
-                "\nPivot RD: "+RD+
-                "\nEstá bloqueado? "+this.isBlocked()+"\n\n";
+        return "(x: "+x+", y: "+y+") = " +this.isBlocked();
+
+        //return "Pivot LT: "+LT+
+        //       "\nPivot RT: "+RT+
+        //        "\nPivot LD: "+LD+
+        //        "\nPivot RD: "+RD+
+        //        "\nEstá bloqueado? "+this.isBlocked()+"\n\n";
 
     }
 
