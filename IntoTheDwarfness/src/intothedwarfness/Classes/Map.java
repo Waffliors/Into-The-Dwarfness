@@ -571,7 +571,7 @@ public class Map extends JPanel implements Drawable {
     private Node lowestFInList(List<Node> list) {
         Node cheapest = list.get(0);
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getF() < cheapest.getF()) {
+            if (list.get(i).calcF() < cheapest.calcF()) {
                 cheapest = list.get(i);
             }
         }

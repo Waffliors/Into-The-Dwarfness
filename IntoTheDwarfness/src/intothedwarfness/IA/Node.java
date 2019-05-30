@@ -16,7 +16,7 @@ public class Node implements Collidable{
     private ArrayList<Node> neighbors = new ArrayList();
 
     //IA VARIABLES
-    private int h, g, f;
+    private int h, g;
     
     public Node(int x, int y, int xM, int yM){
         //Initialize the pivot LT = (0, 0)
@@ -89,12 +89,8 @@ public class Node implements Collidable{
         this.g = g;
     }
 
-    public float getF() {
-        return f;
-    }
-
-    public void setF(int f) {
-        this.f = f;
+    public int calcF() {
+        return g + h;
     }
     
     /**
