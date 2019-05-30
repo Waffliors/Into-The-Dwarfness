@@ -18,9 +18,9 @@ public class Node implements Collidable{
     private ArrayList<Node> neighbors = new ArrayList();
 
     //IA VARIABLES
-    private int h, g;
+    private float f, h, g;
     
-    public Node(int x, int y, int xM, int yM){
+    public Node(int x, int y, int xM, int yM, int id){
         //Initialize the pivot LT = (0, 0)
         this.LT = new Point(x,y);
         //Initialize the pivot RT = (64, 0)
@@ -32,7 +32,9 @@ public class Node implements Collidable{
         this.blocked = false;
         this.x = xM;
         this.y = yM;
+        this.ID = id;
         this.MOVEMENT_COST = 10;
+        this.father = null;
     }
     
 
@@ -65,7 +67,7 @@ public class Node implements Collidable{
     }
     
     public Node getFather() {
-        return father;
+        return this.father;
     }
 
     public void setFather(Node father) {
@@ -80,7 +82,7 @@ public class Node implements Collidable{
         return h;
     }
 
-    public void setH(int h) {
+    public void setH(float h) {
         this.h = h;
     }
 
@@ -89,8 +91,16 @@ public class Node implements Collidable{
     }
 
 
-    public int getF() {
-        return g + h;
+    public float getF() {
+        return f;
+    }
+
+    public void setF(float f) {
+        this.f = f;
+    }
+    
+    public void setG(float g) {
+        this.g = g;
     }
     
     /**
@@ -98,9 +108,9 @@ public class Node implements Collidable{
      *
      * @param parent The node prior to this one.
      */
-    public void setG(Node parent) {
-        this.g = (int) (parent.getG() + MOVEMENT_COST);
-    }
+    //public void setG(Node parent) {
+    //    this.g = (int) (parent.getG() + MOVEMENT_COST);
+    //}
 
     /**
      * Calculates and return the G score, without changing it on the class.
@@ -120,25 +130,6 @@ public class Node implements Collidable{
     public void setH(Node goal) {
         this.h = (Math.abs(getX() - goal.getX()) + Math.abs(getY() - goal.getY())) * MOVEMENT_COST;
     }
-
-    
-    @Override
-	public boolean equals(Object o)
-	{
-		if (o == null)
-			return false;
-		if (!(o instanceof Node))
-			return false;
-		if (o == this)
-			return true;
-
-		Node n = (Node) o;
-		if (n.getX() == x && n.getY() == y && !n.isBlocked())
-			return true;
-		return false;
-	}
-    
-    
     
     
     

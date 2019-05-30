@@ -21,6 +21,7 @@ import intothedwarfness.Classes.States.GameStateManager;
 import intothedwarfness.Classes.characters.Enemy;
 import intothedwarfness.Classes.characters.Player;
 import intothedwarfness.Classes.characters.Spider;
+import intothedwarfness.IA.AStar;
 import intothedwarfness.IA.Node;
 import intothedwarfness.Interfaces.Collidable;
 import intothedwarfness.Interfaces.Drawable;
@@ -112,7 +113,8 @@ public class Window extends JFrame implements KeyListener {
         
         
         //Path test
-        System.out.println(map.findPath(2, 8, 9, 9));
+        //System.out.println(map.findPath(2, 8, 2, 3));
+        AStar.aEstrela(map.getNode(2, 8), map.getNode(1, 1), map);
         while (isRunning) {
             long beforeTime = System.currentTimeMillis();
 
