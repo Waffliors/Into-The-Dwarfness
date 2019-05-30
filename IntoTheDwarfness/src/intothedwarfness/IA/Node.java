@@ -7,15 +7,16 @@ import intothedwarfness.Interfaces.Collidable;
 
 public class Node implements Collidable{
     
+    private int MOVEMENT_COST;
     private int x, y;
     private Point LT,RT,LD, RD; 
     private int ID;
-    private boolean blocked, visited, isTransition;
+    private boolean blocked, visited;
     private Node father;
     private ArrayList<Node> neighbors = new ArrayList();
 
     //IA VARIABLES
-    private float h, g, f;
+    private int h, g, f;
     
     public Node(int x, int y, int xM, int yM){
         //Initialize the pivot LT = (0, 0)
@@ -28,6 +29,7 @@ public class Node implements Collidable{
         this.RD = new Point(x+64,y+64);
         this.x = xM;
         this.y = yM;
+        this.MOVEMENT_COST = 10;
     }
 
     public int getX() {
@@ -75,7 +77,7 @@ public class Node implements Collidable{
         return h;
     }
 
-    public void setH(float h) {
+    public void setH(int h) {
         this.h = h;
     }
 
@@ -83,7 +85,7 @@ public class Node implements Collidable{
         return g;
     }
 
-    public void setG(float g) {
+    public void setG(int g) {
         this.g = g;
     }
 
@@ -91,13 +93,52 @@ public class Node implements Collidable{
         return f;
     }
 
-    public void setF(float f) {
+    public void setF(int f) {
         this.f = f;
     }
     
-    public void setTransition (boolean transition){
-        this.isTransition = transition;
+    /**
+     * Sets the G score based on the parent's G score and the movement cost.
+     *
+     * @param parent The node prior to this one.
+     */
+    public void setG(Node parent) {
+        g = (int) (parent.getG() + MOVEMENT_COST);
     }
+
+    /**
+     * Calculates and return the G score, without changing it on the class.
+     *
+     * @param parent The node prior to this one.
+     * @return This node's G score.
+     */
+    public int calculateG(Node parent) {
+        return (int) (parent.getG() + MOVEMENT_COST);
+    }
+
+    /**
+     * Sets the H score based on the goal's position.
+     *
+     * @param goal The final node on the path.
+     */
+    public void setH(Node goal) {
+        h = (Math.abs(getX() - goal.getX()) + Math.abs(getY() - goal.getY())) * MOVEMENT_COST;
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     //Getters of the pivots
     public Point getLT() {
