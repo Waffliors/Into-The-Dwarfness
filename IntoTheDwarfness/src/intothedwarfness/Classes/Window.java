@@ -20,12 +20,9 @@ import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
 import intothedwarfness.Classes.characters.Enemy;
 import intothedwarfness.Classes.characters.Player;
-import intothedwarfness.Classes.characters.Spider;
 import intothedwarfness.IA.AStar;
 import intothedwarfness.IA.Node;
-import intothedwarfness.Interfaces.Collidable;
 import intothedwarfness.Interfaces.Drawable;
-import java.net.MalformedURLException;
 import java.util.List;
 
 
@@ -35,7 +32,6 @@ public class Window extends JFrame implements KeyListener {
     
     private final int width, height;
     private final Map map;
-    //private final Spider spider1;
     private final Player player;
     private final Enemy spider;
     
@@ -57,7 +53,6 @@ public class Window extends JFrame implements KeyListener {
         this.spider = new Enemy(256, 576, 1, sprites.get(3), map.getNodeMap());
         this.enemies.add(spider);
         this.setSize(this.width, this.height);
-        //this.spider1 = new Spider(320, 448, 1, sprites.get(2), songs, map);
         this.player = new Player(sprites.get(0),songs, map);
         
         
@@ -82,7 +77,6 @@ public class Window extends JFrame implements KeyListener {
         ArrayList<Drawable> elements = new ArrayList();
         elements.add(this.map);
         elements.add(this.player);
-        //elements.add(this.spider1);
         for (Enemy enemy : this.enemies) {
             elements.add(enemy);
         }
@@ -132,7 +126,6 @@ public class Window extends JFrame implements KeyListener {
             if ("PlayState".equals(gsm.getType())) {               
                 
                 player.update();
-                spider.update();
                 for (Enemy enemy : this.enemies) {
                     if (enemy.isStage(this.map)) {
                         enemy.update();                        
