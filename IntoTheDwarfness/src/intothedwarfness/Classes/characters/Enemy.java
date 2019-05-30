@@ -161,7 +161,7 @@ public class Enemy extends Character implements Drawable {
 			path = null;
 			return;
 		}
-		Node next = ((LinkedList<Node>) path).getFirst();
+		Node next = ((List<Node>) path).get(0);
 		if (next.getX() != x)
 		{
 			sx += (next.getX() < x ? -speed : speed);

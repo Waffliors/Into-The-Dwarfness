@@ -42,6 +42,7 @@ public class Window extends JFrame implements KeyListener {
     private final ArrayList<Enemy> enemies = new ArrayList();
     private final ArrayList<BufferedImage> sprites;
     private final ArrayList<Song> songs;
+    private List<Node> path;
     private ArrayList<Drawable> drawables;
 
     /* **************************Class Constructor******************************* */
@@ -114,14 +115,15 @@ public class Window extends JFrame implements KeyListener {
         
         //Path test
         //System.out.println(map.findPath(2, 8, 2, 3));
-        AStar.aEstrela(map.getNode(2, 8), map.getNode(1, 1), map);
+        this.path = AStar.aEstrela(map.getNode(9, 4), map.getNode(2, 8), map);
         while (isRunning) {
+            spider.followPath(path);
             long beforeTime = System.currentTimeMillis();
 
             // Pula os quadros enquanto o tempo for em excesso.
             while (excess > DESIRED_UPDATE_TIME) {
                 player.update();
-                //spider1.update();
+                spider.followPath(path);
                 for (Enemy enemy : this.enemies) {
                     enemy.update();
                 }

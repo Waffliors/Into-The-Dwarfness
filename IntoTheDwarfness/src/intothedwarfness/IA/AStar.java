@@ -142,7 +142,7 @@ public class AStar {
         //imprimir caminho
         System.out.println("Caminho: ");
         for (Node no : listaAuxiliar) {
-            System.out.print(" -> " + no.getId());
+            System.out.print(" -> " + no);
         }
         //inicio artificio apenas para printar caminho
         for (Node no : mapa.getNodeList()) {
