@@ -571,7 +571,7 @@ public class Map extends JPanel implements Drawable {
     private Node lowestFInList(List<Node> list) {
         Node cheapest = list.get(0);
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).calcF() < cheapest.calcF()) {
+            if (list.get(i).getF() < cheapest.getF()) {
                 cheapest = list.get(i);
             }
         }
@@ -597,6 +597,7 @@ public class Map extends JPanel implements Drawable {
         // equal to the goal position.
         while (true) {
             // Gets node with the lowest F score from open list.
+            
             Node current = lowestFInList(openList);
             // Remove current node from open list.
             openList.remove(current);
@@ -609,7 +610,7 @@ public class Map extends JPanel implements Drawable {
                 return calcPath(nodeMap[startX][startY], current);
             }
 
-            List<Node> adjacentNodes = current.getNeighbors();
+            List<Node> adjacentNodes = getAdjacent(current, closedList);
             for (Node adjacent : adjacentNodes) {
                 if (!adjacent.isBlocked()) {
                     // If node is not in the open list ...
@@ -642,7 +643,55 @@ public class Map extends JPanel implements Drawable {
         }
     }
 
-    
+    private List<Node> getAdjacent(Node node, List<Node> closedList)
+	{
+		List<Node> adjacentNodes = new LinkedList<Node>();
+		int x = node.getX();
+		int y = node.getY();
+
+		Node adjacent;
+
+		// Check left node
+		if (x > 0)
+		{
+			adjacent = getNode(x - 1, y);
+			if (adjacent != null && !adjacent.isBlocked() && !closedList.contains(adjacent))
+			{
+				adjacentNodes.add(adjacent);
+			}
+		}
+
+		// Check right node
+		if (x < LINES)
+		{
+			adjacent = getNode(x + 1, y);
+			if (adjacent != null && !adjacent.isBlocked() && !closedList.contains(adjacent))
+			{
+				adjacentNodes.add(adjacent);
+			}
+		}
+
+		// Check top node
+		if (y > 0)
+		{
+			adjacent = this.getNode(x, y - 1);
+			if (adjacent != null && !adjacent.isBlocked() && !closedList.contains(adjacent))
+			{
+				adjacentNodes.add(adjacent);
+			}
+		}
+
+		// Check bottom node
+		if (y < COLUMNS)
+		{
+			adjacent = this.getNode(x, y + 1);
+			if (adjacent != null && !adjacent.isBlocked() && !closedList.contains(adjacent))
+			{
+				adjacentNodes.add(adjacent);
+			}
+		}
+		return adjacentNodes;
+	}
     
     
     

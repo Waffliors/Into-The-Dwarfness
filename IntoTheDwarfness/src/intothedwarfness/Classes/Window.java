@@ -112,7 +112,7 @@ public class Window extends JFrame implements KeyListener {
         
         
         //Path test
-        System.out.println(map.findPath(2, 8, 2, 3));
+        System.out.println(map.findPath(2, 8, 9, 9));
         while (isRunning) {
             long beforeTime = System.currentTimeMillis();
 

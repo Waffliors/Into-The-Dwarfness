@@ -1,6 +1,8 @@
 package intothedwarfness.IA;
 
 import java.util.List;
+
+
 import java.util.ArrayList;
 import intothedwarfness.Classes.Point;
 import intothedwarfness.Interfaces.Collidable;
@@ -27,15 +29,16 @@ public class Node implements Collidable{
         this.LD = new Point(x,y+64);
         //Initialize the pivot RD = (64, 64)
         this.RD = new Point(x+64,y+64);
+        this.blocked = false;
         this.x = xM;
         this.y = yM;
         this.MOVEMENT_COST = 10;
     }
+    
 
     public int getX() {
         return x;
     }
-
     public int getY() {
         return y;
     }
@@ -85,11 +88,8 @@ public class Node implements Collidable{
         return g;
     }
 
-    public void setG(int g) {
-        this.g = g;
-    }
 
-    public int calcF() {
+    public int getF() {
         return g + h;
     }
     
@@ -99,7 +99,7 @@ public class Node implements Collidable{
      * @param parent The node prior to this one.
      */
     public void setG(Node parent) {
-        g = (int) (parent.getG() + MOVEMENT_COST);
+        this.g = (int) (parent.getG() + MOVEMENT_COST);
     }
 
     /**
@@ -118,11 +118,25 @@ public class Node implements Collidable{
      * @param goal The final node on the path.
      */
     public void setH(Node goal) {
-        h = (Math.abs(getX() - goal.getX()) + Math.abs(getY() - goal.getY())) * MOVEMENT_COST;
+        this.h = (Math.abs(getX() - goal.getX()) + Math.abs(getY() - goal.getY())) * MOVEMENT_COST;
     }
 
     
-    
+    @Override
+	public boolean equals(Object o)
+	{
+		if (o == null)
+			return false;
+		if (!(o instanceof Node))
+			return false;
+		if (o == this)
+			return true;
+
+		Node n = (Node) o;
+		if (n.getX() == x && n.getY() == y && !n.isBlocked())
+			return true;
+		return false;
+	}
     
     
     
