@@ -12,6 +12,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import intothedwarfness.IA.AStar;
 
 /**
  *
@@ -27,7 +28,8 @@ public class Enemy extends Character implements Drawable {
     private boolean move, turn;
     private int direction;
     private Node[][] collideMap;
-    private int xPos, yPos, actualStage;
+    private float xPos, yPos;
+    private int  actualStage;
     private final BufferedImage SpriteSheet;
     private int x;
     
@@ -83,112 +85,155 @@ public class Enemy extends Character implements Drawable {
     @Override
     public void update()
 	{
-		if (fixing)
-		{
-			fix();
-		}
-		if (walking)
-		{
-  			walk();
-		}
+    	move();
+//		if (fixing)
+//		{
+//			fix();
+//		}
+//		if (walking)
+//		{
+//  			walk();
+//		}
 	}
+    
+    public void move()
+    {
+    	int length = path.size();
+    	
+    	for(Node node : path) 
+    	{
+    		int cont = 0;
 
-	public void followPath(List<Node> path)
-	{
-		this.path = path;
-		if (walking)
-		{
-			fixing = true;
-			walking = false;
-		}
-		else
-		{
-			walking = true;
-		}
-	}
+    		if (node.getX() != path.get(length-1).getX() && node.getY() != path.get(length-1).getY())
+    		{
+    			cont++;
+    			if(cont % 60 == 0)
+    			{
+    				if(node.getX() > path.get(path.indexOf(node)+1).getX())
+    				{
+    					this.yPos -= 8;
+    				}
+    				//    				else if(node.getX() < path.get(path.indexOf(node)+1).getX())
+    				//    				{
+    				//    					this.yPos += 0.13333;
+    				//    					cont++;
+    				//    				}
+    				//    				else if(node.getY() > path.get(path.indexOf(node)+1).getY())
+    				//    				{
+    				//    					this.xPos -= 0.13333;
+    				//    					cont++;
+    				//    				}
+    				//    				else if(node.getY() < path.get(path.indexOf(node)+1).getY())
+    				//    				{
+    				//    					this.xPos += 0.13333;
+    				//    					cont++;
+    				//    				}
+    			}
+    		}
+    	}
+    }
 
-	private void fix()
-	{
-		if (sx > 0)
-		{
-			sx -= speed;
-			if (sx < 0)
-			{
-				sx = 0;
-			}
-		}
-		if (sx < 0)
-		{
-			sx += speed;
-			if (sx > 0)
-			{
-				sx = 0;
-			}
-		}
-		if (sy > 0)
-		{
-			sy -= speed;
-			if (sy < 0)
-			{
-				sy = 0;
-			}
-		}
-		if (sy < 0)
-		{
-			sy += speed;
-			if (sy > 0)
-			{
-				sy = 0;
-			}
-		}
-		if (sx == 0 && sy == 0)
-		{
-			fixing = false;
-			walking = true;
-		}
-	}
+    public void setPath(List<Node> path) {
+    	this.path = path;
+    }
+
+//	public void followPath(List<Node> path)
+//	{
+//		this.path = path;
+//		if (walking)
+//		{
+//			fixing = true;
+//			walking = false;
+//		}
+//		else
+//		{
+//			walking = true;
+//		}
+//	}
+
+//	private void fix()
+//	{
+//		if (sx > 0)
+//		{
+//			sx -= speed;
+//			if (sx < 0)
+//			{
+//				sx = 0;
+//			}
+//		}
+//		if (sx < 0)
+//		{
+//			sx += speed;
+//			if (sx > 0)
+//			{
+//				sx = 0;
+//			}
+//		}
+//		if (sy > 0)
+//		{
+//			sy -= speed;
+//			if (sy < 0)
+//			{
+//				sy = 0;
+//			}
+//		}
+//		if (sy < 0)
+//		{
+//			sy += speed;
+//			if (sy > 0)
+//			{
+//				sy = 0;
+//			}
+//		}
+//		if (sx == 0 && sy == 0)
+//		{
+//			fixing = false;
+//			walking = true;
+//		}
+//	}
 	
-	private void walk()
-	{
-		if (path == null)
-		{
-			walking = false;
-			return;
-		}
-		if (path.size() <= 0)
-		{
-			walking = false;
-			path = null;
-			return;
-		}
-		Node next = ((LinkedList<Node>) path).getFirst();
-		if (next.getX() != x)
-		{
-			sx += (next.getX() < x ? -speed : speed);
-			if (sx % 32 == 0)
-			{
-				((LinkedList<Node>) path).removeFirst();
-				if (sx > 0)
-					x++;
-				else
-					x--;
-				sx %= 32;
-			}
-		}
-		else if (next.getY() != y)
-		{
-			sy += (next.getY() < y ? -speed : speed);
-			if (sy % 32 == 0)
-			{
-				((LinkedList<Node>) path).removeFirst();
-				if (sy > 0)
-					y++;
-				else
-					y--;
-				sy %= 32;
-			}
-		}
-	}
+
+//	private void walk()
+//	{
+//		if (path == null)
+//		{
+//			walking = false;
+//			return;
+//		}
+//		if (path.size() <= 0)
+//		{
+//			walking = false;
+//			path = null;
+//			return;
+//		}
+//		Node next = ((List<Node>) path).get(0);
+//		if (next.getX() != x)
+//		{
+//			sx += (next.getX() < x ? -speed : speed);
+//			if (sx % 32 == 0)
+//			{
+//				((LinkedList<Node>) path).removeFirst();
+//				if (sx > 0)
+//					x++;
+//				else
+//					x--;
+//				sx %= 32;
+//			}
+//		}
+//		else if (next.getY() != y)
+//		{
+//			sy += (next.getY() < y ? -speed : speed);
+//			if (sy % 32 == 0)
+//			{
+//				((LinkedList<Node>) path).removeFirst();
+//				if (sy > 0)
+//					y++;
+//				else
+//					y--;
+//				sy %= 32;
+//			}
+//		}
+//	}
 
 	public int getX()
 	{
@@ -233,36 +278,36 @@ public class Enemy extends Character implements Drawable {
         
         
         
-    public int getXPosition() {
+    public float getXPosition() {
         return this.xPos;
     }
 
-    public int getYPosition() {
+    public float getYPosition() {
         return this.yPos;
     }
-
-    private void inMove(int ref) {
-        contmove += 1;
-        if (contmove > 8) {
-            contmove = 0;
-            //this.move = false;
-
-            return;
-        }
-
-        if (ref == 1) {
-            this.xPos -= 8;
-        }
-        if (ref == 2) {
-            this.xPos += 8;
-        }
-        if (ref == 3) {
-            this.yPos -= 8;
-        }
-        if (ref == 4) {
-            this.yPos += 8;
-        }
-    }
+//
+//    private void inMove(int ref) {
+//        contmove += 1;
+//        if (contmove > 8) {
+//            contmove = 0;
+//            //this.move = false;
+//
+//            return;
+//        }
+//
+//        if (ref == 1) {
+//            this.xPos -= 8;
+//        }
+//        if (ref == 2) {
+//            this.xPos += 8;
+//        }
+//        if (ref == 3) {
+//            this.yPos -= 8;
+//        }
+//        if (ref == 4) {
+//            this.yPos += 8;
+//        }
+//    }
 
     
     
@@ -277,7 +322,7 @@ public class Enemy extends Character implements Drawable {
     @Override
     public void paintComponent(Graphics g) {
         BufferedImage image = SpriteSheet.getSubimage(xAnim, yAnim, 32, 32);
-        g.drawImage(image, getXPosition(), getYPosition(), 64, 64, null);
+        g.drawImage(image, (int) getXPosition(), (int) getYPosition(), 64, 64, null);
     }
 
     public boolean collision(int ref) {
