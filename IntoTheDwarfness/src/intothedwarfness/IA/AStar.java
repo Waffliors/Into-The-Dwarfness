@@ -1,144 +1,119 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package intothedwarfness.IA;
 
-import intothedwarfness.Classes.Map;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Collections;
+import intothedwarfness.Classes.Map;
+import java.util.LinkedList;
 
-/**
- *
- * @author T-Gamer
- */
 public class AStar {
-    public static List<Node> listaFechada = new ArrayList();
-    public static List<Node> listaAberta = new ArrayList();
-    public static List<Node> caminho = new ArrayList();    
-    public static int colunasDoMapa = 0;
-    public static int linhasDoMapa = 0;
-    public static int tamanhoDoMapa = 0;
-   
-    public static List<Node> aEstrela(Node noInicial, Node noDestino, Map mapa)
-    {
-        System.out.println(noInicial+""+noDestino);
-        colunasDoMapa = mapa.getCOLUMNS();
-        linhasDoMapa = mapa.getLINES();
-        tamanhoDoMapa = mapa.getNodeList().size();
-        
-        listaFechada.clear();
-        listaAberta.clear();
-        caminho.clear();
-        boolean achouCaminho = false;
+
     
-        Node noAtual = noInicial;
-        listaAberta.add(noInicial);
-        
-        while(!achouCaminho)
-        {
-            noAtual = procularMenorF();
-            listaAberta.remove(noAtual);
-            listaFechada.add(noAtual);
-            achouCaminho = noAtual.equals(noDestino);
-            
-            
-            for(Node no: noAtual.getNeighbors())
-            {
-                if(no.isBlocked() || listaFechada.contains(no))
-                {
+    public static int mapSize = 0;
+    public static int mapLines = 0;
+    public static int mapCollumns = 0;
+    public static List<Node> openList = new ArrayList();
+    public static List<Node> closedList = new ArrayList();
+
+    //Method that get the pathe
+    public static List<Node> aEstrela(Node start, Node goal, Map map) {
+        mapLines = map.getLINES();
+        mapCollumns = map.getCOLUMNS();
+        mapSize = map.getNodeList().size();
+        openList.clear();
+        closedList.clear();
+        boolean findPath = false;
+        openList.add(start);
+        Node currentNode;
+
+        while (!findPath) {
+            currentNode = getBestF();
+            openList.remove(currentNode);
+            closedList.add(currentNode);
+            findPath = currentNode.equals(goal);
+
+            for (Node node : currentNode.getNeighbors()) {
+                if (node.isBlocked() || closedList.contains(node)) {
                     continue;
-                }else{
-                    if(!listaAberta.contains(no))
-                    {
-                        listaAberta.add(no);
-                        no.setFather(noAtual);
-                        no.setH(calcularH(no, noDestino));
-                        no.setG(calcularG(no, noAtual));
-                        no.setF(calcularF(no));
-                    }else{
-                        if(no.getG()<noAtual.getG())
-                        {
-                            no.setFather(noAtual);
-                            no.setG(calcularG(noAtual, no));
-                            no.setF(calcularF(no));
+                } else {
+                    if (!openList.contains(node)) {
+                        openList.add(node);
+                        node.setFather(currentNode);
+                        node.setH(calcularH(node, goal));
+                        node.setG(calculateG(node, currentNode));
+                        node.setF(calculateF(node));
+                    } else {
+                        if (node.getG() < currentNode.getG()) {
+                            node.setFather(currentNode);
+                            node.setG(calculateG(currentNode, node));
+                            node.setF(calculateF(node));
                         }
-                    
                     }
                 }
-            
             }
-            if(listaAberta.isEmpty())
-            {
+            if (openList.isEmpty()) {
                 System.out.println("Não achou ");
                 return null;
             }
         }
-        
-        return montaCaminho(noInicial, noDestino, mapa);
+        return makePath(start, goal, map);
     }
-    
-    public static Node procularMenorF() {
-        Collections.sort(listaAberta, Comparator.comparing(Node::getF));
-        return listaAberta.get(0);
-        
-    }
-    
-    
-       
-    public static float calcularF(Node no)
-    {
-        return no.getG()+ no.getH();
 
+    public static Node getBestF() {
+        Collections.sort(openList, Comparator.comparing(Node::getF));
+        return openList.get(0);
     }
-    
-    public static float calcularG(Node noAtual, Node noVizinho)
-    {
-        if (noVizinho.getId() % colunasDoMapa == noAtual.getId() % colunasDoMapa || noVizinho.getId() + 1 == noAtual.getId() || noVizinho.getId() - 1 == noAtual.getId()) {
-            return noVizinho.getG() + 10;
+
+    public static float calculateF(Node no) {
+        return no.getG() + no.getH();
+    }
+
+    public static float calculateG(Node currentNode, Node neighbor) {
+        if (neighbor.getId() % mapCollumns == currentNode.getId() % mapCollumns 
+                || neighbor.getId() + 1 == currentNode.getId() 
+                || neighbor.getId() - 1 == currentNode.getId()) {
+            
+            return neighbor.getG() + 10;
         } else {
-            return noVizinho.getG() + 14;
+            return neighbor.getG() + 14;
         }
-        
     }
- 
     
-    public static float calcularH(Node noAtual, Node noDestino)
-    {
-        int posicaoDestinoX = (noDestino.getId()%colunasDoMapa)+1;
-        int posicaoNoAtualX = (noAtual.getId()%colunasDoMapa)+1;
-        
+    
+    
+    
+    
+
+    public static float calcularH(Node noAtual, Node noDestino) {
+        int posicaoDestinoX = (noDestino.getId() % mapCollumns) + 1;
+        int posicaoNoAtualX = (noAtual.getId() % mapCollumns) + 1;
+
         int distanciaX = posicaoDestinoX > posicaoNoAtualX ? posicaoDestinoX - posicaoNoAtualX : posicaoNoAtualX - posicaoDestinoX;
-        
-        int posicaoDestinoY = (noDestino.getId()/linhasDoMapa)+1;
-        int posicaoNoAtualY = (noAtual.getId()/linhasDoMapa)+1;
-        
+
+        int posicaoDestinoY = (noDestino.getId() / mapLines) + 1;
+        int posicaoNoAtualY = (noAtual.getId() / mapLines) + 1;
+
         int distanciaY = posicaoDestinoY > posicaoNoAtualY ? posicaoDestinoY - posicaoNoAtualY : posicaoNoAtualY - posicaoDestinoY;
-        
-        float distanciaTotal = (float)Math.sqrt((Math.pow(distanciaX, 2)+Math.pow(distanciaY, 2)))*10;
-                
+
+        float distanciaTotal = (float) Math.sqrt((Math.pow(distanciaX, 2) + Math.pow(distanciaY, 2))) * 10;
+
         return distanciaTotal;
     }
 
-    private static List<Node> montaCaminho(Node noInicial, Node noDestino, Map mapa) {
-        List<Node> listaAuxiliar = new ArrayList();
-        Node noAtual = noDestino;
-        
+    private static LinkedList<Node> makePath(Node start, Node goal, Map mapa) {
+        LinkedList<Node> listaAuxiliar = new LinkedList();
+        Node noAtual = goal;
+
         int contador = 0;
-        while (!listaAuxiliar.contains(noInicial) || contador > tamanhoDoMapa)
-        {
+        while (!listaAuxiliar.contains(start) || contador > mapSize) {
             listaAuxiliar.add(noAtual);
-            
+
             noAtual = noAtual.getFather();
-                        
             contador++;
         }
         Collections.reverse(listaAuxiliar);
-        
-        
+
         //imprimir caminho
         System.out.println("Caminho: ");
         for (Node no : listaAuxiliar) {

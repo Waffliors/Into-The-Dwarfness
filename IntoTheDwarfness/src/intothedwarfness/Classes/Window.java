@@ -111,13 +111,11 @@ public class Window extends JFrame implements KeyListener {
         //System.out.println(map.findPath(2, 8, 2, 3));
         this.path = AStar.aEstrela(map.getNode(9, 4), map.getNode(2, 8), map);
         while (isRunning) {
-            spider.followPath(path);
             long beforeTime = System.currentTimeMillis();
 
             // Pula os quadros enquanto o tempo for em excesso.
             while (excess > DESIRED_UPDATE_TIME) {
                 player.update();
-                spider.followPath(path);
                 for (Enemy enemy : this.enemies) {
                     enemy.update();
                 }

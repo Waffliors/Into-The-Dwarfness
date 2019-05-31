@@ -476,6 +476,7 @@ public class Player extends Character implements Drawable, Collidable {
                 IMGSIZE, IMGSIZE);
         //Draw in the player's position
         g.drawImage(image, xPos, yPos, 64, 64, null);
+        
     }
     @Override
     public Boolean isStage(Map map) {

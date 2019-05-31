@@ -9,7 +9,7 @@ import intothedwarfness.Interfaces.Collidable;
 
 public class Node implements Collidable{
     
-    private int MOVEMENT_COST;
+    private final int MOVEMENT_COST;
     private int x, y;
     private Point LT,RT,LD, RD; 
     private int ID;
