@@ -28,7 +28,7 @@ public class Enemy extends Character implements Drawable {
     private boolean move, turn;
     private int direction;
     private Node[][] collideMap;
-    private float xPos, yPos;
+    private int xPos, yPos;
     private int  actualStage;
     private final BufferedImage SpriteSheet;
     private int x;
@@ -63,15 +63,13 @@ public class Enemy extends Character implements Drawable {
         this.actualStage = stage;
         this.collideMap = collideMap;
         this.SpriteSheet = spriteSheet;
-
+        
         this.xAnim = 0;
         this.yAnim = 0;
         
         //ia example
-        this.x = xPos;
-        this.y = yPos;
-        sx = 0;
-        sy = 0;
+        this.sx = 0;
+        this.sy = 0;
         speed = 2;
 
         walking = false;
@@ -100,34 +98,35 @@ public class Enemy extends Character implements Drawable {
     {
     	int length = path.size();
     	
-    	for(Node node : path) 
-    	{
-    		int cont = 0;
+    	if (path == null) {
+    		//walking = false;
+    		return;
+    	}
+    	if (path.size() <= 0) {
+    		path = null;
+    		return;
+    	}
+    	
+    	Node currentPos = ((LinkedList<Node>) path).getFirst();
+    	if (((LinkedList<Node>) path).size() != 1) {
+    		Node next = ((LinkedList<Node>) path).get(1);
 
-    		if (node.getX() != path.get(length-1).getX() && node.getY() != path.get(length-1).getY())
+    		//		System.out.println(next.getX() + " " + );
+    		if (currentPos.getX() != next.getX()) 
     		{
-    			cont++;
-    			if(cont % 60 == 0)
+    			yPos += (currentPos.getX() < next.getX() ? 8 : -8);
+    			if(yPos % 64 == 0)
     			{
-    				if(node.getX() > path.get(path.indexOf(node)+1).getX())
-    				{
-    					this.yPos -= 8;
-    				}
-    				//    				else if(node.getX() < path.get(path.indexOf(node)+1).getX())
-    				//    				{
-    				//    					this.yPos += 0.13333;
-    				//    					cont++;
-    				//    				}
-    				//    				else if(node.getY() > path.get(path.indexOf(node)+1).getY())
-    				//    				{
-    				//    					this.xPos -= 0.13333;
-    				//    					cont++;
-    				//    				}
-    				//    				else if(node.getY() < path.get(path.indexOf(node)+1).getY())
-    				//    				{
-    				//    					this.xPos += 0.13333;
-    				//    					cont++;
-    				//    				}
+    				((LinkedList<Node>) path).removeFirst();
+    			}
+    		}    	
+
+    		else if (currentPos.getY() != next.getY()) 
+    		{
+    			xPos += (currentPos.getY() < next.getY() ? 8 : -8);
+    			if(xPos % 64 == 0)
+    			{
+    				((LinkedList<Node>) path).removeFirst();
     			}
     		}
     	}
@@ -234,26 +233,6 @@ public class Enemy extends Character implements Drawable {
 //			}
 //		}
 //	}
-
-	public int getX()
-	{
-		return x;
-	}
-
-	public void setX(int x)
-	{
-		this.x = x;
-	}
-
-	public int getY()
-	{
-		return y;
-	}
-
-	public void setY(int y)
-	{
-		this.y = y;
-	}
 
 	public int getSx()
 	{

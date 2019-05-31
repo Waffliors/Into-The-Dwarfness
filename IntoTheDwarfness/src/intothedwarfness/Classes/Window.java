@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JFrame;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -108,7 +109,8 @@ public class Window extends JFrame implements KeyListener {
         
         //Path test
         //System.out.println(map.findPath(2, 8, 2, 3));
-        this.path = AStar.aEstrela(map.getNode(9, 4), map.getNode(2, 8), map);
+        this.path = AStar.aEstrela(map.getNode(9, 4), map.getNode(3, 12), map);
+//        ((LinkedList<Node>) this.path).removeFirst();
         spider.setPath(path);
         while (isRunning) {
             long beforeTime = System.currentTimeMillis();
