@@ -54,8 +54,7 @@ public class Window extends JFrame implements KeyListener {
         this.enemies.add(spider);
         this.setSize(this.width, this.height);
         this.player = new Player(sprites.get(0),songs, map);
-        
-        
+
         
         this.drawables = loadDrawables();
         
@@ -110,14 +109,15 @@ public class Window extends JFrame implements KeyListener {
         //Path test
         //System.out.println(map.findPath(2, 8, 2, 3));
         this.path = AStar.aEstrela(map.getNode(9, 4), map.getNode(2, 8), map);
+        spider.setPath(path);
         while (isRunning) {
-            spider.followPath(path);
             long beforeTime = System.currentTimeMillis();
 
             // Pula os quadros enquanto o tempo for em excesso.
             while (excess > DESIRED_UPDATE_TIME) {
+//            	spider.setPath(path);
                 player.update();
-                spider.followPath(path);
+                spider.update();
                 for (Enemy enemy : this.enemies) {
                     enemy.update();
                 }
