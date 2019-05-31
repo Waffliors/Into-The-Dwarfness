@@ -9,7 +9,6 @@ import java.util.LinkedList;
 
 public class AStar {
 
-    
     public static int mapSize = 0;
     public static int mapLines = 0;
     public static int mapCollumns = 0;
@@ -70,10 +69,10 @@ public class AStar {
     }
 
     public static float calculateG(Node currentNode, Node neighbor) {
-        if (neighbor.getId() % mapCollumns == currentNode.getId() % mapCollumns 
-                || neighbor.getId() + 1 == currentNode.getId() 
+        if (neighbor.getId() % mapCollumns == currentNode.getId() % mapCollumns
+                || neighbor.getId() + 1 == currentNode.getId()
                 || neighbor.getId() - 1 == currentNode.getId()) {
-            
+
             return neighbor.getG() + 10;
         } else {
             return neighbor.getG() + 14;
@@ -86,7 +85,7 @@ public class AStar {
         int currentNodeX = (currentNode.getId() % mapCollumns) + 1;
         //Get the distance in X
         int xDistance = goalX > currentNodeX ? goalX - currentNodeX : currentNodeX - goalX;
-        
+
         //Get the goal y position and the current node x position
         int goalY = (goal.getId() / mapLines) + 1;
         int currentNodeY = (currentNode.getId() / mapLines) + 1;
@@ -95,31 +94,29 @@ public class AStar {
 
         //Get the total distance
         float totalDistance = (float) Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2))) * 10;
-
         return totalDistance;
     }
 
-    private static LinkedList<Node> makePath(Node start, Node goal, Map mapa) {
-        LinkedList<Node> listaAuxiliar = new LinkedList();
-        Node noAtual = goal;
+    private static LinkedList<Node> makePath(Node start, Node goal, Map map) {
+        LinkedList<Node> auxList = new LinkedList();
+        Node currentNode = goal;
 
-        int contador = 0;
-        while (!listaAuxiliar.contains(start) || contador > mapSize) {
-            listaAuxiliar.add(noAtual);
-
-            noAtual = noAtual.getFather();
-            contador++;
+        int cont = 0;
+        while (!auxList.contains(start) || cont > mapSize) {
+            auxList.add(currentNode);
+            currentNode = currentNode.getFather();
+            cont++;
         }
-        Collections.reverse(listaAuxiliar);
+        Collections.reverse(auxList);
 
         //imprimir caminho
         System.out.println("Caminho: ");
-        for (Node no : listaAuxiliar) {
-            System.out.print(" -> " + no);
+        for (Node node : auxList) {
+            System.out.print(" -> " + node);
         }
         //inicio artificio apenas para printar caminho
-        for (Node no : mapa.getNodeList()) {
-            if (!listaAuxiliar.contains(no)) {
+        for (Node no : map.getNodeList()) {
+            if (!auxList.contains(no)) {
                 no.setFather(null);
             }
 
@@ -127,18 +124,18 @@ public class AStar {
         //fim do artificio
 
         System.out.println("");
-        desenha(mapa);
+        draw(map);
         System.out.println("Fim ! ");
 
         //retorno do caminho
-        return listaAuxiliar;
+        return auxList;
     }
 
-    public static void desenha(Map mapa) {
+    public static void draw(Map map) {
         System.out.println("");
-        for (int i = 0; i < mapa.getLINES(); i++) {
-            for (int j = 0; j < mapa.getCOLUMNS(); j++) {
-                Node no = mapa.getNode(i, j);
+        for (int i = 0; i < map.getLINES(); i++) {
+            for (int j = 0; j < map.getCOLUMNS(); j++) {
+                Node no = map.getNode(i, j);
                 if (no.getFather() != null) {
                     System.out.print("[-]");
                 } else if (no.isBlocked()) {
@@ -150,5 +147,4 @@ public class AStar {
             System.out.println();
         }
     }
-
 }
