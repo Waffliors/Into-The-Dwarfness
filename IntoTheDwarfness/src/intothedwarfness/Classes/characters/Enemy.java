@@ -192,6 +192,7 @@ public class Enemy extends Character implements Drawable {
 //		}
 //	}
 	
+
 //	private void walk()
 //	{
 //		if (path == null)
