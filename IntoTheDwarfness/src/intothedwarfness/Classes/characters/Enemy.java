@@ -1,145 +1,219 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/** ****************************************************************************
+ ** Class "enemy", here the enemies will be drawn, according to what will be **
+ ** received, a different type of enemy will be drawn with their own         **
+ ** characteristics and movements                                            **
+ ***************************************************************************** */
 package intothedwarfness.Classes.characters;
 
-import intothedwarfness.Classes.Map;
-import intothedwarfness.IA.Node;
-import intothedwarfness.Interfaces.Drawable;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.util.LinkedList;
 import java.util.List;
-import intothedwarfness.IA.AStar;
+import java.awt.Graphics;
+import java.util.LinkedList;
+import intothedwarfness.IA.Node;
+import java.awt.image.BufferedImage;
+import intothedwarfness.Classes.Map;
+import intothedwarfness.Classes.Point;
+import intothedwarfness.Classes.Song;
+import intothedwarfness.Interfaces.Collidable;
+import intothedwarfness.Interfaces.Drawable;
+import java.util.ArrayList;
 
-/**
- *
- * @author matheus.vrsilva
- */
 public class Enemy extends Character implements Drawable {
 
-    /*------------------------------------------------------------------------*
-     *------------------------ Class Variables -------------------------------*
-     *------------------------------------------------------------------------*/
-    private int life;
-    private int moveMax;
-    private boolean move, turn;
-    private int direction;
-    private Node[][] collideMap;
-    private int xPos, yPos;
-    private int  actualStage;
-    private final BufferedImage SpriteSheet;
-    private int x;
-    
-    private int contmove;
-
-    private int xAnim, yAnim;
-
-    //ia example
-    private int y;
-    private int sx;
-    private int sy;
-
-    private int speed;
-
-    private boolean walking;
-    private boolean fixing;
+    /* *************************Class Variables****************************** */
     private List<Node> path;
 
-    /*------------------------------------------------------------------------*
-     *----------------------- Class Constructor ------------------------------*
-     *------------------------------------------------------------------------*/
-    public Enemy(int xPos, int yPos, int stage, BufferedImage spriteSheet, Node[][] collideMap) {
+    
+    //Constants
+    private final int IMGSIZE, TILESIZE;
+    private final BufferedImage SPRITE;
+    private final ArrayList<Song> SONGS;
+    //Position
+    private char currentMove;
+    private ArrayList<Point> pivots;
+    private ArrayList<Collidable> collidables;
+    private int xPos, yPos, actualStage, life;
+    //Animation
+    private int cont, atkCont, hitCont, deadCont;
+    private int drawRef, startLine, animation, endLine;
+    private boolean looking2Right, attacking, gotHit, died, running, idle;
+    /* ***********************Class Constructor****************************** */
+    public Enemy(int xPos, int yPos, int stage, BufferedImage spriteSheet, ArrayList<Song> songs) {
         this.life = 4;
         this.yPos = yPos;
         this.xPos = xPos;
-        this.moveMax = 0;
-        this.contmove = 0;
-        this.move = true;
-        this.turn = false;
-        this.direction = 1; // esquerda
         this.actualStage = stage;
-        this.collideMap = collideMap;
-        this.SpriteSheet = spriteSheet;
+        this.SPRITE = spriteSheet;
+        this.IMGSIZE = 32;
+        this.TILESIZE = 64;
+        this.SONGS = songs;
         
-        this.xAnim = 0;
-        this.yAnim = 0;
-        
-        //ia example
-        this.sx = 0;
-        this.sy = 0;
-        speed = 2;
-
-        walking = false;
-        fixing = false;
-        path = null;
+        this.looking2Right = true;
     }
 
-    
-    
-    
+    /* ****************************Class Methods********************************* */
     @Override
-    public void update()
-	{
-    	move();
-//		if (fixing)
-//		{
-//			fix();
-//		}
-//		if (walking)
-//		{
-//  			walk();
-//		}
-	}
-    
-    public void move()
-    {    	
-    	if (path == null) {
-    		//walking = false;
-    		return;
-    	}
-    	if (path.size() <= 0) {
-    		path = null;
-    		return;
-    	}
-    	
-    	Node currentPos = ((LinkedList<Node>) path).getFirst();
-    	if (((LinkedList<Node>) path).size() != 1) {
-    		Node next = ((LinkedList<Node>) path).get(1);
-    		if (currentPos.getX() != next.getX()) 
-    		{
-    			yPos += (currentPos.getX() < next.getX() ? 8 : -8);
-    			if(yPos % 64 == 0)
-    			{
-    				((LinkedList<Node>) path).removeFirst();
-    			}
-    		}    	
-
-    		else if (currentPos.getY() != next.getY()) 
-    		{
-    			xPos += (currentPos.getY() < next.getY() ? 8 : -8);
-    			if(xPos % 64 == 0)
-    			{
-    				((LinkedList<Node>) path).removeFirst();
-    			}
-    		}
-    	}
-    }
-
-    public void setPath(List<Node> path) {
-    	this.path = path;
-    }
+    public void update() {
+        animate();
+        move();
         
+    }
+
+    public void move() {
+        if (path == null) {
+            idle = true;
+            return;
+        }
+        if (path.size() <= 0) {
+            path = null;
+            return;
+        }
+
+        Node currentPos = ((LinkedList<Node>) path).getFirst();
+        if (((LinkedList<Node>) path).size() != 1 && this.path != null) {
+            this.running = true;
+            this.idle = false;
+
+            Node next = ((LinkedList<Node>) path).get(1);
+            if (currentPos.getX() != next.getX()) {
+                //yPos += (currentPos.getX() < next.getX() ? 8 : -8);
+                if (currentPos.getX() < next.getX()) {
+                    yPos += 4;
+                }
+                if (currentPos.getX() > next.getX()) {
+                    yPos -= 4;
+                }
+                if (yPos % 64 == 0) {
+                    ((LinkedList<Node>) path).removeFirst();
+                }
+
+            } else if (currentPos.getY() != next.getY()) {
+                //xPos += (currentPos.getY() < next.getY() ? 8 : -8);
+
+                if (currentPos.getY() < next.getY()) {
+                    xPos += 4;
+                    looking2Right = true;
+                }
+                if (currentPos.getY() > next.getY()) {
+                    xPos -= 4;
+                    looking2Right = false;
+                }
+
+                if (xPos % 64 == 0) {
+                    ((LinkedList<Node>) path).removeFirst();
+                }
+            }
+        }
+        
+        if (path.size() == 1) {
+            this.path = null;
+            this.running = false;
+            this.idle = true;
+        }
+    }
+
+    private void animate() {
+        //Counters of animations
+        //There are two standard animations that are continuously being 
+        //incremented: Idle and Running, they use the same counters
+        this.cont+= 1;
+        //The others animations need another's counters because of when called, 
+        //they have to start from 0
+        if (attacking) {
+            atkCont += 1;
+        }
+        if (gotHit) {
+            hitCont += 1;
+        }
+        if (died) {
+            deadCont += 1;
+        }
+        
+        //The animations begin to divide by categories, starting in: 
+        //alive player or dead player
+        
+        //Alive player
+        if (!died) {
+            //Then it is divided by:
+            //is looking to the right, movement and action
+           // if (!attacking && !gotHit) {
+                //Idle and Running while looking to the Right
+                if (looking2Right) {
+                    if (idle) {
+                        startAnimation(5, 0, 5);
+                    }
+                    if (running) {
+                        startAnimation(6, 0, 8);
+                    }
+                }
+                                
+                //Idle and Running while looking to the Left
+               if (!looking2Right) {
+                if (idle) {
+                    startAnimation(0, 0, 5);
+                }
+                if (running) {
+                    startAnimation(1, 0, 8);
+                }
+            }
+                //Play the song of this animation
+                if((cont%2 == 1 ) && running){
+                    playsong(4);
+                }
+                //Stop condition of animations of the type "movement"
+                //All the animations of moving types use the same counter
+        
+                if (cont == this.endLine) {
+                    cont = this.startLine;
+                }
+                this.drawRef = cont;
+            }
+        //}
+    }
+    
+    //Method that defines the settings of the current animation
+    private void startAnimation(int animation, int startLine, int endLine) {
+        this.startLine= startLine;
+        this.animation = animation;
+        this.endLine= endLine;
+    }
+    
+    //Method that play the player's songs
+    private void playsong(int ref){
+        SONGS.get(ref).playSoundOnce();
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    public void setPath(List<Node> path) {
+        this.path = path;
+    }
+
     public int getXPosition() {
         return this.xPos;
     }
 
     public int getYPosition() {
         return this.yPos;
-    }   
-    
+    }
+
     @Override
     public Boolean isStage(Map map) {
         if (map.actualStage == this.actualStage) {
@@ -150,8 +224,14 @@ public class Enemy extends Character implements Drawable {
 
     @Override
     public void paintComponent(Graphics g) {
-        BufferedImage image = SpriteSheet.getSubimage(xAnim, yAnim, 32, 32);
-        g.drawImage(image, (int) getXPosition(), (int) getYPosition(), 64, 64, null);
+        //Get a piece of the Image
+        BufferedImage image = SPRITE.getSubimage(
+                super.spriteTiles[drawRef][animation].getSrcX1(), 
+                super.spriteTiles[drawRef][animation].getSrcY1(),
+                IMGSIZE, IMGSIZE);
+        //Draw in the player's position
+        g.drawImage(image, xPos, yPos, 64, 64, null);
+        
     }
 
     public boolean collision(int ref) {

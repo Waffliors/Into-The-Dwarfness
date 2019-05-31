@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import intothedwarfness.IA.Node;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Interfaces.Drawable;
-import java.util.LinkedList;
 
 public class Map extends JPanel implements Drawable {
 /* ***************************Class Variables******************************** */
@@ -541,7 +540,7 @@ public class Map extends JPanel implements Drawable {
     
     //Return a node of the Node Map
     public Node getNode(int x, int y) {
-            System.out.println(x + " " + y);
+            //System.out.println(x + " " + y);
             return nodeMap[x][y];
     }
 

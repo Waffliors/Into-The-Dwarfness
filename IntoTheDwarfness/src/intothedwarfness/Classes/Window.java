@@ -51,7 +51,7 @@ public class Window extends JFrame implements KeyListener {
         this.songs = songs;
         this.sprites = sprites;
         this.map = new Map(sprites.get(8), 12, 16);
-        this.gladiator1 = new Enemy(256, 576, 1, sprites.get(3), map.getNodeMap());
+        this.gladiator1 = new Enemy(256, 576, 1, sprites.get(4), songs);
         this.enemies.add(gladiator1);
         this.setSize(this.width, this.height);
         this.player = new Player(sprites.get(0),songs, map);
@@ -71,8 +71,7 @@ public class Window extends JFrame implements KeyListener {
         this.setIgnoreRepaint(true);
         this.setBackground(new Color(43, 43, 42));
     }
-
-    /* ********************Auxiliary methods of the Constructor****************** */
+/* ********************Auxiliary methods of the Constructor****************** */
     private ArrayList<Drawable> loadDrawables() {
         ArrayList<Drawable> elements = new ArrayList();
         elements.add(this.map);
@@ -83,7 +82,7 @@ public class Window extends JFrame implements KeyListener {
         return elements;
     }
 
-    /* ****************************Class Methods********************************* */
+/* ****************************Class Methods********************************* */
     //Game Start
     public void initialize() {
         gsm = new GameStateManager();
@@ -108,8 +107,7 @@ public class Window extends JFrame implements KeyListener {
         
         
         //Set path and pass it to enemy
-        this.path = AStar.aEstrela(map.getNode(gladiator1.getYPosition()/64, gladiator1.getXPosition()/64), 
-                map.getNode(player.getYPosition()/64, player.getXPosition()/64), map);
+        this.path = AStar.aEstrela(map.getNode(9, 4), map.getNode(3, 3), map);
         gladiator1.setPath(path);
         while (isRunning) {
             long beforeTime = System.currentTimeMillis();
@@ -150,7 +148,7 @@ public class Window extends JFrame implements KeyListener {
         }
     }
 
-    /* *************************Overridden Methods******************************* */
+/* *************************Overridden Methods******************************* */
     @Override
     public void keyTyped(KeyEvent e) {
         if (e.getKeyChar() == 'p') {
@@ -169,8 +167,8 @@ public class Window extends JFrame implements KeyListener {
         if ("PlayState".equals(gsm.getType())) {
             player.setCurrentMove(e.getKeyChar());
             // TODO - Enemy doesn't find path if player moves, why?
-            this.path = AStar.aEstrela(map.getNode(9, 4), map.getNode(player.getYPosition()/64, player.getXPosition()/64), map);
-            gladiator1.setPath(path);
+            //this.path = AStar.aEstrela(map.getNode(9, 4), map.getNode(player.getYPosition()/64, player.getXPosition()/64), map);
+            //gladiator1.setPath(path);
         }
     }
 

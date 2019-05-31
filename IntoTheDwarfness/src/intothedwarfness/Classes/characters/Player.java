@@ -15,7 +15,6 @@ import intothedwarfness.Classes.Map;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Classes.Song;
 import intothedwarfness.Classes.Point;
-import intothedwarfness.IA.Node;
 import intothedwarfness.Interfaces.Drawable;
 import intothedwarfness.Interfaces.Collidable;
 
