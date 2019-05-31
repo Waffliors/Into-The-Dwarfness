@@ -541,6 +541,7 @@ public class Map extends JPanel implements Drawable {
     
     //Return a node of the Node Map
     public Node getNode(int x, int y) {
+            System.out.println(x + " " + y);
             return nodeMap[x][y];
     }
 

@@ -95,9 +95,7 @@ public class Enemy extends Character implements Drawable {
 	}
     
     public void move()
-    {
-    	int length = path.size();
-    	
+    {    	
     	if (path == null) {
     		//walking = false;
     		return;
@@ -110,8 +108,6 @@ public class Enemy extends Character implements Drawable {
     	Node currentPos = ((LinkedList<Node>) path).getFirst();
     	if (((LinkedList<Node>) path).size() != 1) {
     		Node next = ((LinkedList<Node>) path).get(1);
-
-    		//		System.out.println(next.getX() + " " + );
     		if (currentPos.getX() != next.getX()) 
     		{
     			yPos += (currentPos.getX() < next.getX() ? 8 : -8);
@@ -135,160 +131,14 @@ public class Enemy extends Character implements Drawable {
     public void setPath(List<Node> path) {
     	this.path = path;
     }
-
-//	public void followPath(List<Node> path)
-//	{
-//		this.path = path;
-//		if (walking)
-//		{
-//			fixing = true;
-//			walking = false;
-//		}
-//		else
-//		{
-//			walking = true;
-//		}
-//	}
-
-//	private void fix()
-//	{
-//		if (sx > 0)
-//		{
-//			sx -= speed;
-//			if (sx < 0)
-//			{
-//				sx = 0;
-//			}
-//		}
-//		if (sx < 0)
-//		{
-//			sx += speed;
-//			if (sx > 0)
-//			{
-//				sx = 0;
-//			}
-//		}
-//		if (sy > 0)
-//		{
-//			sy -= speed;
-//			if (sy < 0)
-//			{
-//				sy = 0;
-//			}
-//		}
-//		if (sy < 0)
-//		{
-//			sy += speed;
-//			if (sy > 0)
-//			{
-//				sy = 0;
-//			}
-//		}
-//		if (sx == 0 && sy == 0)
-//		{
-//			fixing = false;
-//			walking = true;
-//		}
-//	}
-	
-
-//	private void walk()
-//	{
-//		if (path == null)
-//		{
-//			walking = false;
-//			return;
-//		}
-//		if (path.size() <= 0)
-//		{
-//			walking = false;
-//			path = null;
-//			return;
-//		}
-//		Node next = ((List<Node>) path).get(0);
-//		if (next.getX() != x)
-//		{
-//			sx += (next.getX() < x ? -speed : speed);
-//			if (sx % 32 == 0)
-//			{
-//				((LinkedList<Node>) path).removeFirst();
-//				if (sx > 0)
-//					x++;
-//				else
-//					x--;
-//				sx %= 32;
-//			}
-//		}
-//		else if (next.getY() != y)
-//		{
-//			sy += (next.getY() < y ? -speed : speed);
-//			if (sy % 32 == 0)
-//			{
-//				((LinkedList<Node>) path).removeFirst();
-//				if (sy > 0)
-//					y++;
-//				else
-//					y--;
-//				sy %= 32;
-//			}
-//		}
-//	}
-
-	public int getSx()
-	{
-		return sx;
-	}
-
-	public void setSx(int sx)
-	{
-		this.sx = sx;
-	}
-
-	public int getSy()
-	{
-		return sy;
-	}
-
-	public void setSy(int sy)
-	{
-		this.sy = sy;
-	}
         
-        
-        
-        
-    public float getXPosition() {
+    public int getXPosition() {
         return this.xPos;
     }
 
-    public float getYPosition() {
+    public int getYPosition() {
         return this.yPos;
-    }
-//
-//    private void inMove(int ref) {
-//        contmove += 1;
-//        if (contmove > 8) {
-//            contmove = 0;
-//            //this.move = false;
-//
-//            return;
-//        }
-//
-//        if (ref == 1) {
-//            this.xPos -= 8;
-//        }
-//        if (ref == 2) {
-//            this.xPos += 8;
-//        }
-//        if (ref == 3) {
-//            this.yPos -= 8;
-//        }
-//        if (ref == 4) {
-//            this.yPos += 8;
-//        }
-//    }
-
-    
+    }   
     
     @Override
     public Boolean isStage(Map map) {
