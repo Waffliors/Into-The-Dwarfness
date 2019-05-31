@@ -40,7 +40,7 @@ public class AStar {
                     if (!openList.contains(node)) {
                         openList.add(node);
                         node.setFather(currentNode);
-                        node.setH(calcularH(node, goal));
+                        node.setH(calculateH(node, goal));
                         node.setG(calculateG(node, currentNode));
                         node.setF(calculateF(node));
                     } else {
@@ -79,26 +79,24 @@ public class AStar {
             return neighbor.getG() + 14;
         }
     }
-    
-    
-    
-    
-    
 
-    public static float calcularH(Node noAtual, Node noDestino) {
-        int posicaoDestinoX = (noDestino.getId() % mapCollumns) + 1;
-        int posicaoNoAtualX = (noAtual.getId() % mapCollumns) + 1;
+    public static float calculateH(Node currentNode, Node goal) {
+        //Get the goal x position and the current node x position
+        int goalX = (goal.getId() % mapCollumns) + 1;
+        int currentNodeX = (currentNode.getId() % mapCollumns) + 1;
+        //Get the distance in X
+        int xDistance = goalX > currentNodeX ? goalX - currentNodeX : currentNodeX - goalX;
+        
+        //Get the goal y position and the current node x position
+        int goalY = (goal.getId() / mapLines) + 1;
+        int currentNodeY = (currentNode.getId() / mapLines) + 1;
+        //Get the distane in Y
+        int yDistance = goalY > currentNodeY ? goalY - currentNodeY : currentNodeY - goalY;
 
-        int distanciaX = posicaoDestinoX > posicaoNoAtualX ? posicaoDestinoX - posicaoNoAtualX : posicaoNoAtualX - posicaoDestinoX;
+        //Get the total distance
+        float totalDistance = (float) Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2))) * 10;
 
-        int posicaoDestinoY = (noDestino.getId() / mapLines) + 1;
-        int posicaoNoAtualY = (noAtual.getId() / mapLines) + 1;
-
-        int distanciaY = posicaoDestinoY > posicaoNoAtualY ? posicaoDestinoY - posicaoNoAtualY : posicaoNoAtualY - posicaoDestinoY;
-
-        float distanciaTotal = (float) Math.sqrt((Math.pow(distanciaX, 2) + Math.pow(distanciaY, 2))) * 10;
-
-        return distanciaTotal;
+        return totalDistance;
     }
 
     private static LinkedList<Node> makePath(Node start, Node goal, Map mapa) {
