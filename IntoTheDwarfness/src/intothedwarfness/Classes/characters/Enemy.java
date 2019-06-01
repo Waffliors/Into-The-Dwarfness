@@ -27,6 +27,7 @@ public class Enemy extends Character implements Drawable {
     private final int IMGSIZE, TILESIZE;
     private final BufferedImage SPRITE;
     private final ArrayList<Song> SONGS;
+    private final Map MAP;
     //Position
     private char currentMove;
     private ArrayList<Point> pivots;
@@ -37,7 +38,7 @@ public class Enemy extends Character implements Drawable {
     private int drawRef, startLine, animation, endLine;
     private boolean looking2Right, attacking, gotHit, died, running, idle;
     /* ***********************Class Constructor****************************** */
-    public Enemy(int xPos, int yPos, int stage, BufferedImage spriteSheet, ArrayList<Song> songs) {
+    public Enemy(int xPos, int yPos, int stage, BufferedImage spriteSheet, ArrayList<Song> songs, Map map) {
         this.life = 4;
         this.yPos = yPos;
         this.xPos = xPos;
@@ -46,6 +47,7 @@ public class Enemy extends Character implements Drawable {
         this.IMGSIZE = 32;
         this.TILESIZE = 64;
         this.SONGS = songs;
+        this.MAP = map;
         
         this.looking2Right = true;
     }
@@ -61,6 +63,8 @@ public class Enemy extends Character implements Drawable {
     public void move() {
         if (path == null) {
             idle = true;
+            this.running = false;
+            this.cont = 0;
             return;
         }
         if (path.size() <= 0) {
@@ -70,6 +74,7 @@ public class Enemy extends Character implements Drawable {
 
         Node currentPos = ((LinkedList<Node>) path).getFirst();
         if (((LinkedList<Node>) path).size() != 1 && this.path != null) {
+            System.out.println("ligooou");
             this.running = true;
             this.idle = false;
 
@@ -102,12 +107,6 @@ public class Enemy extends Character implements Drawable {
                     ((LinkedList<Node>) path).removeFirst();
                 }
             }
-        }
-        
-        if (path.size() == 1) {
-            this.path = null;
-            this.running = false;
-            this.idle = true;
         }
     }
 
@@ -181,27 +180,7 @@ public class Enemy extends Character implements Drawable {
     private void playsong(int ref){
         SONGS.get(ref).playSoundOnce();
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     public void setPath(List<Node> path) {
         this.path = path;
     }
@@ -214,6 +193,13 @@ public class Enemy extends Character implements Drawable {
         return this.yPos;
     }
 
+    public Node getNodePos(){
+        return this.MAP.getNode(yPos/64, xPos/64);  
+    }
+    public void getNewPath(){
+        
+    }
+    
     @Override
     public Boolean isStage(Map map) {
         if (map.actualStage == this.actualStage) {

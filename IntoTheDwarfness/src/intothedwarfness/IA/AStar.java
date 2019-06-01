@@ -22,6 +22,7 @@ public class AStar {
         mapSize = map.getNodeList().size();
         openList.clear();
         closedList.clear();
+        
         boolean findPath = false;
         openList.add(start);
         Node currentNode;
@@ -31,7 +32,6 @@ public class AStar {
             openList.remove(currentNode);
             closedList.add(currentNode);
             findPath = currentNode.equals(goal);
-
             for (Node node : currentNode.getNeighbors()) {
                 if (node.isBlocked() || closedList.contains(node)) {
                     continue;
@@ -59,16 +59,16 @@ public class AStar {
         return makePath(start, goal, map);
     }
 
-    public static Node getBestF() {
+    private static Node getBestF() {
         Collections.sort(openList, Comparator.comparing(Node::getF));
         return openList.get(0);
     }
 
-    public static float calculateF(Node no) {
+    private static float calculateF(Node no) {
         return no.getG() + no.getH();
     }
 
-    public static float calculateG(Node currentNode, Node neighbor) {
+    private static float calculateG(Node currentNode, Node neighbor) {
         if (neighbor.getId() % mapCollumns == currentNode.getId() % mapCollumns
                 || neighbor.getId() + 1 == currentNode.getId()
                 || neighbor.getId() - 1 == currentNode.getId()) {
@@ -79,7 +79,7 @@ public class AStar {
         }
     }
 
-    public static float calcularH(Node noAtual, Node noDestino) {
+    private static float calcularH(Node noAtual, Node noDestino) {
         int posicaoDestinoX = (noDestino.getId() % mapCollumns) + 1;
         int posicaoNoAtualX = (noAtual.getId() % mapCollumns) + 1;
 
@@ -130,7 +130,7 @@ public class AStar {
         return listaAuxiliar;
     }
 
-    public static void desenha(Map mapa) {
+    private static void desenha(Map mapa) {
         System.out.println("");
         for (int i = 0; i < mapa.getLINES(); i++) {
             for (int j = 0; j < mapa.getCOLUMNS(); j++) {

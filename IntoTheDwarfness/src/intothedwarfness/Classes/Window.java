@@ -51,7 +51,7 @@ public class Window extends JFrame implements KeyListener {
         this.songs = songs;
         this.sprites = sprites;
         this.map = new Map(sprites.get(8), 12, 16);
-        this.gladiator1 = new Enemy(256, 576, 1, sprites.get(4), songs);
+        this.gladiator1 = new Enemy(256, 576, 1, sprites.get(4), songs, map);
         this.enemies.add(gladiator1);
         this.setSize(this.width, this.height);
         this.player = new Player(sprites.get(0),songs, map);
@@ -107,7 +107,7 @@ public class Window extends JFrame implements KeyListener {
         
         
         //Set path and pass it to enemy
-        this.path = AStar.aEstrela(map.getNode(9, 4), map.getNode(3, 3), map);
+        this.path = AStar.aEstrela(gladiator1.getNodePos(), player.getNodePos(), map);
         gladiator1.setPath(path);
         while (isRunning) {
             long beforeTime = System.currentTimeMillis();
@@ -115,18 +115,20 @@ public class Window extends JFrame implements KeyListener {
             // Pula os quadros enquanto o tempo for em excesso.
             while (excess > DESIRED_UPDATE_TIME) {
                 player.update();
-                gladiator1.update();
                 for (Enemy enemy : this.enemies) {
                     enemy.update();
                 }
                 excess -= DESIRED_UPDATE_TIME;
             }
-            if ("PlayState".equals(gsm.getType())) {               
-                
+            if ("PlayState".equals(gsm.getType())) {
                 player.update();
+                if (gladiator1.getXPosition() % 64 == 0 && gladiator1.getYPosition() % 64 == 0) {
+                    this.path = AStar.aEstrela(gladiator1.getNodePos(), player.getNodePos(), map);
+                    gladiator1.setPath(path);
+                }
                 for (Enemy enemy : this.enemies) {
                     if (enemy.isStage(this.map)) {
-                        enemy.update();                        
+                        enemy.update();
                     }
                 }
             }
@@ -167,8 +169,6 @@ public class Window extends JFrame implements KeyListener {
         if ("PlayState".equals(gsm.getType())) {
             player.setCurrentMove(e.getKeyChar());
             // TODO - Enemy doesn't find path if player moves, why?
-            //this.path = AStar.aEstrela(map.getNode(9, 4), map.getNode(player.getYPosition()/64, player.getXPosition()/64), map);
-            //gladiator1.setPath(path);
         }
     }
 

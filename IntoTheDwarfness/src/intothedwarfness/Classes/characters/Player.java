@@ -15,6 +15,7 @@ import intothedwarfness.Classes.Map;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Classes.Song;
 import intothedwarfness.Classes.Point;
+import intothedwarfness.IA.Node;
 import intothedwarfness.Interfaces.Drawable;
 import intothedwarfness.Interfaces.Collidable;
 
@@ -456,6 +457,10 @@ public class Player extends Character implements Drawable, Collidable {
     public int getYPosition() {
         return this.yPos;
     }
+    
+    public Node getNodePos(){
+        return this.MAP.getNode(yPos/64, xPos/64);  
+    }
 /* *************************Overridden Methods******************************* */
     @Override
     public void update() {
@@ -481,7 +486,6 @@ public class Player extends Character implements Drawable, Collidable {
     public Boolean isStage(Map map) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
     
     @Override
     public Point getPivotLT() {

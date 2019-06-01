@@ -39,7 +39,7 @@ public class Map extends JPanel implements Drawable {
         this.UNBLOCKEDTILES = loadUblockedTiles();
         stageCreator(1);
         this.nodeMap = loadNodeMap();
-        findNeighobors();
+        findNeighbors();
     }
 
 /* ********************Auxiliary methods of the Constructor****************** */
@@ -483,20 +483,21 @@ public class Map extends JPanel implements Drawable {
         }
         //After Create the new map, load the graph
         this.nodeMap = loadNodeMap();
+        findNeighbors();
     }
     
     //Method that walks through the matrix of nodes and for each of them finds
     //its orthogonal neighbors
-    private void findNeighobors() {
+    public void findNeighbors() {
         for (int i = 0; i < LINES; i++) {
             for (int j = 0; j < COLUMNS; j++) {
-                calculateNeighobors(nodeMap[i][j]);
+                calculateNeighbors(nodeMap[i][j]);
             }
         }
     }
     
     //Method that calculate the orthogonal neighbors
-    private void calculateNeighobors(Node node) {
+    private void calculateNeighbors(Node node) {
         int lin = node.getX();
         int col = node.getY();
         
