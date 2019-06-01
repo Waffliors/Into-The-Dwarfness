@@ -34,7 +34,6 @@ public class Window extends JFrame implements KeyListener {
     private final int width, height;
     private final Map map;
     private final Player player;
-    private final Enemy gladiator1;
     
     private final ArrayList<Enemy> enemies = new ArrayList();
     private final ArrayList<BufferedImage> sprites;
@@ -51,14 +50,8 @@ public class Window extends JFrame implements KeyListener {
         this.songs = songs;
         this.sprites = sprites;
         this.map = new Map(sprites.get(8), 12, 16);
-        this.gladiator1 = new Enemy(256, 576, 1, sprites.get(4), songs, map);
-        this.enemies.add(gladiator1);
         this.setSize(this.width, this.height);
-        this.player = new Player(sprites.get(0),songs, map);
-
-        
-        this.drawables = loadDrawables();
-        
+        this.player = new Player(sprites.get(0),songs, map);        
         
         this.setSize(this.width, this.height);
         this.setLocationRelativeTo(null);
@@ -87,6 +80,18 @@ public class Window extends JFrame implements KeyListener {
     public void initialize() {
         gsm = new GameStateManager();
         gsm.init();
+        
+        Enemy gladiator1 = new Enemy(256, 576, 1, sprites.get(4), songs, map);
+        Enemy gladiator2 = new Enemy(640, 576, 1, sprites.get(4), songs, map);
+        Enemy gladiator3 = new Enemy(256, 576, 1, sprites.get(4), songs, map);
+        Enemy gladiator4 = new Enemy(256, 576, 1, sprites.get(4), songs, map);
+        
+        this.enemies.add(gladiator1);
+        this.enemies.add(gladiator2);
+        this.enemies.add(gladiator3);
+        this.enemies.add(gladiator4);
+        
+        this.drawables = loadDrawables();
     }
     
     //Game Loop
@@ -107,8 +112,10 @@ public class Window extends JFrame implements KeyListener {
         
         
         //Set path and pass it to enemy
-        this.path = AStar.aEstrela(gladiator1.getNodePos(), player.getNodePos(), map);
-        gladiator1.setPath(path);
+        for(Enemy enemy : this.enemies) {
+            this.path = AStar.aEstrela(enemy.getNodePos(), player.getNodePos(), map);
+            enemy.setPath(path);
+        }
         while (isRunning) {
             long beforeTime = System.currentTimeMillis();
 
@@ -122,11 +129,11 @@ public class Window extends JFrame implements KeyListener {
             }
             if ("PlayState".equals(gsm.getType())) {
                 player.update();
-                if (gladiator1.getXPosition() % 64 == 0 && gladiator1.getYPosition() % 64 == 0) {
-                    this.path = AStar.aEstrela(gladiator1.getNodePos(), player.getNodePos(), map);
-                    gladiator1.setPath(path);
-                }
-                for (Enemy enemy : this.enemies) {
+                for(Enemy enemy : this.enemies) {
+                    if (enemy.getXPosition() % 64 == 0 && enemy.getYPosition() % 64 == 0) {
+                        this.path = AStar.aEstrela(enemy.getNodePos(), player.getNodePos(), map);
+                        enemy.setPath(path);
+                    }
                     if (enemy.isStage(this.map)) {
                         enemy.update();
                     }
