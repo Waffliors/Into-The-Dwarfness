@@ -61,11 +61,12 @@ public class Enemy extends Character implements Drawable {
     }
 
     public void move() {
-        if (path == null) {
-            idle = true;
+        if (path.size() == 1) {
             this.running = false;
-            this.cont = 0;
+            idle = true;
+            path.clear();
             return;
+        
         }
         if (path.size() <= 0) {
             path = null;
@@ -74,7 +75,6 @@ public class Enemy extends Character implements Drawable {
 
         Node currentPos = ((LinkedList<Node>) path).getFirst();
         if (((LinkedList<Node>) path).size() != 1 && this.path != null) {
-            System.out.println("ligooou");
             this.running = true;
             this.idle = false;
 
@@ -108,9 +108,12 @@ public class Enemy extends Character implements Drawable {
                 }
             }
         }
+        
+        
     }
 
     private void animate() {
+        System.out.println(cont);
         //Counters of animations
         //There are two standard animations that are continuously being 
         //incremented: Idle and Running, they use the same counters
@@ -161,7 +164,7 @@ public class Enemy extends Character implements Drawable {
                 //Stop condition of animations of the type "movement"
                 //All the animations of moving types use the same counter
         
-                if (cont == this.endLine) {
+                if (cont >= this.endLine) {
                     cont = this.startLine;
                 }
                 this.drawRef = cont;
@@ -170,7 +173,7 @@ public class Enemy extends Character implements Drawable {
     }
     
     //Method that defines the settings of the current animation
-    private void startAnimation(int animation, int startLine, int endLine) {
+    private void startAnimation(int animation, int startLine, int endLine){
         this.startLine= startLine;
         this.animation = animation;
         this.endLine= endLine;
@@ -180,7 +183,27 @@ public class Enemy extends Character implements Drawable {
     private void playsong(int ref){
         SONGS.get(ref).playSoundOnce();
     }
-
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public void setPath(List<Node> path) {
         this.path = path;
     }

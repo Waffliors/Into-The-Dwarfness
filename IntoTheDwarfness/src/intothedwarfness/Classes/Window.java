@@ -115,6 +115,7 @@ public class Window extends JFrame implements KeyListener {
             // Pula os quadros enquanto o tempo for em excesso.
             while (excess > DESIRED_UPDATE_TIME) {
                 player.update();
+                //gladiator1.update();
                 for (Enemy enemy : this.enemies) {
                     enemy.update();
                 }
@@ -122,7 +123,8 @@ public class Window extends JFrame implements KeyListener {
             }
             if ("PlayState".equals(gsm.getType())) {
                 player.update();
-                if (gladiator1.getXPosition() % 64 == 0 && gladiator1.getYPosition() % 64 == 0) {
+                //gladiator1.update();
+                if ((gladiator1.getXPosition() % 64 == 0 && gladiator1.getYPosition() % 64 == 0)) {
                     this.path = AStar.aEstrela(gladiator1.getNodePos(), player.getNodePos(), map);
                     gladiator1.setPath(path);
                 }
