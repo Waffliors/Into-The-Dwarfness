@@ -3,6 +3,9 @@ package intothedwarfness.Interfaces;
 import intothedwarfness.Classes.Point;
 
 public interface Collidable {
+    public abstract void gotHit();
+    
+    public String getType();
 
     public Point getPivotLT();
 

@@ -23,6 +23,7 @@ import intothedwarfness.Classes.characters.Enemy;
 import intothedwarfness.Classes.characters.Player;
 import intothedwarfness.IA.AStar;
 import intothedwarfness.IA.Node;
+import intothedwarfness.Interfaces.Collidable;
 import intothedwarfness.Interfaces.Drawable;
 import java.util.List;
 
@@ -81,8 +82,12 @@ public class Window extends JFrame implements KeyListener {
         gsm = new GameStateManager();
         gsm.init();
         
-        Enemy gladiator1 = new Enemy(256, 576, 1, sprites.get(4), songs, map);
-        Enemy gladiator2 = new Enemy(640, 576, 1, sprites.get(4), songs, map);
+        ArrayList<Collidable> enemyCollidables = new ArrayList();
+        
+        enemyCollidables.add(player);
+        
+        Enemy gladiator1 = new Enemy(256, 576, 1, sprites.get(4), songs, map, enemyCollidables);
+        Enemy gladiator2 = new Enemy(640, 576, 1, sprites.get(4), songs, map, enemyCollidables);
         
         this.enemies.add(gladiator1);
         this.enemies.add(gladiator2);
@@ -209,7 +214,5 @@ public class Window extends JFrame implements KeyListener {
             } while (strategy.contentsRestored());
             strategy.show();
         } while (strategy.contentsLost());
-    }
-
-    
+    }   
 }
