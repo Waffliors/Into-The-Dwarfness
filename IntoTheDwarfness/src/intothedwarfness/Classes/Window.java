@@ -83,13 +83,9 @@ public class Window extends JFrame implements KeyListener {
         
         Enemy gladiator1 = new Enemy(256, 576, 1, sprites.get(4), songs, map);
         Enemy gladiator2 = new Enemy(640, 576, 1, sprites.get(4), songs, map);
-        Enemy gladiator3 = new Enemy(256, 576, 1, sprites.get(4), songs, map);
-        Enemy gladiator4 = new Enemy(256, 576, 1, sprites.get(4), songs, map);
         
         this.enemies.add(gladiator1);
         this.enemies.add(gladiator2);
-        this.enemies.add(gladiator3);
-        this.enemies.add(gladiator4);
         
         this.drawables = loadDrawables();
     }
