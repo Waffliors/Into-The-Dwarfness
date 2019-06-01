@@ -11,36 +11,41 @@ import java.util.Arrays;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import java.util.ArrayList;
+import intothedwarfness.IA.Node;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Interfaces.Drawable;
 
 public class Map extends JPanel implements Drawable {
 /* ***************************Class Variables******************************** */
-    private int xPos, yPos;
-    private final BufferedImage SSheet;
-    private final ArrayList<Tile> TMList;
-    private List<Integer> unblockedFloorTile;
-    private int gWallMap[][];
-    private int gFloorMap[][];
-    private int gObjectMap[][];
-    private boolean gUnblockedT[][];
+    private final int XPOS, YPOS, LINES, COLUMNS;
+    private final BufferedImage SPRITE;   
+    private final ArrayList<Tile> TILEMAP;
+    private final List<Integer> UNBLOCKEDTILES;
+    
+    private ArrayList<Node> NodeList = new ArrayList();
+    private int wallMap[][], floorMap[][], objectMap[][];
+    private Node nodeMap[][];
     public int actualStage;
 
 /* **************************Class Constructor******************************* */
-    public Map(BufferedImage spriteSheet) {
-        this.xPos = 0;
-        this.yPos = 0;
-        this.SSheet = spriteSheet;
-        this.TMList = loadTile();
+    public Map(BufferedImage spriteSheet, int lines, int columns) {
+        this.XPOS = 0;
+        this.YPOS = 0;
+        this.LINES = lines;
+        this.COLUMNS = columns;
+        this.SPRITE = spriteSheet;
+        this.TILEMAP = loadTile();
         this.actualStage = 1;
-
-        loadUblockedTiles();
+        this.UNBLOCKEDTILES = loadUblockedTiles();
         stageCreator(1);
+        this.nodeMap = loadNodeMap();
+        findNeighbors();
     }
 
 /* ********************Auxiliary methods of the Constructor****************** */
+    //Method that load the TileS
     private ArrayList<Tile> loadTile() {
-        ArrayList<Tile> mapTiles = new ArrayList();
+        ArrayList<Tile> imageTiles = new ArrayList();
         int x, y, srcX1, srcY1, srcX2, srcY2, id = -1;
         for (y = 0; y < 20; y++) {
             srcY1 = 32 * y;
@@ -48,63 +53,86 @@ public class Map extends JPanel implements Drawable {
             for (x = 0; x < 16; x++) {
                 srcX1 = 32 * x;
                 srcX2 = srcX1 + 32;
-                mapTiles.add(new Tile(srcX1, srcY1, srcX2, srcY2, id += 1));
+                imageTiles.add(new Tile(srcX1, srcY1, srcX2, srcY2, id += 1));
             }
         }
-        return mapTiles;
+        return imageTiles;
     }
     
-    private void loadUblockedTiles (){
-        this.unblockedFloorTile = Arrays.asList(
-                20,  23,  24,  25,  26,  27, 
-        	28,  29,  30,  48,  49,  50,
-                55,  56,  57,  58,  59,  60,
-                61,  62,  81,  82,  88,  89,  
-                90,  91,  92,  93,  95, 101, 
-                104, 105, 106, 107, 285, 286,
-                108, 109, 133, 134, 135, 136, 
-                137, 138, 139, 140, 141, 142, 
-                144, 148, 149, 150, 152, 153,
-                154, 155, 156, 157, 158, 160, 
-                164, 165, 159, 170, 171, 172, 
-                173, 174, 176, 177, 178, 179, 
-                180, 181, 182, 184, 185, 186, 
-                187, 188, 189, 190, 193, 194, 
-                198, 199, 200, 201, 202, 203, 
-                204, 205, 206, 208, 209, 213, 
-                214, 216, 217, 218, 219, 220, 
-                221, 222, 224, 225, 226, 229, 
-                233, 234, 235, 237, 238, 242,
-                248, 250, 254, 258, 259, 266,
-                267, 269, 270, 282, 283, 284);
+    //Method that will define de unblocked pieces os map
+    private List<Integer> loadUblockedTiles (){
+        List<Integer> unblockedTiles = 
+                Arrays.asList( 20, 23, 24, 25, 26, 27, 28, 29, 30, 48, 49, 50,
+                               55, 56, 57, 58, 59, 60, 61, 62, 68, 69, 70, 81, 
+                               82, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94,
+                               95,100,101,102,103,104,105,106,107,108,109,110,
+                              116,117,118,133,134,135,136,137,138,139,140,141,
+                              142,143,144,145,146,147,148,149,150,152,153,154,
+                              155,156,157,158,160,164,165,169,170,171,172,173,
+                              174,176,177,178,179,180,181,182,184,185,186,187,
+                              188,189,190,193,194,197,198,199,200,201,202,203,
+                              204,205,206,213,214,216,217,218,219,220,221,222,
+                              229,233,234,235,237,238,240,241,242,248,250,254,
+                              258,259,266,267,269,270,274,275,276,277,278,282,
+                              283,284,285,286,304,305);
+        
+        return unblockedTiles;
     }
-    public void loadUnblockedGraph() {
-        
-        
-        this.gUnblockedT = new boolean[this.gFloorMap.length][this.gFloorMap[0].length];
-        for (int i = 0; i < this.gUnblockedT.length; i++) {
-            for (int j = 0; j < this.gUnblockedT[0].length; j++) {
-                for (int k = 0; k < this.unblockedFloorTile.size(); k++) {
-                    if ((this.gFloorMap[i][j] == this.unblockedFloorTile.get(k) && this.gWallMap[i][j] == 6 ) || this.gWallMap[i][j] == this.unblockedFloorTile.get(k)) {
-                    	this.gUnblockedT[i][j] = true;
-                    }
-                    if(this.gObjectMap[i][j] == this.unblockedFloorTile.get(k))
-                    {
-                    	this.gUnblockedT[i][j] = false;
-                    }
+    
+    //Method that load the NodeMap
+    private Node[][] loadNodeMap() {
+        int x = 0;
+        int y = 0;
+        Node RESP[][] = new Node[LINES][COLUMNS];
+
+        int cont = 0;
+        for (int i = 0; i < LINES; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                //Create the node
+                RESP[i][j] = new Node(x, y, i, j, cont);
+                //Checks if the node reference appears in one of the matrix
+                int temp1 = wallMap[i][j];
+                int temp2 = objectMap[i][j];
+                int temp3 = floorMap[i][j];
+
+                if (!UNBLOCKEDTILES.contains(temp1) && temp1 != 6) {
+                    RESP[i][j].setBloqueado(true);
                 }
+                if (!UNBLOCKEDTILES.contains(temp2) && temp2 != 6) {
+                    RESP[i][j].setBloqueado(true);
+                }
+                if (!UNBLOCKEDTILES.contains(temp3)) {
+                    RESP[i][j].setBloqueado(true);
+                }
+                this.NodeList.add(RESP[i][j]);
+                x += 64;
+                cont++;
             }
-        }        
+            x = 0;
+            y += 64;
+        }
+        return RESP;
+    }
+
+    public int getLINES() {
+        return LINES;
+    }
+
+    public int getCOLUMNS() {
+        return COLUMNS;
+    }
+
+    public ArrayList<Node> getNodeList() {
+        return NodeList;
     }
     
 /* ****************************Class Methods********************************* */
-    
     //For each stage, all the three matrices are redrawn
     public void stageCreator(int ref) {
         this.actualStage = ref;
         //Create stage 1
         if (actualStage == 1) {
-            this.gFloorMap = new int[][]{
+            this.floorMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6, 138, 138, 138, 138, 138, 105, 105, 138, 138, 138, 138, 138,   6,   6},
                 {  6,   6, 138, 138, 138, 138, 170, 105, 105, 174, 138, 138, 138, 138,   6,   6},
@@ -118,7 +146,7 @@ public class Map extends JPanel implements Drawable {
                 {  6,   6, 138, 138, 204, 138, 170, 105, 105, 174, 138, 138, 138, 138,   6,   6},
                 {  6,   6, 138, 138, 138, 138, 170, 105, 105, 174, 138, 138, 138, 138,   6,   6},};
 
-            this.gObjectMap = new int[][]{
+            this.objectMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6, 304, 305,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,  68, 209,   6,   6,   6,   6,   6,   6,   6, 240,   6,   6,   6},
@@ -132,7 +160,7 @@ public class Map extends JPanel implements Drawable {
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
 
-            this.gWallMap = new int[][]{
+            this.wallMap = new int[][]{
                 {  6,   6,   3,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   5,   6,   6},
                 {  6,   6,  19,  27,  27,  27,  27,  23,  24,  27,  30,  27,  27,  21,   6,   6},
                 {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
@@ -148,7 +176,7 @@ public class Map extends JPanel implements Drawable {
         }
         //Create stage 2
         if (actualStage == 2) {
-            this.gFloorMap = new int[][]{
+            this.floorMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6, 170, 105, 105, 174,   6,   6,   6,   6,   6,   6},
                 {  6, 138, 139, 140, 141, 138, 170, 105, 105, 174, 138, 138, 138, 138, 138,   6},
                 {  6, 154, 155, 156, 157, 158, 170, 105, 105, 174, 138, 138, 138, 138, 138,   6},
@@ -162,7 +190,7 @@ public class Map extends JPanel implements Drawable {
                 {  6, 138, 138, 138, 138, 138, 170, 105, 105, 174, 138, 138, 138, 138, 138,   6},
                 {  6,   6,   6,   6,   6,   6, 170, 105, 105, 174,   6,   6,   6,   6,   6,   6},};
 
-            this.gObjectMap = new int[][]{
+            this.objectMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6, 259,   6,   6,   6,   6,   6,   6,   6, 118,  69,  70,   6,   6,   6},
@@ -176,7 +204,7 @@ public class Map extends JPanel implements Drawable {
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
 
-            this.gWallMap = new int[][]{
+            this.wallMap = new int[][]{
                 {  6,  64,   9,  10,  11,  12,  34,   6,   6,  32,  12,  11,  10,   9,   5,   6},
                 {  6,  19,  20,  20,  20,  20,  50,   6,   6,  48,  28,  27,  26,  25,  21,   6},
                 {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
@@ -192,7 +220,7 @@ public class Map extends JPanel implements Drawable {
         }
         //Create Stage 3
         if (actualStage == 3) {
-            this.gFloorMap = new int[][]{
+            this.floorMap = new int[][]{
                 {  6, 142, 174, 138, 170, 171, 172, 172, 172, 172, 172, 174, 138, 170, 142,   6},
                 {  6, 142, 174, 138, 170, 171, 172, 172, 172, 172, 172, 174, 138, 170, 142,   6},
                 {  6, 142, 174, 138, 170, 171, 172, 172, 172, 172, 172, 174, 138, 170, 142,   6},
@@ -206,7 +234,7 @@ public class Map extends JPanel implements Drawable {
                 {  6, 142, 174, 138, 170, 171, 172, 172, 172, 172, 172, 174, 138, 170, 142,   6},
                 {  6, 142, 174, 138, 170, 171, 172, 172, 172, 172, 172, 174, 138, 170, 142,   6},};
             
-            this.gObjectMap = new int[][]{
+            this.objectMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6, 209,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
@@ -220,7 +248,7 @@ public class Map extends JPanel implements Drawable {
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
             
-            this.gWallMap = new int[][]{
+            this.wallMap = new int[][]{
                 {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
                 {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
                 {  6,  18, 256,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
@@ -236,7 +264,7 @@ public class Map extends JPanel implements Drawable {
         }
         //Create stage 4
         if (actualStage == 4) {
-            this.gFloorMap = new int[][]{
+            this.floorMap = new int[][]{
                 {  6, 142, 174, 138, 138, 138, 138, 138, 138, 138, 138, 138, 138, 170, 142,   6},
                 {  6, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142,   6},
                 {  6, 142, 189, 204, 204, 204, 187, 172, 172, 189, 204, 204, 204, 187, 142,   6},
@@ -250,7 +278,7 @@ public class Map extends JPanel implements Drawable {
                 {  6, 142, 174, 138, 170, 171, 172, 172, 172, 172, 172, 174, 138, 170, 142,   6},
                 {  6, 142, 174, 138, 170, 171, 172, 172, 172, 172, 172, 174, 138, 170, 142,   6},};
 
-            this.gObjectMap = new int[][]{
+            this.objectMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6, 304, 305,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
@@ -258,13 +286,13 @@ public class Map extends JPanel implements Drawable {
                 {  6,   6,   6,   6,   6, 225,   6,   6,   6,   6, 225,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6, 240,   6,   6,   6,   6,   6,   6,   6,   6, 241,   6,   6,   6},
-                {  6,   6,   6,   6,   6, 209,   6,   6,   6,   6, 210,   6,   6,   6,   6,   6},
+                {  6,   6,   6,   6,   6, 209,   6,   6,   6,   6, 209,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6, 225,   6,   6,   6,   6, 225,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
 
-            this.gWallMap = new int[][]{
+            this.wallMap = new int[][]{
                 {  6,  64,   9,  10,  11,  12,  12,   9,   8,  12,   9,  12,  10,   9,  67,   6},
                 {  6,  19,  26,  26,  27,  28,  26,  23,  24,  26,  26,  27,  28,  26,  21,   6},
                 {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
@@ -280,7 +308,7 @@ public class Map extends JPanel implements Drawable {
         }
         //Create stage 5
         if (actualStage == 5) {
-            this.gFloorMap = new int[][]{
+            this.floorMap = new int[][]{
                 {  6, 142, 174, 138, 170, 171, 172, 172, 172, 172, 172, 174, 138, 170, 142,   6},
                 {  6, 142, 174, 138, 170, 171, 172, 172, 172, 172, 172, 174, 138, 170, 142,   6},
                 {  6, 142, 174, 138, 170, 171, 172, 172, 172, 172, 172, 174, 138, 170, 142,   6},
@@ -294,7 +322,7 @@ public class Map extends JPanel implements Drawable {
                 {  6,   6, 174,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
 
-            this.gObjectMap = new int[][]{
+            this.objectMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
@@ -308,7 +336,7 @@ public class Map extends JPanel implements Drawable {
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
 
-            this.gWallMap = new int[][]{
+            this.wallMap = new int[][]{
                 {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
                 {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
                 {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
@@ -324,7 +352,7 @@ public class Map extends JPanel implements Drawable {
         }
         //Create stage 6
         if (actualStage == 6) {
-            this.gFloorMap = new int[][]{
+            this.floorMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6, 133, 133, 133, 133,   6,   6,   6,   6,   6,   6},
                 {  6,  89,  90,  91,  92,  93, 133, 133, 133, 133, 133, 133, 133, 133, 133,   6},
                 {  6, 104, 105, 106, 107, 108, 109, 104,  92,  93, 133, 133, 133, 133, 133,   6},
@@ -337,21 +365,21 @@ public class Map extends JPanel implements Drawable {
                 {  6, 133, 133, 133, 133,  92,  93, 133, 133, 133, 133, 248, 133, 133, 248,   6},
                 {  6, 133, 133, 248, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
-            this.gObjectMap = new int[][]{
+            this.objectMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
-                {  6,   6, 210,   6,   6,   6,   6,   6,   6, 209,   6,   6,   6,   6,   6,   6},
+                {  6,   6,   6,   6,   6,   6,   6,   6,   6, 209,   6,   6,   6,   6,   6,   6},
                 {  6,   6, 226,   6,   6,   6,   6,   6,   6, 225,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6, 209,   6,   6,   6,   6, 209,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6, 225,   6,   6,   6,   6, 225,   6,   6,   6,   6,   6,   6},
-                {  6,   6,   6,   6,   6,   6,   6, 210,   6,   6,   6,   6, 209,   6,   6,   6},
+                {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6, 209,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6, 226,   6,   6,   6,   6, 225,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
             
-            this.gWallMap = new int[][]{
+            this.wallMap = new int[][]{
                 {  6,  64,   9,  10,  11,  12,  12,   9,   8,  12,   9,  12,  10,   9,  67,   6},
                 {  6,  19,  26,  26,  27,  28,  26,  26,  26,  26,  26,  30,  28,  26,  21,   6},
                 {  6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6},
@@ -367,7 +395,7 @@ public class Map extends JPanel implements Drawable {
         }
         //Create stage 7
         if (actualStage == 7) {
-           this.gFloorMap = new int[][]{
+           this.floorMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
@@ -381,7 +409,7 @@ public class Map extends JPanel implements Drawable {
                 {  6,   6, 138, 138, 138, 138, 170, 105, 105, 174, 138, 138, 138, 138,   6,   6},
                 {  6,   6, 138, 138, 138, 138, 170, 105, 105, 174, 138, 138, 138, 138,   6,   6},};
 
-            this.gObjectMap = new int[][]{
+            this.objectMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
@@ -395,7 +423,7 @@ public class Map extends JPanel implements Drawable {
                 {  6,   6,   6, 274,   6,   6, 225,   6,   6, 225,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
 
-            this.gWallMap = new int[][]{
+            this.wallMap = new int[][]{
                 {  6,   6,   3,   4,   4,   4,   4,   4,   4,   4,   4,   4,   4,   5,   6,   6},
                 {  6,   6,  19,  27,  27,  27,  27,  27,  27,  27,  27,  27,  27,  21,   6,   6},
                 {  6,   6,  18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16,   6,   6},
@@ -411,7 +439,7 @@ public class Map extends JPanel implements Drawable {
         }
         //Create stage 8
         if (actualStage == 8) {
-            this.gFloorMap = new int[][]{
+            this.floorMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6, 133, 133, 133, 133,   6,   6,   6,   6,   6,   6},
                 {133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133},
                 {133, 133, 133, 264, 133, 101,   6, 101,   6, 133, 248, 133, 133, 133, 133, 133},
@@ -425,7 +453,7 @@ public class Map extends JPanel implements Drawable {
                 {133, 133, 133, 248, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
 
-            this.gObjectMap = new int[][]{
+            this.objectMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6, 209,   6,   6,   6,   6,   6,   6,   6, 210,   6,   6,   6,   6},
@@ -439,7 +467,7 @@ public class Map extends JPanel implements Drawable {
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},};
 
-            this.gWallMap = new int[][]{
+            this.wallMap = new int[][]{
                 {  3,   4,   4,   4,   4,   4,  34,   6,   6,  32,   4,   4,   4,  45,   4,   5},
                 { 19,  20,  20,  20,  20,  20,  50,   6,   6,  48, 144, 145, 145, 148,  20,  21},
                 { 18,   6,   6,   6,   6,   6,   6,   6,   6,   6, 160, 161, 161, 164,   6,  16},
@@ -454,39 +482,101 @@ public class Map extends JPanel implements Drawable {
                 { 51,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  53},};            
         }
         //After Create the new map, load the graph
-        loadUnblockedGraph();
+        this.nodeMap = loadNodeMap();
+        findNeighbors();
     }
-
-/* *************************Overridden Methods******************************* */
-    @Override
-    public void paintComponent(Graphics g) {
-        for (int x = 0; x < this.gFloorMap[0].length; x++) {
-            for (int y = 0; y < this.gFloorMap.length; y++) {
-                g.drawImage(SSheet, 
-                		(x * 64) + xPos, (y * 64) + yPos, 
-                		(x * 64) + 64 + xPos, (y * 64) + 64 + yPos,     
-                        TMList.get(this.gFloorMap[y][x]).getSrcX1(), TMList.get(this.gFloorMap[y][x]).getSrcY1(),        
-                        TMList.get(this.gFloorMap[y][x]).getSrcX2(), TMList.get(this.gFloorMap[y][x]).getSrcY2(),       
-                        null);        
-                               
-                g.drawImage(SSheet, 
-                        (x * 64) + xPos, (y * 64) + yPos, 
-                        (x * 64) + 64 + xPos, (y * 64) + 64 + yPos,
-                        TMList.get(this.gObjectMap[y][x]).getSrcX1(), TMList.get(this.gObjectMap[y][x]).getSrcY1(),
-                        TMList.get(this.gObjectMap[y][x]).getSrcX2(), TMList.get(this.gObjectMap[y][x]).getSrcY2(), 
-                        null);
-                
-                g.drawImage(SSheet,
-                        (x * 64) + xPos, (y * 64) + yPos,
-                        (x * 64) + 64 + xPos, (y * 64) + 64 + yPos, 
-                        TMList.get(this.gWallMap[y][x]).getSrcX1(), TMList.get(this.gWallMap[y][x]).getSrcY1(),
-                        TMList.get(this.gWallMap[y][x]).getSrcX2(), TMList.get(this.gWallMap[y][x]).getSrcY2(), 
-                        null);
+    
+    //Method that walks through the matrix of nodes and for each of them finds
+    //its orthogonal neighbors
+    public void findNeighbors() {
+        for (int i = 0; i < LINES; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                calculateNeighbors(nodeMap[i][j]);
             }
         }
     }
-    public boolean[][] getgUnblockedT() {
-        return gUnblockedT;
+    
+    //Method that calculate the orthogonal neighbors
+    private void calculateNeighbors(Node node) {
+        int lin = node.getX();
+        int col = node.getY();
+        
+        //Index in the matrix of the left neighbor
+        int adjLeft_lin = lin;
+        int adjLeft_col = col-1;
+        //Index in matrix of the right neighbor
+        int adjRight_lin = lin;
+        int adjRight_col = col+1;
+        //Index in matrix of the top neighbor
+        int adjTop_lin = lin - 1;
+        int adjTop_col = col;
+        ////Index in matrix of the down neighbor
+        int adjDown_lin = lin + 1;
+        int adjDown_col = col;
+        
+        //Now check if the neighbors of the node are in the limits of the matrix
+        if (adjLeft_lin >= 0 && adjLeft_lin <= LINES) {
+            if (adjLeft_col >= 0 && adjLeft_col <= COLUMNS) {
+                nodeMap[lin][col].addNeighbor(nodeMap[adjLeft_lin][adjLeft_col]);
+            }
+        }
+        if (adjRight_lin >= 0 && adjRight_lin <= LINES) {
+            if (adjRight_col >= 0 && adjRight_col <= COLUMNS-1) {
+                nodeMap[lin][col].addNeighbor(nodeMap[adjRight_lin][adjRight_col]);
+            }
+        }
+        if (adjTop_lin >= 0 && adjTop_lin <= LINES) {
+            if (adjTop_col >= 0 && adjTop_col <= COLUMNS) {
+                nodeMap[lin][col].addNeighbor(nodeMap[adjTop_lin][adjTop_col]);
+            }
+        }
+        if (adjDown_lin >= 0 && adjDown_lin <= LINES-1) {
+            if (adjDown_col >= 0 && adjDown_col <= COLUMNS) {
+                nodeMap[lin][col].addNeighbor(nodeMap[adjDown_lin][adjDown_col]);
+            }
+        }
+        //Print the neighbors
+        //nodeMap[lin][col].showNeigh();
+    }
+    
+    //Return a node of the Node Map
+    public Node getNode(int x, int y) {
+            //System.out.println(x + " " + y);
+            return nodeMap[x][y];
+    }
+
+    //Return the node map
+    public Node[][] getNodeMap() {
+        return nodeMap;
+    }
+    
+/* *************************Overridden Methods******************************* */
+    @Override
+    public void paintComponent(Graphics g) {
+        for (int x = 0; x < this.floorMap[0].length; x++) {
+            for (int y = 0; y < this.floorMap.length; y++) {
+                g.drawImage(SPRITE,
+                        (x * 64) + XPOS, (y * 64) + YPOS,
+                        (x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS,
+                        TILEMAP.get(this.floorMap[y][x]).getSrcX1(), TILEMAP.get(this.floorMap[y][x]).getSrcY1(),
+                        TILEMAP.get(this.floorMap[y][x]).getSrcX2(), TILEMAP.get(this.floorMap[y][x]).getSrcY2(),
+                        null);
+
+                g.drawImage(SPRITE,
+                        (x * 64) + XPOS, (y * 64) + YPOS,
+                        (x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS,
+                        TILEMAP.get(this.objectMap[y][x]).getSrcX1(), TILEMAP.get(this.objectMap[y][x]).getSrcY1(),
+                        TILEMAP.get(this.objectMap[y][x]).getSrcX2(), TILEMAP.get(this.objectMap[y][x]).getSrcY2(),
+                        null);
+
+                g.drawImage(SPRITE,
+                        (x * 64) + XPOS, (y * 64) + YPOS,
+                        (x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS,
+                        TILEMAP.get(this.wallMap[y][x]).getSrcX1(), TILEMAP.get(this.wallMap[y][x]).getSrcY1(),
+                        TILEMAP.get(this.wallMap[y][x]).getSrcX2(), TILEMAP.get(this.wallMap[y][x]).getSrcY2(),
+                        null);
+            }
+        }
     }
 
     @Override

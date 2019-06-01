@@ -32,6 +32,8 @@ public class IntoTheDwarfness {
         for (int i = 1; i <= 9; i++) {
             sprites.add(ImageIO.read(new File("images/" + i + ".png")));
         }
+        sprites.add(ImageIO.read(new File("images/TILES REF.png")));
+        
         //Loading the songs of the game
         ArrayList<Song> songs = loadSong();
 

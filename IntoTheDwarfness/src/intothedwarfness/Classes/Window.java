@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JFrame;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -18,8 +19,13 @@ import intothedwarfness.Classes.States.PlayState;
 import intothedwarfness.Classes.States.GameState;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
+import intothedwarfness.Classes.characters.Enemy;
+import intothedwarfness.Classes.characters.Player;
+import intothedwarfness.IA.AStar;
+import intothedwarfness.IA.Node;
 import intothedwarfness.Interfaces.Drawable;
-import java.net.MalformedURLException;
+import java.util.List;
+
 
 public class Window extends JFrame implements KeyListener {
     /* ***************************Class Variables******************************** */
@@ -28,31 +34,32 @@ public class Window extends JFrame implements KeyListener {
     private final int width, height;
     private final Map map;
     private final Player player;
+    private final Enemy gladiator1;
+    
     private final ArrayList<Enemy> enemies = new ArrayList();
     private final ArrayList<BufferedImage> sprites;
     private final ArrayList<Song> songs;
+    private List<Node> path;
     private ArrayList<Drawable> drawables;
 
     /* **************************Class Constructor******************************* */
     public Window(ArrayList<BufferedImage> sprites, ArrayList<Song> songs) {
         super("Into The Dwarfness");
 
-        this.sprites = sprites;
-        this.songs = songs;
-        this.map = new Map(sprites.get(8));
-        this.player = new Player(sprites.get(0),songs, map);
         this.width = 1024;
         this.height = 768;
-        this.drawables = loadDrawables();
-        Enemy gladiator = new Enemy(512, 128, 2, sprites.get(3), map.getgUnblockedT());
-        this.enemies.add(gladiator);
+        this.songs = songs;
+        this.sprites = sprites;
+        this.map = new Map(sprites.get(8), 12, 16);
+        this.gladiator1 = new Enemy(256, 576, 1, sprites.get(4), songs, map);
+        this.enemies.add(gladiator1);
         this.setSize(this.width, this.height);
-        
-        Enemy spider = new Enemy(512, 128, 2, sprites.get(3), map.getgUnblockedT());
-        this.enemies.add(spider);
+        this.player = new Player(sprites.get(0),songs, map);
+
         
         this.drawables = loadDrawables();
-
+        
+        
         this.setSize(this.width, this.height);
         this.setLocationRelativeTo(null);
         this.setUndecorated(false);
@@ -64,21 +71,18 @@ public class Window extends JFrame implements KeyListener {
         this.setIgnoreRepaint(true);
         this.setBackground(new Color(43, 43, 42));
     }
-
-    /* ********************Auxiliary methods of the Constructor****************** */
+/* ********************Auxiliary methods of the Constructor****************** */
     private ArrayList<Drawable> loadDrawables() {
         ArrayList<Drawable> elements = new ArrayList();
         elements.add(this.map);
         elements.add(this.player);
-
         for (Enemy enemy : this.enemies) {
             elements.add(enemy);
         }
-
         return elements;
     }
 
-    /* ****************************Class Methods********************************* */
+/* ****************************Class Methods********************************* */
     //Game Start
     public void initialize() {
         gsm = new GameStateManager();
@@ -87,7 +91,7 @@ public class Window extends JFrame implements KeyListener {
     
     //Game Loop
     public void run() throws InterruptedException {
-        songs.get(0).playSound();
+        //songs.get(0).playSound();
         boolean isRunning = true;
 
         long excess = 0;
@@ -100,6 +104,11 @@ public class Window extends JFrame implements KeyListener {
         this.createBufferStrategy(2);
         //BufferStrategy strategy = this.getBufferStrategy();
 
+        
+        
+        //Set path and pass it to enemy
+        this.path = AStar.aEstrela(gladiator1.getNodePos(), player.getNodePos(), map);
+        gladiator1.setPath(path);
         while (isRunning) {
             long beforeTime = System.currentTimeMillis();
 
@@ -113,9 +122,13 @@ public class Window extends JFrame implements KeyListener {
             }
             if ("PlayState".equals(gsm.getType())) {
                 player.update();
+                if (gladiator1.getXPosition() % 64 == 0 && gladiator1.getYPosition() % 64 == 0) {
+                    this.path = AStar.aEstrela(gladiator1.getNodePos(), player.getNodePos(), map);
+                    gladiator1.setPath(path);
+                }
                 for (Enemy enemy : this.enemies) {
                     if (enemy.isStage(this.map)) {
-                        enemy.update();                        
+                        enemy.update();
                     }
                 }
             }
@@ -137,7 +150,7 @@ public class Window extends JFrame implements KeyListener {
         }
     }
 
-    /* *************************Overridden Methods******************************* */
+/* *************************Overridden Methods******************************* */
     @Override
     public void keyTyped(KeyEvent e) {
         if (e.getKeyChar() == 'p') {
@@ -155,6 +168,7 @@ public class Window extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if ("PlayState".equals(gsm.getType())) {
             player.setCurrentMove(e.getKeyChar());
+            // TODO - Enemy doesn't find path if player moves, why?
         }
     }
 
@@ -186,10 +200,13 @@ public class Window extends JFrame implements KeyListener {
                         drawable.paintComponent(graphics);
                     }
                 }
+                graphics.drawImage(this.sprites.get(9), 0, 0, null);
                 //Disposes of this graphics context, it's no longer referenced.
                 graphics.dispose();
             } while (strategy.contentsRestored());
             strategy.show();
         } while (strategy.contentsLost());
     }
+
+    
 }
