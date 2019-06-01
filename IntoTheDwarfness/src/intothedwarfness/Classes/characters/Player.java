@@ -34,7 +34,7 @@ public class Player extends Character implements Drawable, Collidable {
     //Animation
     private int cont, atkCont, hitCont, deadCont;
     private int drawRef, startLine, animation, endLine;
-    private boolean looking2Right, attacking, gotHit, died, running;
+    private boolean looking2Right, attacking, hitted, died, running;
 
 /* **************************Class Constructor******************************* */
     public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map) {
@@ -54,7 +54,7 @@ public class Player extends Character implements Drawable, Collidable {
 
         //Player's animation
         this.died = false;
-        this.gotHit = false;
+        this.hitted = false;
         this.running = false;
         this.attacking = false;
         this.looking2Right = true;
@@ -123,12 +123,13 @@ public class Player extends Character implements Drawable, Collidable {
                 this.attacking = true;
             }
             if (currentMove == 'h') {
-                this.gotHit = true;
+                this.hitted = true;
             }
             this.currentMove = currentMove;
         }
     }
 
+    
     //Method that moves the player
     private void move(char key) {
         //save the current position
@@ -310,7 +311,7 @@ public class Player extends Character implements Drawable, Collidable {
         if (attacking) {
             atkCont += 1;
         }
-        if (gotHit) {
+        if (hitted) {
             hitCont += 1;
         }
         if (died) {
@@ -324,7 +325,7 @@ public class Player extends Character implements Drawable, Collidable {
         if (!died) {
             //Then it is divided by:
             //is looking to the right, movement and action
-            if (!attacking && !gotHit) {
+            if (!attacking && !hitted) {
                 //Idle and Running while looking to the Right
                 if (looking2Right) {
                     if (currentMove == 'a' || currentMove == 'w' || 
@@ -379,7 +380,7 @@ public class Player extends Character implements Drawable, Collidable {
             }
             
             //Animations to get hit
-            if (gotHit) {
+            if (hitted) {
                 if (looking2Right) {
                     startAnimation(3, 0, 4);
                 }
@@ -395,7 +396,7 @@ public class Player extends Character implements Drawable, Collidable {
                 if (hitCont == endLine) {
                     cont= 0;
                     hitCont = 0;
-                    gotHit = false;
+                    hitted = false;
                     life -= 1;
                     if (life == 0){
                         died = true;
@@ -445,9 +446,7 @@ public class Player extends Character implements Drawable, Collidable {
         //Also resets the motion animations counter
         running = false;
         this.cont = 0;
-    }
-    
-    
+    }    
     
     //Method that get the player's x position on the screen   
     public int getXPosition() {
@@ -505,6 +504,16 @@ public class Player extends Character implements Drawable, Collidable {
     @Override
     public Point getPivotRD() {
         return this.pivots.get(3);
+    }
+
+    @Override
+    public String getType() {
+        return "PlayerType";
+    }
+
+    @Override
+    public void gotHit() {
+        this.hitted = true;
     }
 
 }

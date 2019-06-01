@@ -131,16 +131,6 @@ public class Node implements Collidable{
         this.h = (Math.abs(getX() - goal.getX()) + Math.abs(getY() - goal.getY())) * MOVEMENT_COST;
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     //Getters of the pivots
     public Point getLT() {
         return LT;
@@ -197,6 +187,16 @@ public class Node implements Collidable{
     @Override
     public Point getPivotRD() {
         return RD;
+    }
+
+    @Override
+    public String getType() {
+        return "NodeType";
+    }
+
+    @Override
+    public void gotHit() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 
