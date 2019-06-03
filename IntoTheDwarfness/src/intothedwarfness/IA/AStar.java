@@ -107,8 +107,8 @@ public class AStar {
             contador++;
         }
         Collections.reverse(listaAuxiliar);
-
-        //imprimir caminho
+/*       
+//imprimir caminho
         System.out.println("Caminho: ");
         for (Node no : listaAuxiliar) {
             System.out.print(" -> " + no);
@@ -120,17 +120,19 @@ public class AStar {
             }
 
         }
-        //fim do artificio
 
+        //fim do artificio
+        
         System.out.println("");
         desenha(mapa);
         System.out.println("Fim ! ");
-
+         */
         //retorno do caminho
         return listaAuxiliar;
     }
 
     private static void desenha(Map mapa) {
+      /*  
         System.out.println("");
         for (int i = 0; i < mapa.getLINES(); i++) {
             for (int j = 0; j < mapa.getCOLUMNS(); j++) {
@@ -145,6 +147,6 @@ public class AStar {
             }
             System.out.println();
         }
+*/
     }
-
 }

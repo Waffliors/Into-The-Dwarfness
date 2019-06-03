@@ -346,10 +346,7 @@ public class Player extends Character implements Drawable, Collidable {
                         startAnimation(5,0,5);
                     } 
                 }
-                //Play the song of this animation
-                if((cont%2 == 1 ) && running){
-                    playsong(4);
-                }
+                
                 //Stop condition of animations of the type "movement"
                 if (cont == this.endLine) {
                     cont = this.startLine;

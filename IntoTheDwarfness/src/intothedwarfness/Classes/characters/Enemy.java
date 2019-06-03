@@ -29,17 +29,23 @@ public class Enemy extends Character implements Drawable, Collidable {
     private final ArrayList<Song> SONGS;
     private final Map MAP;
     //Position
+    private List<Integer> range;
     private char currentMove;
     private ArrayList<Point> pivots;
     private int xPos, yPos, actualStage, life;
     private final ArrayList<Collidable> collidables;
+    private boolean endedPath, followingPlayer, canPlaySong;
     //Animation
-    private int cont, atkCont, hitCont, deadCont;
+    private int cont, wait, atkCont, hitCont, deadCont;
     private int drawRef, startLine, animation, endLine;
     private boolean looking2Right, attacking, hitted, died, running, idle;
 
     /* ***********************Class Constructor****************************** */
-    public Enemy(int xPos, int yPos, int stage, BufferedImage spriteSheet, ArrayList<Song> songs, Map map, ArrayList<Collidable> collidables) {
+    public Enemy(int xPos, int yPos, int stage, BufferedImage spriteSheet, 
+            ArrayList<Song> songs, Map map, ArrayList<Collidable> collidables, 
+            int enemyType) {
+        
+        
         this.life = 4;
         this.yPos = yPos;
         this.xPos = xPos;
@@ -51,6 +57,11 @@ public class Enemy extends Character implements Drawable, Collidable {
         this.TILESIZE = 64;
         this.SONGS = songs;
         this.MAP = map;
+        this.endedPath = false;
+        this.wait = 0;
+        this.range = new ArrayList();
+        this.followingPlayer = false;
+        this.canPlaySong = true;
         
         //Player's animation
         this.died = false;
@@ -60,7 +71,6 @@ public class Enemy extends Character implements Drawable, Collidable {
         this.looking2Right = true;
         
         setPivot();
-        initializeCollidables();
     }
     
     /* ********************Auxiliary methods of the Constructor****************** */
@@ -77,75 +87,89 @@ public class Enemy extends Character implements Drawable, Collidable {
         this.pivots.add(new Point(this.xPos+TILESIZE,this.yPos+TILESIZE));
     }
     
-    private void initializeCollidables() {
-        
-    }
+
 
     /* ****************************Class Methods********************************* */
     @Override
     public void update() {
         animate();
         move();
-        
     }
 
+    
+    
     public void move() {
-        if (path == null) {
-            idle = true;
-            this.running = false;
-            this.cont = 0;
-            return;
+        if (!endedPath) {
+            if (path.size() == 1) {
+                idle = true;
+                this.running = false;
+                this.cont = 0;
+                this.endedPath = true;
+                return;
+            }
+            if (path.size() <= 0) {
+                path = null;
+                return;
+            }
+            //save the current position
+            int antXPos = this.xPos;
+            int antYPos = this.yPos;
+
+            Node currentPos = ((LinkedList<Node>) path).getFirst();
+            if (((LinkedList<Node>) path).size() != 1 && this.path != null) {
+                this.endedPath = false;
+                this.running = true;
+                this.idle = false;
+
+                Node next = ((LinkedList<Node>) path).get(1);
+                if (currentPos.getX() != next.getX()) {
+                    //yPos += (currentPos.getX() < next.getX() ? 8 : -8);
+                    if (currentPos.getX() < next.getX()) {
+                        yPos += 4;
+                    }
+                    if (currentPos.getX() > next.getX()) {
+                        yPos -= 4;
+                    }
+                    if (yPos % 64 == 0) {
+                        ((LinkedList<Node>) path).removeFirst();
+                    }
+
+                } else if (currentPos.getY() != next.getY()) {
+                    //xPos += (currentPos.getY() < next.getY() ? 8 : -8);
+
+                    if (currentPos.getY() < next.getY()) {
+                        xPos += 4;
+                        looking2Right = true;
+                    }
+                    if (currentPos.getY() > next.getY()) {
+                        xPos -= 4;
+                        looking2Right = false;
+                    }
+
+                    if (xPos % 64 == 0) {
+                        ((LinkedList<Node>) path).removeFirst();
+                    }
+                }
+                //set the new pivots
+                setPivot();
+                //if had collision, return to the old position
+                if (collision()) {
+                    //this.xPos = antXPos;
+                    //this.yPos = antYPos;
+                }
+            }
+            
         }
-        if (path.size() <= 0) {
-            path = null;
-            return;
-        }
-        //save the current position
-        int antXPos = this.xPos;
-        int antYPos = this.yPos;
         
-        Node currentPos = ((LinkedList<Node>) path).getFirst();
-        if (((LinkedList<Node>) path).size() != 1 && this.path != null) {
-            this.running = true;
-            this.idle = false;
-
-            Node next = ((LinkedList<Node>) path).get(1);
-            if (currentPos.getX() != next.getX()) {
-                //yPos += (currentPos.getX() < next.getX() ? 8 : -8);
-                if (currentPos.getX() < next.getX()) {
-                    yPos += 4;
-                }
-                if (currentPos.getX() > next.getX()) {
-                    yPos -= 4;
-                }
-                if (yPos % 64 == 0) {
-                    ((LinkedList<Node>) path).removeFirst();
-                }
-
-            } else if (currentPos.getY() != next.getY()) {
-                //xPos += (currentPos.getY() < next.getY() ? 8 : -8);
-
-                if (currentPos.getY() < next.getY()) {
-                    xPos += 4;
-                    looking2Right = true;
-                }
-                if (currentPos.getY() > next.getY()) {
-                    xPos -= 4;
-                    looking2Right = false;
-                }
-
-                if (xPos % 64 == 0) {
-                    ((LinkedList<Node>) path).removeFirst();
-                }
-            }
-            //set the new pivots
-            setPivot();
-            //if had collision, return to the old position
-            if (collision()) {
-                this.xPos = antXPos;
-                this.yPos = antYPos;
+        if(endedPath && !followingPlayer){
+            this.idle = true;
+            wait+=1;
+            if (wait >= 75){
+                wait = 0;
+                this.endedPath = false;
             }
         }
+            
     }
     
     public boolean collision() {
@@ -227,14 +251,10 @@ public class Enemy extends Character implements Drawable, Collidable {
                     startAnimation(1, 0, 8);
                 }
             }
-                //Play the song of this animation
-                if((cont%2 == 1 ) && running){
-                    playsong(4);
-                }
                 //Stop condition of animations of the type "movement"
                 //All the animations of moving types use the same counter
         
-                if (cont == this.endLine) {
+                if (cont >= this.endLine) {
                     cont = this.startLine;
                 }
                 this.drawRef = cont;
@@ -266,6 +286,35 @@ public class Enemy extends Character implements Drawable, Collidable {
         return this.yPos;
     }
 
+    public Node getNodePos(){
+        return this.MAP.getNode(yPos/64, xPos/64);  
+    }
+    
+    public boolean endedPath(){
+        return this.endedPath;
+    }
+    
+    private int[] getArea (){
+        int resp[] = new int[4];
+        resp[0] = this.xPos - 192;
+        resp[1] = this.yPos - 192;
+        resp[2] = this.xPos + 192;
+        resp[3] = this.yPos + 192;
+        return resp;
+    }
+    
+    public boolean inRange(Player player) {
+        if (player.getXPosition() > getArea()[0] && player.getXPosition() < getArea()[2]) {
+            if (player.getYPosition() > getArea()[1] && player.getYPosition() < getArea()[3]) {
+                System.out.println("PLAYER NO RANGE");
+                this.followingPlayer = true;
+            }
+        }
+        System.out.println("PLAYER FUGIU");
+        this.followingPlayer = false;
+        return false;
+    }
+    
     @Override
     public Point getPivotLT() {
         return this.pivots.get(0);
@@ -284,13 +333,6 @@ public class Enemy extends Character implements Drawable, Collidable {
     @Override
     public Point getPivotRD() {
         return this.pivots.get(3);
-    }
-    
-    public Node getNodePos(){
-        return this.MAP.getNode(yPos/64, xPos/64);  
-    }
-    public void getNewPath(){
-        
     }
     
     @Override

@@ -26,6 +26,7 @@ import intothedwarfness.IA.Node;
 import intothedwarfness.Interfaces.Collidable;
 import intothedwarfness.Interfaces.Drawable;
 import java.util.List;
+import java.util.Random;
 
 
 public class Window extends JFrame implements KeyListener {
@@ -50,7 +51,7 @@ public class Window extends JFrame implements KeyListener {
         this.height = 768;
         this.songs = songs;
         this.sprites = sprites;
-        this.map = new Map(sprites.get(8), 12, 16);
+        this.map = new Map(sprites.get(6), 12, 16);
         this.setSize(this.width, this.height);
         this.player = new Player(sprites.get(0),songs, map);        
         
@@ -85,19 +86,18 @@ public class Window extends JFrame implements KeyListener {
         ArrayList<Collidable> enemyCollidables = new ArrayList();
         
         enemyCollidables.add(player);
-        
-        Enemy gladiator1 = new Enemy(256, 576, 1, sprites.get(4), songs, map, enemyCollidables);
-        Enemy gladiator2 = new Enemy(640, 576, 1, sprites.get(4), songs, map, enemyCollidables);
+        Enemy gladiator1 = new Enemy(256, 576, 2, sprites.get(3), songs, map, enemyCollidables,0);
+        Enemy gladiator2 = new Enemy(640, 576, 2, sprites.get(3), songs, map, enemyCollidables,0);
                 
+        
         this.enemies.add(gladiator1);
         this.enemies.add(gladiator2);
-        
         this.drawables = loadDrawables();
     }
     
     //Game Loop
     public void run() throws InterruptedException {
-        //songs.get(0).playSound();
+        songs.get(0).playSound();
         boolean isRunning = true;
 
         long excess = 0;
@@ -109,15 +109,15 @@ public class Window extends JFrame implements KeyListener {
         // Cria double-buffering strategy genérico
         this.createBufferStrategy(2);
         //BufferStrategy strategy = this.getBufferStrategy();
-
-        
         
         //Set path and pass it to enemy
         for(Enemy enemy : this.enemies) {
-            this.path = AStar.aEstrela(enemy.getNodePos(), player.getNodePos(), map);
+            this.path = AStar.aEstrela(enemy.getNodePos(), randomPath(), map);
             enemy.setPath(path);
         }
+        
         while (isRunning) {
+            
             long beforeTime = System.currentTimeMillis();
 
             // Pula os quadros enquanto o tempo for em excesso.
@@ -130,10 +130,17 @@ public class Window extends JFrame implements KeyListener {
             }
             if ("PlayState".equals(gsm.getType())) {
                 player.update();
-                for(Enemy enemy : this.enemies) {
+                for (Enemy enemy : this.enemies) {
                     if (enemy.getXPosition() % 64 == 0 && enemy.getYPosition() % 64 == 0) {
-                        this.path = AStar.aEstrela(enemy.getNodePos(), player.getNodePos(), map);
-                        enemy.setPath(path);
+                        if (enemy.inRange(player)){
+                            System.out.println("SEGUINDO O PLAYER");
+                            this.path = AStar.aEstrela(enemy.getNodePos(), player.getNodePos(), map);
+                            enemy.setPath(path);
+                        }
+                        if (enemy.endedPath()) {
+                            this.path = AStar.aEstrela(enemy.getNodePos(), randomPath(), map);
+                            enemy.setPath(path);
+                        }
                     }
                     if (enemy.isStage(this.map)) {
                         enemy.update();
@@ -141,7 +148,6 @@ public class Window extends JFrame implements KeyListener {
                 }
             }
             repaint();
-
             long afterTime = System.currentTimeMillis();
             long sleepTime = afterTime - beforeTime;
 
@@ -156,6 +162,20 @@ public class Window extends JFrame implements KeyListener {
                 }
             }
         }
+    }
+    
+    public Node randomPath(){
+        Random random = new Random();
+        boolean find = false;
+        Node node = null;
+        
+        while(!find){
+           node = map.getNode(random.nextInt(11), random.nextInt(15));
+           if (!node.isBlocked()){
+               find = true;
+           }
+        }
+        return node;
     }
 
 /* *************************Overridden Methods******************************* */
@@ -176,7 +196,6 @@ public class Window extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if ("PlayState".equals(gsm.getType())) {
             player.setCurrentMove(e.getKeyChar());
-            // TODO - Enemy doesn't find path if player moves, why?
         }
     }
 
@@ -208,7 +227,7 @@ public class Window extends JFrame implements KeyListener {
                         drawable.paintComponent(graphics);
                     }
                 }
-                graphics.drawImage(this.sprites.get(9), 0, 0, null);
+                graphics.drawImage(this.sprites.get(7), 0, 0, null);
                 //Disposes of this graphics context, it's no longer referenced.
                 graphics.dispose();
             } while (strategy.contentsRestored());
