@@ -306,11 +306,10 @@ public class Enemy extends Character implements Drawable, Collidable {
     public boolean inRange(Player player) {
         if (player.getXPosition() > getArea()[0] && player.getXPosition() < getArea()[2]) {
             if (player.getYPosition() > getArea()[1] && player.getYPosition() < getArea()[3]) {
-                System.out.println("PLAYER NO RANGE");
                 this.followingPlayer = true;
+                return true;
             }
         }
-        System.out.println("PLAYER FUGIU");
         this.followingPlayer = false;
         return false;
     }
@@ -353,6 +352,15 @@ public class Enemy extends Character implements Drawable, Collidable {
         //Draw in the player's position
         g.drawImage(image, xPos, yPos, 64, 64, null);
         
+        if(followingPlayer){
+            BufferedImage alert = SPRITE.getSubimage(
+                super.spriteTiles[7][7].getSrcX1(), 
+                super.spriteTiles[7][7].getSrcY1(),
+                IMGSIZE, IMGSIZE);
+        //Draw in the player's position
+        g.drawImage(alert, xPos, yPos, 64, 64, null);
+            
+        }
     }
 
     @Override

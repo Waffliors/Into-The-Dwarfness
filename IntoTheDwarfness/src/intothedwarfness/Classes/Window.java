@@ -10,7 +10,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JFrame;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -133,7 +132,6 @@ public class Window extends JFrame implements KeyListener {
                 for (Enemy enemy : this.enemies) {
                     if (enemy.getXPosition() % 64 == 0 && enemy.getYPosition() % 64 == 0) {
                         if (enemy.inRange(player)){
-                            System.out.println("SEGUINDO O PLAYER");
                             this.path = AStar.aEstrela(enemy.getNodePos(), player.getNodePos(), map);
                             enemy.setPath(path);
                         }
