@@ -77,7 +77,7 @@ public class Player extends Character implements Drawable, Collidable {
         this.pivots.add(new Point(this.xPos+TILESIZE,this.yPos+TILESIZE));
     }
     
-    public void initializeCollidables() {
+    private void initializeCollidables() {
         this.collidables.clear();
         
         MAP.getNodeMap();
@@ -295,6 +295,7 @@ public class Player extends Character implements Drawable, Collidable {
         }
         //After check, create the stage and the collide list
         map.stageCreator(actualStage);
+        initializeCollidables();
         return this.actualStage;
     }
     
