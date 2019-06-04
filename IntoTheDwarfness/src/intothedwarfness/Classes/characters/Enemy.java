@@ -90,13 +90,15 @@ public class Enemy extends Character implements Drawable, Collidable {
 
 
     /* ****************************Class Methods********************************* */
+    public int getActualStage() {
+        return actualStage;
+    }
+
     @Override
     public void update() {
         animate();
         move();
     }
-
-    
     
     public void move() {
         if (!endedPath) {

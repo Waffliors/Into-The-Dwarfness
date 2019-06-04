@@ -87,7 +87,6 @@ public class Window extends JFrame implements KeyListener {
         enemyCollidables.add(player);
         Enemy gladiator1 = new Enemy(256, 576, 2, sprites.get(3), songs, map, enemyCollidables,0);
         Enemy gladiator2 = new Enemy(640, 576, 2, sprites.get(3), songs, map, enemyCollidables,0);
-                
         
         this.enemies.add(gladiator1);
         this.enemies.add(gladiator2);
@@ -115,7 +114,7 @@ public class Window extends JFrame implements KeyListener {
             enemy.setPath(path);
         }
         
-        while (isRunning) {
+        while (isRunning) {        
             
             long beforeTime = System.currentTimeMillis();
 
@@ -210,6 +209,14 @@ public class Window extends JFrame implements KeyListener {
     public void keyReleased(KeyEvent e) {
         player.setCurrentMove('.');
         player.setLook(e.getKeyChar());
+        
+        if (player.checkStage(e.getKeyChar(), this.map) > 0) {
+            for(Enemy enemy : this.enemies) {
+                if (enemy.getActualStage() == this.map.getActualStage()) {
+                    this.map.getStageEnemies().add(enemy);
+                }
+            }
+        };
     }
 
     @Override

@@ -79,6 +79,7 @@ public class Player extends Character implements Drawable, Collidable {
     
     private void initializeCollidables() {
         this.collidables.clear();
+        
         MAP.getNodeMap();
         for (int i = 0; i < MAP.getNodeMap().length; i++) {
             for (int j = 0; j < MAP.getNodeMap()[0].length; j++) {
@@ -86,6 +87,10 @@ public class Player extends Character implements Drawable, Collidable {
                     collidables.add(MAP.getNodeMap()[i][j]);
                 }
             }
+        }
+        
+        for (Enemy stageEnemy : MAP.getStageEnemies()) {
+            collidables.add(stageEnemy);
         }
     }
     
@@ -197,7 +202,8 @@ public class Player extends Character implements Drawable, Collidable {
     }
 
     //Method that verifies if the player will change the stage
-    private void checkStage(char key, Map map) {
+    public int checkStage(char key, Map map) {
+        int lastStage = this.actualStage;
         //Check the entries in stage 1
         if (actualStage == 1) {
             if (key == 's' && yPos >= 704 && (xPos >= 448 && xPos <= 512)) {
@@ -283,9 +289,14 @@ public class Player extends Character implements Drawable, Collidable {
                 this.actualStage = 2;
             }
         }
+        
+        if(lastStage == this.actualStage) {
+            return 0;
+        }
         //After check, create the stage and the collide list
         map.stageCreator(actualStage);
         initializeCollidables();
+        return this.actualStage;
     }
     
     //Method that defines the settings of the current animation
@@ -452,6 +463,10 @@ public class Player extends Character implements Drawable, Collidable {
     //Method that get the player's y position on the screen
     public int getYPosition() {
         return this.yPos;
+    }
+    
+    public ArrayList<Collidable> getCollidables() {
+        return collidables;
     }
     
     public Node getNodePos(){
