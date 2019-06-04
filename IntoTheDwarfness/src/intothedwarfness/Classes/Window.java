@@ -132,7 +132,13 @@ public class Window extends JFrame implements KeyListener {
                 for (Enemy enemy : this.enemies) {
                     if (enemy.getXPosition() % 64 == 0 && enemy.getYPosition() % 64 == 0) {
                         if (enemy.inRange(player)){
-                            this.path = AStar.aEstrela(enemy.getNodePos(), player.getNodePos(), map);
+                            Node end = player.getNodePos();
+                            if (!player.getNodePos().getNeighbors().get(0).isBlocked()) {
+                                end = player.getNodePos().getNeighbors().get(0);
+                            } else if (!player.getNodePos().getNeighbors().get(1).isBlocked()) {
+                                end = player.getNodePos().getNeighbors().get(1);
+                            }
+                            this.path = AStar.aEstrela(enemy.getNodePos(), end, map);
                             enemy.setPath(path);
                         }
                         if (enemy.endedPath()) {
@@ -145,6 +151,9 @@ public class Window extends JFrame implements KeyListener {
                     }
                 }
             }
+            
+            
+            map.getNode(WIDTH, WIDTH);
             repaint();
             long afterTime = System.currentTimeMillis();
             long sleepTime = afterTime - beforeTime;
