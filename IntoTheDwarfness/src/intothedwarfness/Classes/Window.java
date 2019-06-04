@@ -216,7 +216,8 @@ public class Window extends JFrame implements KeyListener {
                     this.map.getStageEnemies().add(enemy);
                 }
             }
-        };
+            player.initializeCollidables();
+        }
     }
 
     @Override
