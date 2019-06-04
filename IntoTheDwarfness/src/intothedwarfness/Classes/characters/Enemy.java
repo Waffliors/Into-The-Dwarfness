@@ -32,7 +32,7 @@ public class Enemy extends Character implements Drawable, Collidable {
     private List<Integer> range;
     private char currentMove;
     private ArrayList<Point> pivots;
-    private int xPos, yPos, actualStage, life;
+    private int xPos, yPos, actualStage, life, enemyType;
     private final ArrayList<Collidable> collidables;
     private boolean endedPath, followingPlayer, canPlaySong;
     //Animation
@@ -46,6 +46,26 @@ public class Enemy extends Character implements Drawable, Collidable {
             int enemyType) {
         
         
+        this.enemyType = enemyType;
+        switch (this.enemyType) {
+            case 0:
+                this.IMGSIZE = 32;
+                break;
+            case 2:
+                this.IMGSIZE = 32;
+                break;
+            case 1:
+                this.IMGSIZE = 16;
+                break;
+            case 3:
+                this.IMGSIZE = 64;
+                break;
+            default:
+                this.IMGSIZE = 0;
+        }
+
+
+        this.TILESIZE = 64;
         this.life = 4;
         this.yPos = yPos;
         this.xPos = xPos;
@@ -53,15 +73,14 @@ public class Enemy extends Character implements Drawable, Collidable {
         this.pivots = new ArrayList();
         this.collidables = collidables;
         this.SPRITE = spriteSheet;
-        this.IMGSIZE = 32;
-        this.TILESIZE = 64;
         this.SONGS = songs;
         this.MAP = map;
-        this.endedPath = false;
+        this.endedPath = true;
         this.wait = 0;
         this.range = new ArrayList();
         this.followingPlayer = false;
         this.canPlaySong = true;
+        
         
         //Player's animation
         this.died = false;
@@ -74,19 +93,45 @@ public class Enemy extends Character implements Drawable, Collidable {
     }
     
     /* ********************Auxiliary methods of the Constructor****************** */
-    private void setPivot(){
+    private void setPivot() {
         this.pivots.clear();
         // Pivots position:
         // at 0: Left Top
         // at 1: Right Top 
         // at 2: Left Down
         // at 3: Right Down
-        this.pivots.add(new Point(this.xPos,this.yPos));
-        this.pivots.add(new Point(this.xPos+TILESIZE,this.yPos));
-        this.pivots.add(new Point(this.xPos,this.yPos+TILESIZE));
-        this.pivots.add(new Point(this.xPos+TILESIZE,this.yPos+TILESIZE));
+
+        this.pivots.add(new Point(this.xPos, this.yPos));
+        this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos));
+        this.pivots.add(new Point(this.xPos, this.yPos + TILESIZE));
+        this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos + TILESIZE));
+
+        
+        
+        
+        if (this.enemyType == 1) {
+            this.pivots.add(new Point(this.xPos, this.yPos));
+            this.pivots.add(new Point((this.xPos + TILESIZE), this.yPos));
+            this.pivots.add(new Point(this.xPos, (this.yPos + TILESIZE)));
+            this.pivots.add(new Point((this.xPos + TILESIZE), (this.yPos + TILESIZE)));
+        }
+        
+        if (this.enemyType == 0) {
+            this.pivots.add(new Point(this.xPos, this.yPos));
+            this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos));
+            this.pivots.add(new Point(this.xPos, this.yPos + TILESIZE));
+            this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos + TILESIZE));
+            
+        }
+        if (this.enemyType == 3) {
+            this.pivots.add(new Point(this.xPos, this.yPos));
+            this.pivots.add(new Point(this.xPos + 128, this.yPos));
+            this.pivots.add(new Point(this.xPos, this.yPos + 128));
+            this.pivots.add(new Point(this.xPos + 128, this.yPos + 128));
+
+        }
     }
-    
+
 
 
     /* ****************************Class Methods********************************* */
@@ -101,6 +146,7 @@ public class Enemy extends Character implements Drawable, Collidable {
     }
     
     public void move() {
+        /*
         if (!endedPath) {
             if (path.size() == 1) {
                 idle = true;
@@ -155,10 +201,10 @@ public class Enemy extends Character implements Drawable, Collidable {
                 //set the new pivots
                 setPivot();
                 //if had collision, return to the old position
-                if (collision()) {
+                //if (collision()) {
                     //this.xPos = antXPos;
                     //this.yPos = antYPos;
-                }
+               // }
             }
             
         }
@@ -171,6 +217,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                 this.endedPath = false;
             }
         }
+        */
             
     }
     
@@ -198,7 +245,8 @@ public class Enemy extends Character implements Drawable, Collidable {
                         // Is the top edge of the player above the bottom edge of the object?
                         if (topSide < underSide_C) {
                             if (c.getType() == "PlayerType") {
-                                c.gotHit();
+                                //c.gotHit();
+                                System.out.println("COLIDIU COM O PLAYER");
                             }
                             return true;
                         }
@@ -210,12 +258,8 @@ public class Enemy extends Character implements Drawable, Collidable {
     }
     
     private void animate() {
-        //Counters of animations
-        //There are two standard animations that are continuously being 
-        //incremented: Idle and Running, they use the same counters
         this.cont+= 1;
-        //The others animations need another's counters because of when called, 
-        //they have to start from 0
+
         if (attacking) {
             atkCont += 1;
         }
@@ -226,31 +270,75 @@ public class Enemy extends Character implements Drawable, Collidable {
             deadCont += 1;
         }
         
-        //The animations begin to divide by categories, starting in: 
-        //alive player or dead player
-        
-        //Alive player
         if (!died) {
-            //Then it is divided by:
-            //is looking to the right, movement and action
-           // if (!attacking && !gotHit) {
                 //Idle and Running while looking to the Right
                 if (looking2Right) {
                     if (idle) {
-                        startAnimation(5, 0, 5);
+                        //aranha
+                        if(this.enemyType == 0)
+                            startAnimation(8, 0, 4);
+                        //morcego
+                        if(this.enemyType == 1)
+                            startAnimation(1, 0, 4);
+                        //gladiador
+                        if(this.enemyType == 2)
+                            startAnimation(5, 0, 5);
+                        //minotauro
+                        if(this.enemyType == 3)
+                            startAnimation(0, 0, 4);
+                            
                     }
                     if (running) {
-                        startAnimation(6, 0, 8);
+                        //aranha
+                        if(this.enemyType == 0)
+                            startAnimation(9, 0, 5);
+                        //morcego
+                        if(this.enemyType == 1)
+                            startAnimation(1, 0, 4);
+                        //gladiador
+                        if(this.enemyType == 2)
+                            startAnimation(6, 0, 7);
+                        //minotauro
+                        if(this.enemyType == 3)
+                            startAnimation(1, 0, 7);
                     }
                 }
                                 
                 //Idle and Running while looking to the Left
                if (!looking2Right) {
                 if (idle) {
-                    startAnimation(0, 0, 5);
-                }
+                       if (this.enemyType == 0) {
+                           startAnimation(0, 0, 4);
+                       }
+                       //morcego
+                       if (this.enemyType == 1) {
+                           startAnimation(4, 0, 4);
+                       }
+                       //gladiador
+                       if (this.enemyType == 2) {
+                           startAnimation(0, 0, 5);
+                       }
+                       //minotauro
+                       if (this.enemyType == 3) {
+                           startAnimation(10, 0, 4);
+                       }
+                   }
                 if (running) {
-                    startAnimation(1, 0, 8);
+                    if (this.enemyType == 0) {
+                           startAnimation(1, 0, 5);
+                       }
+                       //morcego
+                       if (this.enemyType == 1) {
+                           startAnimation(4, 0, 4);
+                       }
+                       //gladiador
+                       if (this.enemyType == 2) {
+                           startAnimation(1, 0, 7);
+                       }
+                       //minotauro
+                       if (this.enemyType == 3) {
+                           startAnimation(11, 0, 7);
+                       }
                 }
             }
                 //Stop condition of animations of the type "movement"
@@ -346,23 +434,48 @@ public class Enemy extends Character implements Drawable, Collidable {
 
     @Override
     public void paintComponent(Graphics g) {
-        //Get a piece of the Image
-        BufferedImage image = SPRITE.getSubimage(
-                super.spriteTiles[drawRef][animation].getSrcX1(), 
-                super.spriteTiles[drawRef][animation].getSrcY1(),
-                IMGSIZE, IMGSIZE);
-        //Draw in the player's position
-        g.drawImage(image, xPos, yPos, 64, 64, null);
-        
-        if(followingPlayer){
-            BufferedImage alert = SPRITE.getSubimage(
-                super.spriteTiles[7][7].getSrcX1(), 
-                super.spriteTiles[7][7].getSrcY1(),
-                IMGSIZE, IMGSIZE);
-        //Draw in the player's position
-        g.drawImage(alert, xPos, yPos, 64, 64, null);
-            
+        //Existem 3 tipos de inimigos, e são tratados de forma diferente:
+        //If spider or Gladiator
+        if (this.enemyType == 0 || this.enemyType == 2) {
+            //Get a piece of the Image
+            BufferedImage image = SPRITE.getSubimage(
+                    super.tile_32x32[drawRef][animation].getSrcX1(),
+                    super.tile_32x32[drawRef][animation].getSrcY1(),
+                    IMGSIZE, IMGSIZE);
+            //Draw in the player's position
+            g.drawImage(image, xPos, yPos, 64, 64, null);
+            if (followingPlayer) {
+            }
         }
+        if (this.enemyType == 1) {
+            //Get a piece of the Image
+            BufferedImage image = SPRITE.getSubimage(
+                    super.tile_16x16[drawRef][animation].getSrcX1(),
+                    super.tile_16x16[drawRef][animation].getSrcY1(),
+                    IMGSIZE, IMGSIZE);
+            //Draw in the player's position
+            g.drawImage(image, xPos+16, yPos+16, 32, 32, null);
+            if (followingPlayer) {
+            }
+        }
+        
+        if (this.enemyType == 3) {
+            //Get a piece of the Image
+            BufferedImage image = SPRITE.getSubimage(
+                    super.tile_64x64[drawRef][animation].getSrcX1(),
+                    super.tile_64x64[drawRef][animation].getSrcY1(),
+                    IMGSIZE, IMGSIZE);
+            //Draw in the player's position
+            g.drawImage(image, xPos, yPos, 128, 128, null);
+            if (followingPlayer) {
+            }
+        }
+        
+        
+
+        
+        
+
     }
 
     @Override

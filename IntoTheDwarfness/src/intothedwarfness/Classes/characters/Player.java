@@ -29,15 +29,20 @@ public class Player extends Character implements Drawable, Collidable {
     //Position
     private char currentMove;
     private ArrayList<Point> pivots;
+    private ArrayList<Enemy> ENEMIES;
     private ArrayList<Collidable> collidables;
     private int xPos, yPos, actualStage, life;
+
+    public int getActualStage() {
+        return actualStage;
+    }
     //Animation
     private int cont, atkCont, hitCont, deadCont;
     private int drawRef, startLine, animation, endLine;
     private boolean looking2Right, attacking, hitted, died, running;
 
 /* **************************Class Constructor******************************* */
-    public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map) {
+    public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map, ArrayList<Enemy> enemies) {
         //Player's settings
         this.life = 4;
         this.MAP = map;
@@ -49,8 +54,10 @@ public class Player extends Character implements Drawable, Collidable {
         this.actualStage = 1;
         this.currentMove = '.';
         this.SPRITE = spriteSheet;
+        this.ENEMIES = enemies;
         this.pivots = new ArrayList();
         this.collidables = new ArrayList();
+        
 
         //Player's animation
         this.died = false;
@@ -89,8 +96,10 @@ public class Player extends Character implements Drawable, Collidable {
             }
         }
         
-        for (Enemy stageEnemy : MAP.getStageEnemies()) {
-            collidables.add(stageEnemy);
+        for (Enemy enemy : this.ENEMIES) {
+            if (enemy.isStage(this.MAP)) {
+            collidables.add(enemy);
+            }
         }
     }
     
@@ -183,7 +192,6 @@ public class Player extends Character implements Drawable, Collidable {
             int lSide_C = (c.getPivotLT().getX() + c.getPivotLD().getX());
             int topSide_C = (c.getPivotRT().getY() + c.getPivotLT().getY());
             int underSide_C = (c.getPivotRD().getY() + c.getPivotLD().getY());
-
             // Is the right edge of the player to the right of the left edge of the object?
             if (rSide > lSide_C) {
                 // Is the left edge of the player to the left of the right edge of the object?
@@ -192,6 +200,9 @@ public class Player extends Character implements Drawable, Collidable {
                     if (underSide > topSide_C) {
                         // Is the top edge of the player above the bottom edge of the object?
                         if (topSide < underSide_C) {
+                            if("Enemy".equals(c.getClass().getSimpleName())){
+                                return false;
+                            }
                             return true;
                         }
                     }
@@ -486,8 +497,8 @@ public class Player extends Character implements Drawable, Collidable {
     public void paintComponent(Graphics g) {
         //Get a piece of the Image
         BufferedImage image = SPRITE.getSubimage(
-                super.spriteTiles[drawRef][animation].getSrcX1(), 
-                super.spriteTiles[drawRef][animation].getSrcY1(),
+                super.tile_32x32[drawRef][animation].getSrcX1(), 
+                super.tile_32x32[drawRef][animation].getSrcY1(),
                 IMGSIZE, IMGSIZE);
         //Draw in the player's position
         g.drawImage(image, xPos, yPos, 64, 64, null);
