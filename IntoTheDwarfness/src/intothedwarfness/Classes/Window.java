@@ -107,7 +107,6 @@ public class Window extends JFrame implements KeyListener {
         // All the enemies will collide with the player
         ArrayList<Collidable> enemyCollidables = new ArrayList();
         enemyCollidables.add(PLAYER);
-        System.out.println(enemyCollidables);
         
         
         Enemy spider_1 = new Enemy(64*4, 64*9, 1, SPRITES.get(2), SONGS, MAP, 
@@ -249,12 +248,12 @@ public class Window extends JFrame implements KeyListener {
     
     private void pathToPlayer(Enemy enemy) {
         Node end = PLAYER.getNodePos();
-        /*if (!PLAYER.getNodePos().getNeighbors().get(0).isBlocked()) {
+        if (!PLAYER.getNodePos().getNeighbors().get(0).isBlocked()) {
             end = PLAYER.getNodePos().getNeighbors().get(0);
         } else if (!PLAYER.getNodePos().getNeighbors().get(1).isBlocked()) {
             end = PLAYER.getNodePos().getNeighbors().get(1);
         }
-        */
+        
         this.path = AStar.aEstrela(enemy.getNodePos(), end, MAP);
         enemy.setPath(path);
 

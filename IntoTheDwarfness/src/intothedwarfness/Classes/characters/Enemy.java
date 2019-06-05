@@ -58,7 +58,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                 this.IMGSIZE = 16;
                 break;
             case 3:
-                this.IMGSIZE = 64;
+                this.IMGSIZE = 96;
                 break;
             default:
                 this.IMGSIZE = 0;
@@ -101,11 +101,19 @@ public class Enemy extends Character implements Drawable, Collidable {
         // at 2: Left Down
         // at 3: Right Down
 
+        if(enemyType == 3){
+        this.pivots.add(new Point(this.xPos, this.yPos));
+        this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos));
+        this.pivots.add(new Point(this.xPos, this.yPos + IMGSIZE));
+        this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos + IMGSIZE));
+            
+        }else{
         this.pivots.add(new Point(this.xPos, this.yPos));
         this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos));
         this.pivots.add(new Point(this.xPos, this.yPos + TILESIZE));
         this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos + TILESIZE));
-    }
+        }
+        }
 
 
 
@@ -177,11 +185,10 @@ public class Enemy extends Character implements Drawable, Collidable {
                 //if had collision, return to the old position
                 if (collision()) {
                     this.attacking = true;
-                    //this.xPos = antXPos;
-                    //this.yPos = antYPos;
+                    this.xPos = antXPos;
+                    this.yPos = antYPos;
                 }
-            }
-            
+            }       
         }
         
         if(endedPath && !followingPlayer){
@@ -218,15 +225,16 @@ public class Enemy extends Character implements Drawable, Collidable {
                         // Is the top edge of the player above the bottom edge of the object?
                         if (topSide < underSide_C) {
                             if ("PlayerType".equals(c.getType())) {
-                                //c.gotHit();
-                                System.out.println("ATACA");
+                                if (attacking) {
+                                   // c.gotHit();
+                                }
                             }
                             return true;
                         }
                     }
                 }
             }
-        
+
     }
         return false;
     }
@@ -245,87 +253,149 @@ public class Enemy extends Character implements Drawable, Collidable {
         }
         
         if (!died) {
+            if (!attacking && !hitted) {
                 //Idle and Running while looking to the Right
                 if (looking2Right) {
                     if (idle) {
                         //aranha
-                        if(this.enemyType == 0)
+                        if (this.enemyType == 0) {
                             startAnimation(8, 0, 4);
+                        }
                         //morcego
-                        if(this.enemyType == 1)
+                        if (this.enemyType == 1) {
                             startAnimation(1, 0, 4);
+                        }
                         //gladiador
-                        if(this.enemyType == 2)
+                        if (this.enemyType == 2) {
                             startAnimation(5, 0, 5);
+                        }
                         //minotauro
-                        if(this.enemyType == 3)
+                        if (this.enemyType == 3) {
                             startAnimation(0, 0, 4);
-                            
+                        }
+
                     }
                     if (running) {
                         //aranha
-                        if(this.enemyType == 0)
+                        if (this.enemyType == 0) {
                             startAnimation(9, 0, 5);
+                        }
                         //morcego
-                        if(this.enemyType == 1)
+                        if (this.enemyType == 1) {
                             startAnimation(1, 0, 4);
+                        }
                         //gladiador
-                        if(this.enemyType == 2)
+                        if (this.enemyType == 2) {
                             startAnimation(6, 0, 7);
+                        }
                         //minotauro
-                        if(this.enemyType == 3)
+                        if (this.enemyType == 3) {
                             startAnimation(1, 0, 7);
+                        }
                     }
                 }
-                                
+
                 //Idle and Running while looking to the Left
-               if (!looking2Right) {
-                if (idle) {
-                       if (this.enemyType == 0) {
-                           startAnimation(0, 0, 4);
-                       }
-                       //morcego
-                       if (this.enemyType == 1) {
-                           startAnimation(4, 0, 4);
-                       }
-                       //gladiador
-                       if (this.enemyType == 2) {
-                           startAnimation(0, 0, 5);
-                       }
-                       //minotauro
-                       if (this.enemyType == 3) {
-                           startAnimation(10, 0, 4);
-                       }
-                   }
-                if (running) {
-                    if (this.enemyType == 0) {
-                           startAnimation(1, 0, 5);
-                       }
-                       //morcego
-                       if (this.enemyType == 1) {
-                           startAnimation(4, 0, 4);
-                       }
-                       //gladiador
-                       if (this.enemyType == 2) {
-                           startAnimation(1, 0, 7);
-                       }
-                       //minotauro
-                       if (this.enemyType == 3) {
-                           startAnimation(11, 0, 7);
-                       }
+                if (!looking2Right) {
+                    if (idle) {
+                        if (this.enemyType == 0) {
+                            startAnimation(0, 0, 4);
+                        }
+                        //morcego
+                        if (this.enemyType == 1) {
+                            startAnimation(4, 0, 4);
+                        }
+                        //gladiador
+                        if (this.enemyType == 2) {
+                            startAnimation(0, 0, 5);
+                        }
+                        //minotauro
+                        if (this.enemyType == 3) {
+                            startAnimation(10, 0, 4);
+                        }
+                    }
+                    if (running) {
+                        //aranha
+                        if (this.enemyType == 0) {
+                            startAnimation(1, 0, 5);
+                        }
+                        //morcego
+                        if (this.enemyType == 1) {
+                            startAnimation(4, 0, 4);
+                        }
+                        //gladiador
+                        if (this.enemyType == 2) {
+                            startAnimation(1, 0, 7);
+                        }
+                        //minotauro
+                        if (this.enemyType == 3) {
+                            startAnimation(11, 0, 7);
+                        }
+                    }
                 }
-            }
                 //Stop condition of animations of the type "movement"
                 //All the animations of moving types use the same counter
-        
+
                 if (cont >= this.endLine) {
                     cont = this.startLine;
                 }
                 this.drawRef = cont;
             }
-        //}
+            //Attack animations
+            if (attacking) {
+                if (looking2Right) {
+                    //aranha
+                    if (this.enemyType == 0) {
+                        startAnimation(10, 0, 8);
+                    }
+                    //morcego
+                    if (this.enemyType == 1) {
+                        startAnimation(0, 0, 4);
+                    }
+                    //gladiador
+                    if (this.enemyType == 2) {
+                        startAnimation(7, 0, 6);
+                    }
+                    //minotauro
+                    if (this.enemyType == 3) {
+                        startAnimation(6, 0, 8);
+                        System.out.println("ATACA DIREITA");
+                    }
+                }
+                if (!looking2Right) {
+                    //aranha
+                    if (this.enemyType == 0) {
+                        startAnimation(2, 0, 8);
+                    }
+                    //morcego
+                    if (this.enemyType == 1) {
+                        startAnimation(3, 0, 4);
+                    }
+                    //gladiador
+                    if (this.enemyType == 2) {
+                        startAnimation(2, 0, 6);
+                    }
+                    //minotauro
+                    if (this.enemyType == 3) {
+                        System.out.println("ATACA ESQUERDA");
+                        startAnimation(16, 0, 7);
+                    }
+                }
+                //Play the song of this animation
+                if (atkCont == 1) {
+                    playsong(1);
+                }
+                //Stop condition of animations of the type "atatck"
+                if (atkCont >= this.endLine) {
+                    atkCont = 0;
+                    cont = 0;
+                    attacking = false;
+                }
+                this.drawRef = atkCont;
+            }
+        }
     }
-    
+
     //Method that defines the settings of the current animation
     private void startAnimation(int animation, int startLine, int endLine) {
         this.startLine= startLine;
@@ -426,11 +496,12 @@ public class Enemy extends Character implements Drawable, Collidable {
         }
         if (this.enemyType == 3) {
             BufferedImage image = SPRITE.getSubimage(
-                    super.tile_64x64[drawRef][animation].getSrcX1(),
-                    super.tile_64x64[drawRef][animation].getSrcY1(),
+                    super.tile_96x96[drawRef][animation].getSrcX1(),
+                    super.tile_96x96[drawRef][animation].getSrcY1(),
                     IMGSIZE, IMGSIZE);
-            g.drawImage(image, xPos, yPos, 64, 64, null);
+            g.drawImage(image, xPos-10, yPos, 96, 96, null);
         }
+        
         
         if (this.followingPlayer) {
             BufferedImage alert;
@@ -452,6 +523,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                     break;
             }
         }
+        
     }
 
     @Override

@@ -79,9 +79,9 @@ public class Player extends Character implements Drawable, Collidable {
         // at 2: Left Down
         // at 3: Right Down
         this.pivots.add(new Point(this.xPos,this.yPos));
-        this.pivots.add(new Point(this.xPos+TILESIZE,this.yPos));
-        this.pivots.add(new Point(this.xPos,this.yPos+TILESIZE));
-        this.pivots.add(new Point(this.xPos+TILESIZE,this.yPos+TILESIZE));
+        this.pivots.add(new Point(this.xPos+IMGSIZE,this.yPos));
+        this.pivots.add(new Point(this.xPos,this.yPos+IMGSIZE));
+        this.pivots.add(new Point(this.xPos+IMGSIZE,this.yPos+IMGSIZE));
     }
     
     private void initializeCollidables() {
