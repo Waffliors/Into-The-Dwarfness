@@ -3,7 +3,7 @@
  ** within this window will be created and drawn the objects of the game      **
  ** (Player, Enemy and Map), collected the events of the keyboard and where   **
  ** will be the game loop.                                                    **
- ***************************************************************************** */
+ ******************************************************************************/
 package intothedwarfness.Classes;
 
 import java.awt.Color;
@@ -56,8 +56,8 @@ public class Window extends JFrame implements KeyListener {
         this.SCREEN_WIDTH = 1024;
         this.SCREEN_HEIGHT = 768;
         this.MAP = new Map(SPRITES.get(6), 12, 16);
+        this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP, enemiesFactory());
         this.ENEMIES = enemiesFactory();
-        this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP, ENEMIES);
         this.DRAWABLES = loadDrawables();
         
         // Set configuration of the screen
@@ -107,6 +107,7 @@ public class Window extends JFrame implements KeyListener {
         // All the enemies will collide with the player
         ArrayList<Collidable> enemyCollidables = new ArrayList();
         enemyCollidables.add(PLAYER);
+        System.out.println(enemyCollidables);
         
         
         Enemy spider_1 = new Enemy(64*4, 64*9, 1, SPRITES.get(2), SONGS, MAP, 
@@ -158,7 +159,7 @@ public class Window extends JFrame implements KeyListener {
         enemies.add(minotaur_1);
         enemies.add(minotaur_2);
         enemies.add(minotaur_3);
-        
+                
         return enemies;
     }
 
@@ -179,8 +180,7 @@ public class Window extends JFrame implements KeyListener {
 
         // Set path and pass it to enemy
         for (Enemy enemy : this.ENEMIES) {
-            this.path = AStar.aEstrela(enemy.getNodePos(), randomPath(), MAP);
-            enemy.setPath(path);
+            setRandomPath(enemy);
         }
 
         while (isRunning) {
@@ -199,24 +199,14 @@ public class Window extends JFrame implements KeyListener {
                 PLAYER.update();
                 for (Enemy enemy : this.ENEMIES) {
                     if (enemy.isStage(this.MAP)) {
-                    if (enemy.getXPosition() % 64 == 0 && enemy.getYPosition() % 64 == 0) {
-                        /*if (enemy.inRange(PLAYER)) {
-                            Node end = PLAYER.getNodePos();
-                            if (!PLAYER.getNodePos().getNeighbors().get(0).isBlocked()) {
-                                end = PLAYER.getNodePos().getNeighbors().get(0);
-                            } else if (!PLAYER.getNodePos().getNeighbors().get(1).isBlocked()) {
-                                end = PLAYER.getNodePos().getNeighbors().get(1);
+                        if (enemy.getXPosition() % 64 == 0 && enemy.getYPosition() % 64 == 0) {
+                            if (enemy.inRange(PLAYER)) {
+                                pathToPlayer(enemy);
                             }
-                            this.path = AStar.aEstrela(enemy.getNodePos(), end, MAP);
-                            enemy.setPath(path);
+                            if (enemy.endedPath()) {
+                                setRandomPath(enemy);
+                            }
                         }
-                        */
-                        if (enemy.endedPath()) {
-                            this.path = AStar.aEstrela(enemy.getNodePos(), randomPath(), MAP);
-                            enemy.setPath(path);
-                        }
-                    }
-                    
                         enemy.update();
                     }
                 }
@@ -240,7 +230,7 @@ public class Window extends JFrame implements KeyListener {
         }
     }
 
-    public Node randomPath() {
+    private void setRandomPath(Enemy enemy) {
         Random random = new Random();
         boolean find = false;
         Node node = null;
@@ -251,7 +241,23 @@ public class Window extends JFrame implements KeyListener {
                 find = true;
             }
         }
-        return node;
+        
+        this.path = AStar.aEstrela(enemy.getNodePos(), node, MAP);
+        enemy.setPath(path);
+
+    }
+    
+    private void pathToPlayer(Enemy enemy) {
+        Node end = PLAYER.getNodePos();
+        /*if (!PLAYER.getNodePos().getNeighbors().get(0).isBlocked()) {
+            end = PLAYER.getNodePos().getNeighbors().get(0);
+        } else if (!PLAYER.getNodePos().getNeighbors().get(1).isBlocked()) {
+            end = PLAYER.getNodePos().getNeighbors().get(1);
+        }
+        */
+        this.path = AStar.aEstrela(enemy.getNodePos(), end, MAP);
+        enemy.setPath(path);
+
     }
 
     /* *************************Overridden Methods******************************* */

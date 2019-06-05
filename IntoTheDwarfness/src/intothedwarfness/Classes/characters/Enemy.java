@@ -76,7 +76,7 @@ public class Enemy extends Character implements Drawable, Collidable {
         this.SONGS = songs;
         this.MAP = map;
         this.endedPath = true;
-        this.wait = 0;
+        this.wait = 40;
         this.range = new ArrayList();
         this.followingPlayer = false;
         this.canPlaySong = true;
@@ -105,31 +105,6 @@ public class Enemy extends Character implements Drawable, Collidable {
         this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos));
         this.pivots.add(new Point(this.xPos, this.yPos + TILESIZE));
         this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos + TILESIZE));
-
-        
-        
-        
-        if (this.enemyType == 1) {
-            this.pivots.add(new Point(this.xPos, this.yPos));
-            this.pivots.add(new Point((this.xPos + TILESIZE), this.yPos));
-            this.pivots.add(new Point(this.xPos, (this.yPos + TILESIZE)));
-            this.pivots.add(new Point((this.xPos + TILESIZE), (this.yPos + TILESIZE)));
-        }
-        
-        if (this.enemyType == 0) {
-            this.pivots.add(new Point(this.xPos, this.yPos));
-            this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos));
-            this.pivots.add(new Point(this.xPos, this.yPos + TILESIZE));
-            this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos + TILESIZE));
-            
-        }
-        if (this.enemyType == 3) {
-            this.pivots.add(new Point(this.xPos, this.yPos));
-            this.pivots.add(new Point(this.xPos + 128, this.yPos));
-            this.pivots.add(new Point(this.xPos, this.yPos + 128));
-            this.pivots.add(new Point(this.xPos + 128, this.yPos + 128));
-
-        }
     }
 
 
@@ -146,7 +121,6 @@ public class Enemy extends Character implements Drawable, Collidable {
     }
     
     public void move() {
-        /*
         if (!endedPath) {
             if (path.size() == 1) {
                 idle = true;
@@ -201,10 +175,11 @@ public class Enemy extends Character implements Drawable, Collidable {
                 //set the new pivots
                 setPivot();
                 //if had collision, return to the old position
-                //if (collision()) {
+                if (collision()) {
+                    this.attacking = true;
                     //this.xPos = antXPos;
                     //this.yPos = antYPos;
-               // }
+                }
             }
             
         }
@@ -216,9 +191,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                 wait = 0;
                 this.endedPath = false;
             }
-        }
-        */
-            
+        }            
     }
     
     public boolean collision() {
@@ -244,16 +217,17 @@ public class Enemy extends Character implements Drawable, Collidable {
                     if (underSide > topSide_C) {
                         // Is the top edge of the player above the bottom edge of the object?
                         if (topSide < underSide_C) {
-                            if (c.getType() == "PlayerType") {
+                            if ("PlayerType".equals(c.getType())) {
                                 //c.gotHit();
-                                System.out.println("COLIDIU COM O PLAYER");
+                                System.out.println("ATACA");
                             }
                             return true;
                         }
                     }
                 }
             }
-        }
+        
+    }
         return false;
     }
     
@@ -397,6 +371,7 @@ public class Enemy extends Character implements Drawable, Collidable {
         if (player.getXPosition() > getArea()[0] && player.getXPosition() < getArea()[2]) {
             if (player.getYPosition() > getArea()[1] && player.getYPosition() < getArea()[3]) {
                 this.followingPlayer = true;
+                this.endedPath = false;
                 return true;
             }
         }
@@ -434,48 +409,49 @@ public class Enemy extends Character implements Drawable, Collidable {
 
     @Override
     public void paintComponent(Graphics g) {
-        //Existem 3 tipos de inimigos, e são tratados de forma diferente:
-        //If spider or Gladiator
+        //Draw the sprite
         if (this.enemyType == 0 || this.enemyType == 2) {
-            //Get a piece of the Image
             BufferedImage image = SPRITE.getSubimage(
                     super.tile_32x32[drawRef][animation].getSrcX1(),
                     super.tile_32x32[drawRef][animation].getSrcY1(),
                     IMGSIZE, IMGSIZE);
-            //Draw in the player's position
             g.drawImage(image, xPos, yPos, 64, 64, null);
-            if (followingPlayer) {
-            }
         }
         if (this.enemyType == 1) {
-            //Get a piece of the Image
             BufferedImage image = SPRITE.getSubimage(
                     super.tile_16x16[drawRef][animation].getSrcX1(),
                     super.tile_16x16[drawRef][animation].getSrcY1(),
                     IMGSIZE, IMGSIZE);
-            //Draw in the player's position
-            g.drawImage(image, xPos+16, yPos+16, 32, 32, null);
-            if (followingPlayer) {
-            }
+            g.drawImage(image, xPos + 16, yPos + 16, 32, 32, null);
         }
-        
         if (this.enemyType == 3) {
-            //Get a piece of the Image
             BufferedImage image = SPRITE.getSubimage(
                     super.tile_64x64[drawRef][animation].getSrcX1(),
                     super.tile_64x64[drawRef][animation].getSrcY1(),
                     IMGSIZE, IMGSIZE);
-            //Draw in the player's position
-            g.drawImage(image, xPos, yPos, 128, 128, null);
-            if (followingPlayer) {
-            }
+            g.drawImage(image, xPos, yPos, 64, 64, null);
         }
         
-        
-
-        
-        
-
+        if (this.followingPlayer) {
+            BufferedImage alert;
+            //Draw e exclamation
+            switch (this.enemyType) {
+                case 0:
+                    alert = SPRITE.getSubimage(super.tile_32x32[8][0].getSrcX1(), super.tile_32x32[8][0].getSrcY1(), IMGSIZE, IMGSIZE);
+                    g.drawImage(alert, xPos, yPos, 64, 64 + 32, null);
+                    break;
+                case 1:
+                    alert = SPRITE.getSubimage(super.tile_16x16[5][0].getSrcX1(), super.tile_32x32[5][0].getSrcY1(), IMGSIZE, IMGSIZE);
+                    g.drawImage(alert, xPos, yPos, 64, 64, null);
+                    break;
+                case 2:
+                    alert = SPRITE.getSubimage(super.tile_32x32[7][0].getSrcX1(), super.tile_32x32[7][0].getSrcY1(), IMGSIZE, IMGSIZE);
+                    g.drawImage(alert, xPos, yPos, 64, 64, null);
+                    break;
+                case 3:
+                    break;
+            }
+        }
     }
 
     @Override
