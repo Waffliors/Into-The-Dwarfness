@@ -138,9 +138,9 @@ public class Window extends JFrame implements KeyListener {
         
         Enemy minotaur_1 = new Enemy(64*12, 64*4, 6, SPRITES.get(4), SONGS, MAP, 
                 enemyCollidables, 3);
-        Enemy minotaur_2 = new Enemy(64*5, 64*3, 8, SPRITES.get(4), SONGS, MAP, 
+        Enemy minotaur_2 = new Enemy(64*4, 64*9, 8, SPRITES.get(4), SONGS, MAP, 
                 enemyCollidables, 3);
-        Enemy minotaur_3 = new Enemy(64*6, 64*8, 8, SPRITES.get(4), SONGS, MAP, 
+        Enemy minotaur_3 = new Enemy(64*6, 64*10, 8, SPRITES.get(4), SONGS, MAP, 
                 enemyCollidables, 3);
         
         Enemy fire_elemental_1 = new Enemy(64*8, 64*8, 1, SPRITES.get(7), SONGS, MAP,

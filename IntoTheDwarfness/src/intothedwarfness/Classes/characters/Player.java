@@ -1,11 +1,11 @@
-/******************************************************************************
+/** ****************************************************************************
  **     Player class                                                         **
  **                                                                          **
  ** The player object is one that will be manipulated by the player, the     **
  ** class is responsible for manipulating the object through the keyboard    **
  ** events passed by the Window                                              **
  **                                                                          **
- ******************************************************************************/
+ ***************************************************************************** */
 package intothedwarfness.Classes.characters;
 
 import java.awt.Graphics;
@@ -21,7 +21,8 @@ import intothedwarfness.Interfaces.Drawable;
 import intothedwarfness.Interfaces.Collidable;
 
 public class Player extends Character implements Drawable, Collidable {
-/* ***************************Class Variables******************************** */
+
+    /* ***************************Class Variables******************************** */
     //Constants
     private final Map MAP;
     private final int IMGSIZE, TILESIZE;
@@ -40,7 +41,7 @@ public class Player extends Character implements Drawable, Collidable {
     private boolean looking2Right, attacking, hitted, died, running;
     private ArrayList<BufferedImage> health_bar_image;
 
-/* **************************Class Constructor******************************* */
+    /* **************************Class Constructor******************************* */
     public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map, ArrayList<BufferedImage> health_bar) {
         //Player's settings
         this.life = 6;
@@ -56,7 +57,6 @@ public class Player extends Character implements Drawable, Collidable {
         this.pivots = new ArrayList();
         this.collidables = new ArrayList();
         this.health_bar_image = health_bar;
-        
 
         //Player's animation
         this.died = false;
@@ -68,68 +68,67 @@ public class Player extends Character implements Drawable, Collidable {
         setPivot();
         initializeCollidables();
     }
-    
-/* ********************Auxiliary methods of the Constructor****************** */
-    private void setPivot(){
+
+    /* ********************Auxiliary methods of the Constructor****************** */
+    private void setPivot() {
         this.pivots.clear();
         // Pivots position:
         // at 0: Left Top
         // at 1: Right Top 
         // at 2: Left Down
         // at 3: Right Down
-        this.pivots.add(new Point(this.xPos,this.yPos));
-        this.pivots.add(new Point(this.xPos+TILESIZE,this.yPos));
-        this.pivots.add(new Point(this.xPos,this.yPos+TILESIZE));
-        this.pivots.add(new Point(this.xPos+TILESIZE,this.yPos+TILESIZE));
+        this.pivots.add(new Point(this.xPos, this.yPos));
+        this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos));
+        this.pivots.add(new Point(this.xPos, this.yPos + TILESIZE));
+        this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos + TILESIZE));
     }
-    
-    public void recieveCollidables(ArrayList<Enemy> enemies){
+
+    public void recieveCollidables(ArrayList<Enemy> enemies) {
         this.ENEMIES = enemies;
-        
+
         for (Enemy enemy : this.ENEMIES) {
-                if (enemy.isStage(this.MAP)) {
-                    collidables.add(enemy);
-                }
+            if (enemy.isStage(this.MAP)) {
+                collidables.add(enemy);
             }
-        
-        
+        }
+
     }
-    
+
     public void initializeCollidables() {
         this.collidables.clear();
-        
+
         MAP.getNodeMap();
         for (int i = 0; i < MAP.getNodeMap().length; i++) {
             for (int j = 0; j < MAP.getNodeMap()[0].length; j++) {
-                if(MAP.getNodeMap()[i][j].isBlocked()){
+                if (MAP.getNodeMap()[i][j].isBlocked()) {
                     collidables.add(MAP.getNodeMap()[i][j]);
                 }
             }
         }
     }
-    
-/* ****************************Class Methods********************************* */
+
+    /* ****************************Class Methods********************************* */
     //Method that receives the char of the window's KeyEvent and set the state
     public void setCurrentMove(char currentMove) {
         //Caps Lock filter
         switch (currentMove) {
-                case 'A':
-                    currentMove = 'a';
-                    break; 
-                case 'W':
-                    currentMove = 'w';
-                    break;
-                case 'D':
-                    currentMove = 'd';
-                    break;
-                case 'S':
-                    currentMove = 's';
-                    break;
+            case 'A':
+                currentMove = 'a';
+                break;
+            case 'W':
+                currentMove = 'w';
+                break;
+            case 'D':
+                currentMove = 'd';
+                break;
+            case 'S':
+                currentMove = 's';
+                break;
         }
         //Set the current move
         if (!died) {
-            if (currentMove == 'd' || currentMove == 'a' ||
-                currentMove == 's' || currentMove == 'w') {
+            if (currentMove == 'd' || currentMove == 'a'
+                    || currentMove == 's' || currentMove == 'w') {
                 running = true;
             }
             if (currentMove == 'd') {
@@ -149,7 +148,6 @@ public class Player extends Character implements Drawable, Collidable {
         }
     }
 
-    
     //Method that moves the player
     private void move(char key) {
         //save the current position
@@ -180,11 +178,11 @@ public class Player extends Character implements Drawable, Collidable {
             }
             checkStage(this.currentMove, MAP);
         }
-        
+
     }
 
     //Method that check the collisions
- public boolean collision() {
+    public boolean collision() {
         //get the sides of the player
         int rSide = (this.getPivotRT().getX() + this.getPivotRD().getX());
         int lSide = (this.getPivotLT().getX() + this.getPivotLD().getX());
@@ -199,7 +197,6 @@ public class Player extends Character implements Drawable, Collidable {
             int topSide_C = (c.getPivotRT().getY() + c.getPivotLT().getY());
             int underSide_C = (c.getPivotRD().getY() + c.getPivotLD().getY());
 
-
             // Is the right edge of the player to the right of the left edge of the object?
             if (rSide > lSide_C) {
                 // Is the left edge of the player to the left of the right edge of the object?
@@ -213,9 +210,9 @@ public class Player extends Character implements Drawable, Collidable {
                                     c.gotHit();
                                     System.out.println("Acertou inimigo");
                                 }
-                                    return false;
+                                return false;
                             }
-                                return true;
+                            return true;
                         }
                     }
                 }
@@ -312,8 +309,8 @@ public class Player extends Character implements Drawable, Collidable {
                 this.actualStage = 2;
             }
         }
-        
-        if(lastStage == this.actualStage) {
+
+        if (lastStage == this.actualStage) {
             return 0;
         }
         //After check, create the stage and the collide list
@@ -321,25 +318,25 @@ public class Player extends Character implements Drawable, Collidable {
         initializeCollidables();
         return this.actualStage;
     }
-    
+
     //Method that defines the settings of the current animation
     private void startAnimation(int animation, int startLine, int endLine) {
-        this.startLine= startLine;
+        this.startLine = startLine;
         this.animation = animation;
-        this.endLine= endLine;
+        this.endLine = endLine;
     }
-    
+
     //Method that play the player's songs
-    private void playsong(int ref){
+    private void playsong(int ref) {
         SONGS.get(ref).playSoundOnce();
     }
-    
+
     //Method that checks the conditions to defines the animations to be drawn
     private void animate() {
         //Counters of animations
         //There are two standard animations that are continuously being 
         //incremented: Idle and Running, they use the same counters
-        this.cont+= 1;
+        this.cont += 1;
         //The others animations need another's counters because of when called, 
         //they have to start from 0
         if (attacking) {
@@ -351,10 +348,9 @@ public class Player extends Character implements Drawable, Collidable {
         if (died) {
             deadCont += 1;
         }
-        
+
         //The animations begin to divide by categories, starting in: 
         //alive player or dead player
-        
         //Alive player
         if (!died) {
             //Then it is divided by:
@@ -362,8 +358,8 @@ public class Player extends Character implements Drawable, Collidable {
             if (!attacking && !hitted) {
                 //Idle and Running while looking to the Right
                 if (looking2Right) {
-                    if (currentMove == 'a' || currentMove == 'w' || 
-                        currentMove == 's' || currentMove == 'd') {
+                    if (currentMove == 'a' || currentMove == 'w'
+                            || currentMove == 's' || currentMove == 'd') {
                         startAnimation(1, 0, 8);
                     }
                     if (currentMove == '.') {
@@ -371,16 +367,16 @@ public class Player extends Character implements Drawable, Collidable {
                     }
                 }
                 //Idle and Running while looking to the Left
-                if(!looking2Right){
-                    if (currentMove == 'a' || currentMove == 'w' || 
-                        currentMove == 's' || currentMove == 'd') {
-                        startAnimation(6,0,8);
+                if (!looking2Right) {
+                    if (currentMove == 'a' || currentMove == 'w'
+                            || currentMove == 's' || currentMove == 'd') {
+                        startAnimation(6, 0, 8);
                     }
                     if (currentMove == '.') {
-                        startAnimation(5,0,5);
-                    } 
+                        startAnimation(5, 0, 5);
+                    }
                 }
-                
+
                 //Stop condition of animations of the type "movement"
                 if (cont == this.endLine) {
                     cont = this.startLine;
@@ -388,7 +384,7 @@ public class Player extends Character implements Drawable, Collidable {
                 //All the animations of moving types use the same counter
                 this.drawRef = cont;
             }
-            
+
             //Attack animations
             if (attacking) {
                 if (looking2Right) {
@@ -398,7 +394,7 @@ public class Player extends Character implements Drawable, Collidable {
                     startAnimation(7, 0, 7);
                 }
                 //Play the song of this animation
-                if (atkCont == 1){
+                if (atkCont == 1) {
                     playsong(1);
                 }
                 //Stop condition of animations of the type "atatck"
@@ -409,7 +405,7 @@ public class Player extends Character implements Drawable, Collidable {
                 }
                 this.drawRef = atkCont;
             }
-            
+
             //Animations to get hit
             if (hitted) {
                 if (looking2Right) {
@@ -419,51 +415,51 @@ public class Player extends Character implements Drawable, Collidable {
                     startAnimation(8, 0, 4);
                 }
                 //Play song of this animation
-                if(hitCont == 1){
+                if (hitCont == 1) {
                     playsong(2);
                 }
                 //Stop condition of animations of the type "get hit", also 
                 //decrease the player's life
                 if (hitCont == endLine) {
-                    cont= 0;
+                    cont = 0;
                     hitCont = 0;
                     hitted = false;
                     life -= 1;
-                    if (life == 0){
+                    if (life == 0) {
                         died = true;
                     }
                 }
                 this.drawRef = hitCont;
             }
         }
-        
+
         //Dead Player
-        if (died){
-            if (looking2Right){
-                startAnimation(4,0,7);
+        if (died) {
+            if (looking2Right) {
+                startAnimation(4, 0, 7);
             }
-            if (!looking2Right){
-                startAnimation(9,0,7);
+            if (!looking2Right) {
+                startAnimation(9, 0, 7);
             }
             //Play song of this animation
-                if(deadCont == 1){
-                    playsong(3);
-                }
+            if (deadCont == 1) {
+                playsong(3);
+            }
             //Stop condition of animations of the type "died" 
-            if (deadCont == this.endLine){
-                deadCont = endLine-1;
+            if (deadCont == this.endLine) {
+                deadCont = endLine - 1;
             }
             this.drawRef = deadCont;
         }
-    }  
-    
+    }
+
     //Method called in the window that says where the player is looking
     public void setLook(char view) {
         //Key filter
-        if(currentMove != 'a' && currentMove != 's' &&
-           currentMove != 'd' && currentMove != 'w' &&
-           currentMove != '.' && currentMove != ' ' &&
-           currentMove != 'h'){
+        if (currentMove != 'a' && currentMove != 's'
+                && currentMove != 'd' && currentMove != 'w'
+                && currentMove != '.' && currentMove != ' '
+                && currentMove != 'h') {
             return;
         }
         if (!died) {
@@ -477,80 +473,89 @@ public class Player extends Character implements Drawable, Collidable {
         //Also resets the motion animations counter
         running = false;
         this.cont = 0;
-    }    
-    
+    }
+
     //Method that get the player's x position on the screen   
     public int getXPosition() {
         return this.xPos;
     }
+
     //Method that get the player's y position on the screen
     public int getYPosition() {
         return this.yPos;
     }
-    
+
     public ArrayList<Collidable> getCollidables() {
         return collidables;
     }
-    
-    public Node getNodePos(){
-        return this.MAP.getNode(yPos/64, xPos/64);  
+
+    public Node getNodePos() {
+        return this.MAP.getNode(yPos / 64, xPos / 64);
     }
-    
-    public void setNewCollidables(ArrayList <Enemy> newEnemies){
+
+    public void setNewCollidables(ArrayList<Enemy> newEnemies) {
         this.ENEMIES = newEnemies;
-        
+
     }
-    
-    public ArrayList<Enemy> getEnemies(){        
+
+    public ArrayList<Enemy> getEnemies() {
         return this.ENEMIES;
     }
-/* *************************Overridden Methods******************************* */
+
+    /* *************************Overridden Methods******************************* */
     @Override
     public void update() {
         //Moves the player to the saved position
-        move(this.currentMove);      
+        move(this.currentMove);
         //Do the animations
         animate();
         //Play the current song
     }
-    
+
     @Override
     public void paintComponent(Graphics g) {
         //Get a piece of the Image
         BufferedImage image = SPRITE.getSubimage(
-                super.tile_32x32[drawRef][animation].getSrcX1(), 
+                super.tile_32x32[drawRef][animation].getSrcX1(),
                 super.tile_32x32[drawRef][animation].getSrcY1(),
                 IMGSIZE, IMGSIZE);
         //Draw in the player's position
         g.drawImage(image, xPos, yPos, 64, 64, null);
         // Draw Player's life bar
         g.drawImage(health_bar_image.get(this.life), 15, 50, 15 + 125, 50 + 32, 0, 0, 125, 32, null);
-        
+
     }
+
     @Override
     public Boolean isStage(Map map) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
     @Override
     public Point getPivotLT() {
         return this.pivots.get(0);
     }
+
     @Override
     public Point getPivotRT() {
         return this.pivots.get(1);
     }
+
     @Override
     public Point getPivotLD() {
         return this.pivots.get(2);
     }
+
     @Override
     public Point getPivotRD() {
         return this.pivots.get(3);
     }
+
     @Override
     public String getType() {
         return "PlayerType";
     }
+
     @Override
     public void gotHit() {
         this.hitted = true;
@@ -560,8 +565,7 @@ public class Player extends Character implements Drawable, Collidable {
         return actualStage;
     }
 
-    public int getLife()
-    {
-    	return this.life;
+    public int getLife() {
+        return this.life;
     }
 }
