@@ -10,7 +10,6 @@ package intothedwarfness.Classes.characters;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-//import intothedwarfness.IA.Node;
 import intothedwarfness.Classes.Map;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Classes.Song;
