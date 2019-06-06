@@ -293,7 +293,7 @@ public class Player extends Character implements Drawable, Collidable {
         //Check the entries in stage 7
         if (actualStage == 7) {
             if (key == 's' && yPos >= 704 && (xPos >= 448 && xPos <= 512)) {
-                this.yPos = 0;
+                this.yPos = 64;
                 this.actualStage = 4;
             }
             if (key == 'w' && yPos <= 272 && xPos == 480) {

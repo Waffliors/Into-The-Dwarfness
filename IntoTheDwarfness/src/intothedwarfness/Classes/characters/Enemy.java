@@ -55,7 +55,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                 this.IMGSIZE = 32;
                 break;
             case 1:
-                this.IMGSIZE = 16;
+                this.IMGSIZE = 32;
                 break;
             case 3:
                 this.IMGSIZE = 96;
@@ -254,6 +254,7 @@ public class Enemy extends Character implements Drawable, Collidable {
         return false;
     }
 
+    
     private void animate() {
         this.cont+= 1;
 
@@ -299,7 +300,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                         }
                         //fire elemental
                         if (this.enemyType == 1) {
-                            startAnimation(1, 0, 4);
+                            startAnimation(0, 0, 7);
                         }
                         //gladiador
                         if (this.enemyType == 2) {
@@ -584,20 +585,14 @@ public class Enemy extends Character implements Drawable, Collidable {
     @Override
     public void paintComponent(Graphics g) {
         //Draw the sprite
-        if (this.enemyType == 0 || this.enemyType == 2) {
+        if (this.enemyType == 0 || this.enemyType == 2 || this.enemyType == 1) {
             BufferedImage image = SPRITE.getSubimage(
                     super.tile_32x32[drawRef][animation].getSrcX1(),
                     super.tile_32x32[drawRef][animation].getSrcY1(),
                     IMGSIZE, IMGSIZE);
             g.drawImage(image, xPos, yPos, 64, 64, null);
         }
-        if (this.enemyType == 1) {
-            BufferedImage image = SPRITE.getSubimage(
-                    super.tile_32x32[drawRef][animation].getSrcX1(),
-                    super.tile_32x32[drawRef][animation].getSrcY1(),
-                    IMGSIZE, IMGSIZE);
-            g.drawImage(image, xPos, yPos, 64, 64, null);
-        }
+        
         if (this.enemyType == 3) {
             BufferedImage image = SPRITE.getSubimage(
                     super.tile_96x96[drawRef][animation].getSrcX1(),
