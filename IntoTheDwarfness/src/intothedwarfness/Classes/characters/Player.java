@@ -10,12 +10,10 @@ package intothedwarfness.Classes.characters;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-//import intothedwarfness.IA.Node;
 import intothedwarfness.Classes.Map;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Classes.Song;
 import intothedwarfness.Classes.Point;
-import intothedwarfness.Classes.Window;
 import intothedwarfness.IA.Node;
 import intothedwarfness.Interfaces.Drawable;
 import intothedwarfness.Interfaces.Collidable;
@@ -39,10 +37,9 @@ public class Player extends Character implements Drawable, Collidable {
     private int cont, atkCont, hitCont, deadCont;
     private int drawRef, startLine, animation, endLine;
     private boolean looking2Right, attacking, hitted, died, running;
-    private ArrayList<BufferedImage> health_bar_image;
 
-    /* **************************Class Constructor******************************* */
-    public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map, ArrayList<BufferedImage> health_bar) {
+/* **************************Class Constructor******************************* */
+    public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map) {
         //Player's settings
         this.life = 6;
         this.MAP = map;
@@ -56,7 +53,6 @@ public class Player extends Character implements Drawable, Collidable {
         this.SPRITE = spriteSheet;
         this.pivots = new ArrayList();
         this.collidables = new ArrayList();
-        this.health_bar_image = health_bar;
 
         //Player's animation
         this.died = false;
@@ -521,9 +517,6 @@ public class Player extends Character implements Drawable, Collidable {
                 IMGSIZE, IMGSIZE);
         //Draw in the player's position
         g.drawImage(image, xPos, yPos, 64, 64, null);
-        // Draw Player's life bar
-        g.drawImage(health_bar_image.get(this.life), 15, 50, 15 + 125, 50 + 32, 0, 0, 125, 32, null);
-
     }
 
     @Override
