@@ -143,6 +143,9 @@ public class Window extends JFrame implements KeyListener {
         Enemy minotaur_3 = new Enemy(64*6, 64*8, 8, SPRITES.get(4), SONGS, MAP, 
                 enemyCollidables, 3);
         
+        Enemy fire_elemental_1 = new Enemy(64*8, 64*8, 1, SPRITES.get(7), SONGS, MAP,
+                enemyCollidables, 1);
+        
         enemies.add(spider_1);
         enemies.add(spider_2);
         enemies.add(spider_3);
@@ -160,6 +163,7 @@ public class Window extends JFrame implements KeyListener {
         enemies.add(minotaur_2);
         enemies.add(minotaur_3);
                 
+        enemies.add(fire_elemental_1);
         return enemies;
     }
 

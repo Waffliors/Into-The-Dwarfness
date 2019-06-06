@@ -29,7 +29,7 @@ public class IntoTheDwarfness {
 
         //Loading the images of the game
         ArrayList<BufferedImage> sprites = new ArrayList();
-        for (int i = 1; i <= 7; i++) {
+        for (int i = 1; i <= 8; i++) {
             sprites.add(ImageIO.read(new File("images/" + i + ".png")));
         }
         sprites.add(ImageIO.read(new File("images/TILES REF.png")));

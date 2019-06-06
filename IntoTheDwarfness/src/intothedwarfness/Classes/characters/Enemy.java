@@ -269,9 +269,9 @@ public class Enemy extends Character implements Drawable, Collidable {
                         if (this.enemyType == 0) {
                             startAnimation(8, 0, 4);
                         }
-                        //morcego
+                        //fire elemental
                         if (this.enemyType == 1) {
-                            startAnimation(1, 0, 4);
+                            startAnimation(1, 0, 5);
                         }
                         //gladiador
                         if (this.enemyType == 2) {
@@ -288,7 +288,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                         if (this.enemyType == 0) {
                             startAnimation(9, 0, 5);
                         }
-                        //morcego
+                        //fire elemental
                         if (this.enemyType == 1) {
                             startAnimation(1, 0, 4);
                         }
@@ -309,7 +309,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                         if (this.enemyType == 0) {
                             startAnimation(0, 0, 4);
                         }
-                        //morcego
+                        //fire elemental
                         if (this.enemyType == 1) {
                             startAnimation(4, 0, 4);
                         }
@@ -327,7 +327,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                         if (this.enemyType == 0) {
                             startAnimation(1, 0, 5);
                         }
-                        //morcego
+                        //fire elemental
                         if (this.enemyType == 1) {
                             startAnimation(4, 0, 4);
                         }
@@ -358,7 +358,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                     if (this.enemyType == 0) {
                         startAnimation(10, 0, 8);
                     }
-                    //morcego
+                    //fire elemental
                     if (this.enemyType == 1) {
                         startAnimation(0, 0, 4);
                     }
@@ -376,7 +376,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                     if (this.enemyType == 0) {
                         startAnimation(2, 0, 8);
                     }
-                    //morcego
+                    //fire elemental
                     if (this.enemyType == 1) {
                         startAnimation(3, 0, 4);
                     }
@@ -452,7 +452,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                 if (this.enemyType == 0) {
                     startAnimation(14, 0, 8);
                 }
-                //morcego
+                //fire elemental
                 if (this.enemyType == 1) {
                     startAnimation(2, 0, 4);
                 }
@@ -470,7 +470,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                 if (this.enemyType == 0) {
                     startAnimation(6, 0, 8);
                 }
-                //morcego
+                //fire elemental
                 if (this.enemyType == 1) {
                     startAnimation(5, 0, 4);
                 }
@@ -584,10 +584,10 @@ public class Enemy extends Character implements Drawable, Collidable {
         }
         if (this.enemyType == 1) {
             BufferedImage image = SPRITE.getSubimage(
-                    super.tile_16x16[drawRef][animation].getSrcX1(),
-                    super.tile_16x16[drawRef][animation].getSrcY1(),
+                    super.tile_32x32[drawRef][animation].getSrcX1(),
+                    super.tile_32x32[drawRef][animation].getSrcY1(),
                     IMGSIZE, IMGSIZE);
-            g.drawImage(image, xPos + 16, yPos + 16, 32, 32, null);
+            g.drawImage(image, xPos, yPos, 64, 64, null);
         }
         if (this.enemyType == 3) {
             BufferedImage image = SPRITE.getSubimage(
