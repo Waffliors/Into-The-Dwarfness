@@ -204,7 +204,6 @@ public class Player extends Character implements Drawable, Collidable {
                             if ("EnemyType".equals(c.getType())) {
                                 if (attacking && atkCont == 0) {
                                     c.gotHit();
-                                    System.out.println("Acertou inimigo");
                                 }
                                 return false;
                             }
