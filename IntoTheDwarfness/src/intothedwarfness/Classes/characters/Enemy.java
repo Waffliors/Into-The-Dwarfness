@@ -29,17 +29,43 @@ public class Enemy extends Character implements Drawable, Collidable {
     private final ArrayList<Song> SONGS;
     private final Map MAP;
     //Position
+    private List<Integer> range;
     private char currentMove;
     private ArrayList<Point> pivots;
-    private int xPos, yPos, actualStage, life;
+    private int xPos, yPos, actualStage, life, enemyType;
     private final ArrayList<Collidable> collidables;
+    private boolean endedPath, followingPlayer, canPlaySong;
     //Animation
-    private int cont, atkCont, hitCont, deadCont;
+    private int cont, wait, atkCont, hitCont, deadCont;
     private int drawRef, startLine, animation, endLine;
     private boolean looking2Right, attacking, hitted, died, running, idle;
 
     /* ***********************Class Constructor****************************** */
-    public Enemy(int xPos, int yPos, int stage, BufferedImage spriteSheet, ArrayList<Song> songs, Map map, ArrayList<Collidable> collidables) {
+    public Enemy(int xPos, int yPos, int stage, BufferedImage spriteSheet, 
+            ArrayList<Song> songs, Map map, ArrayList<Collidable> collidables, 
+            int enemyType) {
+        
+        
+        this.enemyType = enemyType;
+        switch (this.enemyType) {
+            case 0:
+                this.IMGSIZE = 32;
+                break;
+            case 2:
+                this.IMGSIZE = 32;
+                break;
+            case 1:
+                this.IMGSIZE = 16;
+                break;
+            case 3:
+                this.IMGSIZE = 96;
+                break;
+            default:
+                this.IMGSIZE = 0;
+        }
+
+
+        this.TILESIZE = 64;
         this.life = 4;
         this.yPos = yPos;
         this.xPos = xPos;
@@ -47,10 +73,14 @@ public class Enemy extends Character implements Drawable, Collidable {
         this.pivots = new ArrayList();
         this.collidables = collidables;
         this.SPRITE = spriteSheet;
-        this.IMGSIZE = 32;
-        this.TILESIZE = 64;
         this.SONGS = songs;
         this.MAP = map;
+        this.endedPath = true;
+        this.wait = 40;
+        this.range = new ArrayList();
+        this.followingPlayer = false;
+        this.canPlaySong = true;
+        
         
         //Player's animation
         this.died = false;
@@ -60,92 +90,115 @@ public class Enemy extends Character implements Drawable, Collidable {
         this.looking2Right = true;
         
         setPivot();
-        initializeCollidables();
     }
     
     /* ********************Auxiliary methods of the Constructor****************** */
-    private void setPivot(){
+    private void setPivot() {
         this.pivots.clear();
         // Pivots position:
         // at 0: Left Top
         // at 1: Right Top 
         // at 2: Left Down
         // at 3: Right Down
-        this.pivots.add(new Point(this.xPos,this.yPos));
-        this.pivots.add(new Point(this.xPos+TILESIZE,this.yPos));
-        this.pivots.add(new Point(this.xPos,this.yPos+TILESIZE));
-        this.pivots.add(new Point(this.xPos+TILESIZE,this.yPos+TILESIZE));
-    }
-    
-    private void initializeCollidables() {
-        
-    }
+
+        if(enemyType == 3){
+        this.pivots.add(new Point(this.xPos, this.yPos));
+        this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos));
+        this.pivots.add(new Point(this.xPos, this.yPos + IMGSIZE));
+        this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos + IMGSIZE));
+            
+        }else{
+        this.pivots.add(new Point(this.xPos, this.yPos));
+        this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos));
+        this.pivots.add(new Point(this.xPos, this.yPos + TILESIZE));
+        this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos + TILESIZE));
+        }
+        }
+
+
 
     /* ****************************Class Methods********************************* */
+    public int getActualStage() {
+        return actualStage;
+    }
+
     @Override
     public void update() {
         animate();
         move();
-        
     }
-
+    
     public void move() {
-        if (path == null) {
-            idle = true;
-            this.running = false;
-            this.cont = 0;
-            return;
+        if (!endedPath) {
+            if (path.size() == 1) {
+                idle = true;
+                this.running = false;
+                this.cont = 0;
+                this.endedPath = true;
+                return;
+            }
+            if (path.size() <= 0) {
+                path = null;
+                return;
+            }
+            //save the current position
+            int antXPos = this.xPos;
+            int antYPos = this.yPos;
+
+            Node currentPos = ((LinkedList<Node>) path).getFirst();
+            if (((LinkedList<Node>) path).size() != 1 && this.path != null) {
+                this.endedPath = false;
+                this.running = true;
+                this.idle = false;
+
+                Node next = ((LinkedList<Node>) path).get(1);
+                if (currentPos.getX() != next.getX()) {
+                    //yPos += (currentPos.getX() < next.getX() ? 8 : -8);
+                    if (currentPos.getX() < next.getX()) {
+                        yPos += 4;
+                    }
+                    if (currentPos.getX() > next.getX()) {
+                        yPos -= 4;
+                    }
+                    if (yPos % 64 == 0) {
+                        ((LinkedList<Node>) path).removeFirst();
+                    }
+
+                } else if (currentPos.getY() != next.getY()) {
+                    //xPos += (currentPos.getY() < next.getY() ? 8 : -8);
+
+                    if (currentPos.getY() < next.getY()) {
+                        xPos += 4;
+                        looking2Right = true;
+                    }
+                    if (currentPos.getY() > next.getY()) {
+                        xPos -= 4;
+                        looking2Right = false;
+                    }
+
+                    if (xPos % 64 == 0) {
+                        ((LinkedList<Node>) path).removeFirst();
+                    }
+                }
+                //set the new pivots
+                setPivot();
+                //if had collision, return to the old position
+                if (collision()) {
+                    this.attacking = true;
+                    this.xPos = antXPos;
+                    this.yPos = antYPos;
+                }
+            }       
         }
-        if (path.size() <= 0) {
-            path = null;
-            return;
-        }
-        //save the current position
-        int antXPos = this.xPos;
-        int antYPos = this.yPos;
         
-        Node currentPos = ((LinkedList<Node>) path).getFirst();
-        if (((LinkedList<Node>) path).size() != 1 && this.path != null) {
-            this.running = true;
-            this.idle = false;
-
-            Node next = ((LinkedList<Node>) path).get(1);
-            if (currentPos.getX() != next.getX()) {
-                //yPos += (currentPos.getX() < next.getX() ? 8 : -8);
-                if (currentPos.getX() < next.getX()) {
-                    yPos += 4;
-                }
-                if (currentPos.getX() > next.getX()) {
-                    yPos -= 4;
-                }
-                if (yPos % 64 == 0) {
-                    ((LinkedList<Node>) path).removeFirst();
-                }
-
-            } else if (currentPos.getY() != next.getY()) {
-                //xPos += (currentPos.getY() < next.getY() ? 8 : -8);
-
-                if (currentPos.getY() < next.getY()) {
-                    xPos += 4;
-                    looking2Right = true;
-                }
-                if (currentPos.getY() > next.getY()) {
-                    xPos -= 4;
-                    looking2Right = false;
-                }
-
-                if (xPos % 64 == 0) {
-                    ((LinkedList<Node>) path).removeFirst();
-                }
+        if(endedPath && !followingPlayer){
+            this.idle = true;
+            wait+=1;
+            if (wait >= 75){
+                wait = 0;
+                this.endedPath = false;
             }
-            //set the new pivots
-            setPivot();
-            //if had collision, return to the old position
-            if (collision()) {
-                this.xPos = antXPos;
-                this.yPos = antYPos;
-            }
-        }
+        }            
     }
     
     public boolean collision() {
@@ -171,25 +224,24 @@ public class Enemy extends Character implements Drawable, Collidable {
                     if (underSide > topSide_C) {
                         // Is the top edge of the player above the bottom edge of the object?
                         if (topSide < underSide_C) {
-                            if (c.getType() == "PlayerType") {
-                                c.gotHit();
+                            if ("PlayerType".equals(c.getType())) {
+                                if (attacking) {
+                                   // c.gotHit();
+                                }
                             }
                             return true;
                         }
                     }
                 }
             }
-        }
+
+    }
         return false;
     }
     
     private void animate() {
-        //Counters of animations
-        //There are two standard animations that are continuously being 
-        //incremented: Idle and Running, they use the same counters
         this.cont+= 1;
-        //The others animations need another's counters because of when called, 
-        //they have to start from 0
+
         if (attacking) {
             atkCont += 1;
         }
@@ -200,48 +252,150 @@ public class Enemy extends Character implements Drawable, Collidable {
             deadCont += 1;
         }
         
-        //The animations begin to divide by categories, starting in: 
-        //alive player or dead player
-        
-        //Alive player
         if (!died) {
-            //Then it is divided by:
-            //is looking to the right, movement and action
-           // if (!attacking && !gotHit) {
+            if (!attacking && !hitted) {
                 //Idle and Running while looking to the Right
                 if (looking2Right) {
                     if (idle) {
-                        startAnimation(5, 0, 5);
+                        //aranha
+                        if (this.enemyType == 0) {
+                            startAnimation(8, 0, 4);
+                        }
+                        //morcego
+                        if (this.enemyType == 1) {
+                            startAnimation(1, 0, 4);
+                        }
+                        //gladiador
+                        if (this.enemyType == 2) {
+                            startAnimation(5, 0, 5);
+                        }
+                        //minotauro
+                        if (this.enemyType == 3) {
+                            startAnimation(0, 0, 4);
+                        }
+
                     }
                     if (running) {
-                        startAnimation(6, 0, 8);
+                        //aranha
+                        if (this.enemyType == 0) {
+                            startAnimation(9, 0, 5);
+                        }
+                        //morcego
+                        if (this.enemyType == 1) {
+                            startAnimation(1, 0, 4);
+                        }
+                        //gladiador
+                        if (this.enemyType == 2) {
+                            startAnimation(6, 0, 7);
+                        }
+                        //minotauro
+                        if (this.enemyType == 3) {
+                            startAnimation(1, 0, 7);
+                        }
                     }
                 }
-                                
+
                 //Idle and Running while looking to the Left
-               if (!looking2Right) {
-                if (idle) {
-                    startAnimation(0, 0, 5);
-                }
-                if (running) {
-                    startAnimation(1, 0, 8);
-                }
-            }
-                //Play the song of this animation
-                if((cont%2 == 1 ) && running){
-                    playsong(4);
+                if (!looking2Right) {
+                    if (idle) {
+                        if (this.enemyType == 0) {
+                            startAnimation(0, 0, 4);
+                        }
+                        //morcego
+                        if (this.enemyType == 1) {
+                            startAnimation(4, 0, 4);
+                        }
+                        //gladiador
+                        if (this.enemyType == 2) {
+                            startAnimation(0, 0, 5);
+                        }
+                        //minotauro
+                        if (this.enemyType == 3) {
+                            startAnimation(10, 0, 4);
+                        }
+                    }
+                    if (running) {
+                        //aranha
+                        if (this.enemyType == 0) {
+                            startAnimation(1, 0, 5);
+                        }
+                        //morcego
+                        if (this.enemyType == 1) {
+                            startAnimation(4, 0, 4);
+                        }
+                        //gladiador
+                        if (this.enemyType == 2) {
+                            startAnimation(1, 0, 7);
+                        }
+                        //minotauro
+                        if (this.enemyType == 3) {
+                            startAnimation(11, 0, 7);
+                        }
+                    }
                 }
                 //Stop condition of animations of the type "movement"
                 //All the animations of moving types use the same counter
-        
-                if (cont == this.endLine) {
+
+                if (cont >= this.endLine) {
                     cont = this.startLine;
                 }
                 this.drawRef = cont;
             }
-        //}
+            //Attack animations
+            if (attacking) {
+                if (looking2Right) {
+                    //aranha
+                    if (this.enemyType == 0) {
+                        startAnimation(10, 0, 8);
+                    }
+                    //morcego
+                    if (this.enemyType == 1) {
+                        startAnimation(0, 0, 4);
+                    }
+                    //gladiador
+                    if (this.enemyType == 2) {
+                        startAnimation(7, 0, 6);
+                    }
+                    //minotauro
+                    if (this.enemyType == 3) {
+                        startAnimation(6, 0, 8);
+                        System.out.println("ATACA DIREITA");
+                    }
+                }
+                if (!looking2Right) {
+                    //aranha
+                    if (this.enemyType == 0) {
+                        startAnimation(2, 0, 8);
+                    }
+                    //morcego
+                    if (this.enemyType == 1) {
+                        startAnimation(3, 0, 4);
+                    }
+                    //gladiador
+                    if (this.enemyType == 2) {
+                        startAnimation(2, 0, 6);
+                    }
+                    //minotauro
+                    if (this.enemyType == 3) {
+                        System.out.println("ATACA ESQUERDA");
+                        startAnimation(16, 0, 7);
+                    }
+                }
+                //Play the song of this animation
+                if (atkCont == 1) {
+                    playsong(1);
+                }
+                //Stop condition of animations of the type "atatck"
+                if (atkCont >= this.endLine) {
+                    atkCont = 0;
+                    cont = 0;
+                    attacking = false;
+                }
+                this.drawRef = atkCont;
+            }
+        }
     }
-    
+
     //Method that defines the settings of the current animation
     private void startAnimation(int animation, int startLine, int endLine) {
         this.startLine= startLine;
@@ -266,6 +420,35 @@ public class Enemy extends Character implements Drawable, Collidable {
         return this.yPos;
     }
 
+    public Node getNodePos(){
+        return this.MAP.getNode(yPos/64, xPos/64);  
+    }
+    
+    public boolean endedPath(){
+        return this.endedPath;
+    }
+    
+    private int[] getArea (){
+        int resp[] = new int[4];
+        resp[0] = this.xPos - 192;
+        resp[1] = this.yPos - 192;
+        resp[2] = this.xPos + 192;
+        resp[3] = this.yPos + 192;
+        return resp;
+    }
+    
+    public boolean inRange(Player player) {
+        if (player.getXPosition() > getArea()[0] && player.getXPosition() < getArea()[2]) {
+            if (player.getYPosition() > getArea()[1] && player.getYPosition() < getArea()[3]) {
+                this.followingPlayer = true;
+                this.endedPath = false;
+                return true;
+            }
+        }
+        this.followingPlayer = false;
+        return false;
+    }
+    
     @Override
     public Point getPivotLT() {
         return this.pivots.get(0);
@@ -286,13 +469,6 @@ public class Enemy extends Character implements Drawable, Collidable {
         return this.pivots.get(3);
     }
     
-    public Node getNodePos(){
-        return this.MAP.getNode(yPos/64, xPos/64);  
-    }
-    public void getNewPath(){
-        
-    }
-    
     @Override
     public Boolean isStage(Map map) {
         if (map.actualStage == this.actualStage) {
@@ -303,13 +479,50 @@ public class Enemy extends Character implements Drawable, Collidable {
 
     @Override
     public void paintComponent(Graphics g) {
-        //Get a piece of the Image
-        BufferedImage image = SPRITE.getSubimage(
-                super.spriteTiles[drawRef][animation].getSrcX1(), 
-                super.spriteTiles[drawRef][animation].getSrcY1(),
-                IMGSIZE, IMGSIZE);
-        //Draw in the player's position
-        g.drawImage(image, xPos, yPos, 64, 64, null);
+        //Draw the sprite
+        if (this.enemyType == 0 || this.enemyType == 2) {
+            BufferedImage image = SPRITE.getSubimage(
+                    super.tile_32x32[drawRef][animation].getSrcX1(),
+                    super.tile_32x32[drawRef][animation].getSrcY1(),
+                    IMGSIZE, IMGSIZE);
+            g.drawImage(image, xPos, yPos, 64, 64, null);
+        }
+        if (this.enemyType == 1) {
+            BufferedImage image = SPRITE.getSubimage(
+                    super.tile_16x16[drawRef][animation].getSrcX1(),
+                    super.tile_16x16[drawRef][animation].getSrcY1(),
+                    IMGSIZE, IMGSIZE);
+            g.drawImage(image, xPos + 16, yPos + 16, 32, 32, null);
+        }
+        if (this.enemyType == 3) {
+            BufferedImage image = SPRITE.getSubimage(
+                    super.tile_96x96[drawRef][animation].getSrcX1(),
+                    super.tile_96x96[drawRef][animation].getSrcY1(),
+                    IMGSIZE, IMGSIZE);
+            g.drawImage(image, xPos-10, yPos, 96, 96, null);
+        }
+        
+        
+        if (this.followingPlayer) {
+            BufferedImage alert;
+            //Draw e exclamation
+            switch (this.enemyType) {
+                case 0:
+                    alert = SPRITE.getSubimage(super.tile_32x32[8][0].getSrcX1(), super.tile_32x32[8][0].getSrcY1(), IMGSIZE, IMGSIZE);
+                    g.drawImage(alert, xPos, yPos, 64, 64 + 32, null);
+                    break;
+                case 1:
+                    alert = SPRITE.getSubimage(super.tile_16x16[5][0].getSrcX1(), super.tile_32x32[5][0].getSrcY1(), IMGSIZE, IMGSIZE);
+                    g.drawImage(alert, xPos, yPos, 64, 64, null);
+                    break;
+                case 2:
+                    alert = SPRITE.getSubimage(super.tile_32x32[7][0].getSrcX1(), super.tile_32x32[7][0].getSrcY1(), IMGSIZE, IMGSIZE);
+                    g.drawImage(alert, xPos, yPos, 64, 64, null);
+                    break;
+                case 3:
+                    break;
+            }
+        }
         
     }
 

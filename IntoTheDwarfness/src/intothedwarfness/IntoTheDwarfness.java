@@ -29,16 +29,23 @@ public class IntoTheDwarfness {
 
         //Loading the images of the game
         ArrayList<BufferedImage> sprites = new ArrayList();
-        for (int i = 1; i <= 9; i++) {
+        for (int i = 1; i <= 7; i++) {
             sprites.add(ImageIO.read(new File("images/" + i + ".png")));
         }
         sprites.add(ImageIO.read(new File("images/TILES REF.png")));
+            
         
         //Loading the songs of the game
         ArrayList<Song> songs = loadSong();
+        ArrayList<BufferedImage> HUD = new ArrayList();
+
+	    for(int i = 0; i <= 6; i ++)
+	    {
+	    	HUD.add(ImageIO.read(new File("images/HUD/Health_" + i + ".png")));
+	    }    
 
         //Creating the window of the game
-        Window screen = new Window(sprites, songs);
+        Window screen = new Window(sprites, songs, HUD);
         screen.initialize();
         screen.run();
     }
@@ -50,6 +57,7 @@ public class IntoTheDwarfness {
         songs.add(new Song("songs/sfx/hurt/pain2.wav"));
         songs.add(new Song("songs/sfx/hurt/die2.wav"));
         songs.add(new Song("songs/sfx/footsteps/gravel.wav"));
+        songs.add(new Song("songs/sfx/Gladiator/fight01.wav"));
         return songs;
     }
 }

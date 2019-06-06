@@ -6,6 +6,7 @@
  ******************************************************************************/
 package intothedwarfness.Classes;
 
+import intothedwarfness.Classes.characters.Enemy;
 import java.util.List;
 import java.util.Arrays;
 import java.awt.Graphics;
@@ -25,6 +26,7 @@ public class Map extends JPanel implements Drawable {
     private ArrayList<Node> NodeList = new ArrayList();
     private int wallMap[][], floorMap[][], objectMap[][];
     private Node nodeMap[][];
+    private final ArrayList<Enemy> stageEnemies = new ArrayList();
     public int actualStage;
 
 /* **************************Class Constructor******************************* */
@@ -126,7 +128,16 @@ public class Map extends JPanel implements Drawable {
         return NodeList;
     }
     
-/* ****************************Class Methods********************************* */
+/* ****************************Class Methods********************************* */ 
+
+    public int getActualStage() {
+        return actualStage;
+    }
+    
+    public ArrayList<Enemy> getStageEnemies() {
+        return stageEnemies;
+    }
+
     //For each stage, all the three matrices are redrawn
     public void stageCreator(int ref) {
         this.actualStage = ref;
@@ -395,7 +406,7 @@ public class Map extends JPanel implements Drawable {
         }
         //Create stage 7
         if (actualStage == 7) {
-           this.floorMap = new int[][]{
+            this.floorMap = new int[][]{
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},
                 {  6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6},

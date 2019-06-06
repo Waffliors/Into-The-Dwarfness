@@ -15,6 +15,7 @@ import intothedwarfness.Classes.Map;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Classes.Song;
 import intothedwarfness.Classes.Point;
+import intothedwarfness.Classes.HUD;
 import intothedwarfness.IA.Node;
 import intothedwarfness.Interfaces.Drawable;
 import intothedwarfness.Interfaces.Collidable;
@@ -29,17 +30,19 @@ public class Player extends Character implements Drawable, Collidable {
     //Position
     private char currentMove;
     private ArrayList<Point> pivots;
+    private ArrayList<Enemy> ENEMIES;
     private ArrayList<Collidable> collidables;
     private int xPos, yPos, actualStage, life;
+
     //Animation
     private int cont, atkCont, hitCont, deadCont;
     private int drawRef, startLine, animation, endLine;
     private boolean looking2Right, attacking, hitted, died, running;
 
 /* **************************Class Constructor******************************* */
-    public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map) {
+    public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map, ArrayList<Enemy> enemies) {
         //Player's settings
-        this.life = 4;
+        this.life = 6;
         this.MAP = map;
         this.xPos = 512;
         this.yPos = 128;
@@ -49,8 +52,10 @@ public class Player extends Character implements Drawable, Collidable {
         this.actualStage = 1;
         this.currentMove = '.';
         this.SPRITE = spriteSheet;
+        this.ENEMIES = enemies;
         this.pivots = new ArrayList();
         this.collidables = new ArrayList();
+        
 
         //Player's animation
         this.died = false;
@@ -72,19 +77,26 @@ public class Player extends Character implements Drawable, Collidable {
         // at 2: Left Down
         // at 3: Right Down
         this.pivots.add(new Point(this.xPos,this.yPos));
-        this.pivots.add(new Point(this.xPos+TILESIZE,this.yPos));
-        this.pivots.add(new Point(this.xPos,this.yPos+TILESIZE));
-        this.pivots.add(new Point(this.xPos+TILESIZE,this.yPos+TILESIZE));
+        this.pivots.add(new Point(this.xPos+IMGSIZE,this.yPos));
+        this.pivots.add(new Point(this.xPos,this.yPos+IMGSIZE));
+        this.pivots.add(new Point(this.xPos+IMGSIZE,this.yPos+IMGSIZE));
     }
     
     private void initializeCollidables() {
         this.collidables.clear();
+        
         MAP.getNodeMap();
         for (int i = 0; i < MAP.getNodeMap().length; i++) {
             for (int j = 0; j < MAP.getNodeMap()[0].length; j++) {
                 if(MAP.getNodeMap()[i][j].isBlocked()){
                     collidables.add(MAP.getNodeMap()[i][j]);
                 }
+            }
+        }
+        
+        for (Enemy enemy : this.ENEMIES) {
+            if (enemy.isStage(this.MAP)) {
+            collidables.add(enemy);
             }
         }
     }
@@ -178,7 +190,6 @@ public class Player extends Character implements Drawable, Collidable {
             int lSide_C = (c.getPivotLT().getX() + c.getPivotLD().getX());
             int topSide_C = (c.getPivotRT().getY() + c.getPivotLT().getY());
             int underSide_C = (c.getPivotRD().getY() + c.getPivotLD().getY());
-
             // Is the right edge of the player to the right of the left edge of the object?
             if (rSide > lSide_C) {
                 // Is the left edge of the player to the left of the right edge of the object?
@@ -187,6 +198,9 @@ public class Player extends Character implements Drawable, Collidable {
                     if (underSide > topSide_C) {
                         // Is the top edge of the player above the bottom edge of the object?
                         if (topSide < underSide_C) {
+                            if("Enemy".equals(c.getClass().getSimpleName())){
+                                return false;
+                            }
                             return true;
                         }
                     }
@@ -197,7 +211,8 @@ public class Player extends Character implements Drawable, Collidable {
     }
 
     //Method that verifies if the player will change the stage
-    private void checkStage(char key, Map map) {
+    public int checkStage(char key, Map map) {
+        int lastStage = this.actualStage;
         //Check the entries in stage 1
         if (actualStage == 1) {
             if (key == 's' && yPos >= 704 && (xPos >= 448 && xPos <= 512)) {
@@ -283,9 +298,14 @@ public class Player extends Character implements Drawable, Collidable {
                 this.actualStage = 2;
             }
         }
+        
+        if(lastStage == this.actualStage) {
+            return 0;
+        }
         //After check, create the stage and the collide list
         map.stageCreator(actualStage);
         initializeCollidables();
+        return this.actualStage;
     }
     
     //Method that defines the settings of the current animation
@@ -346,10 +366,7 @@ public class Player extends Character implements Drawable, Collidable {
                         startAnimation(5,0,5);
                     } 
                 }
-                //Play the song of this animation
-                if((cont%2 == 1 ) && running){
-                    playsong(4);
-                }
+                
                 //Stop condition of animations of the type "movement"
                 if (cont == this.endLine) {
                     cont = this.startLine;
@@ -457,6 +474,10 @@ public class Player extends Character implements Drawable, Collidable {
         return this.yPos;
     }
     
+    public ArrayList<Collidable> getCollidables() {
+        return collidables;
+    }
+    
     public Node getNodePos(){
         return this.MAP.getNode(yPos/64, xPos/64);  
     }
@@ -474,8 +495,8 @@ public class Player extends Character implements Drawable, Collidable {
     public void paintComponent(Graphics g) {
         //Get a piece of the Image
         BufferedImage image = SPRITE.getSubimage(
-                super.spriteTiles[drawRef][animation].getSrcX1(), 
-                super.spriteTiles[drawRef][animation].getSrcY1(),
+                super.tile_32x32[drawRef][animation].getSrcX1(), 
+                super.tile_32x32[drawRef][animation].getSrcY1(),
                 IMGSIZE, IMGSIZE);
         //Draw in the player's position
         g.drawImage(image, xPos, yPos, 64, 64, null);
@@ -516,4 +537,12 @@ public class Player extends Character implements Drawable, Collidable {
         this.hitted = true;
     }
 
+    public int getActualStage() {
+        return actualStage;
+    }
+
+    public int getLife()
+    {
+    	return this.life;
+    }
 }
