@@ -83,6 +83,7 @@ public class Enemy extends Character implements Drawable, Collidable {
         
         
         //Player's animation
+        
         this.died = false;
         this.hitted = false;
         this.running = false;
@@ -109,10 +110,9 @@ public class Enemy extends Character implements Drawable, Collidable {
 //            
 //        }else{
         this.pivots.add(new Point(this.xPos, this.yPos));
-        this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos));
-        this.pivots.add(new Point(this.xPos, this.yPos + IMGSIZE));
-        this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos + IMGSIZE));
-        System.out.println(pivots);
+        this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos));
+        this.pivots.add(new Point(this.xPos, this.yPos + TILESIZE));
+        this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos + TILESIZE));
     }
 
 
@@ -131,6 +131,7 @@ public class Enemy extends Character implements Drawable, Collidable {
     }
 
     public void move() {
+         if (!this.died){
         if (!endedPath) {
             if (path.size() == 1) {
                 idle = true;
@@ -206,6 +207,7 @@ public class Enemy extends Character implements Drawable, Collidable {
         //set the new pivots
         setPivot();
     }
+    }
     
     public boolean collision() {
         //get the sides of the player
@@ -247,21 +249,22 @@ public class Enemy extends Character implements Drawable, Collidable {
     private void animate() {
         this.cont+= 1;
 
-        if (attacking) {
-            atkCont += 1;
+        if (this.attacking) {
+            this.atkCont += 1;
         }
-        if (hitted) {
-            hitCont += 1;
+        if (this.hitted) {
+            this.hitCont += 1;
         }
-        if (died) {
-            deadCont += 1;
+        if (this.died) {
+            this.deadCont += 1;
         }
         
-        if (!died) {
-            if (!attacking && !hitted) {
+        
+        if (!this.died) {
+            if (!this.attacking && !this.hitted) {
                 //Idle and Running while looking to the Right
-                if (looking2Right) {
-                    if (idle) {
+                if (this.looking2Right) {
+                    if (this.idle) {
                         //aranha
                         if (this.enemyType == 0) {
                             startAnimation(8, 0, 4);
@@ -280,7 +283,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                         }
 
                     }
-                    if (running) {
+                    if (this.running) {
                         //aranha
                         if (this.enemyType == 0) {
                             startAnimation(9, 0, 5);
@@ -301,8 +304,8 @@ public class Enemy extends Character implements Drawable, Collidable {
                 }
 
                 //Idle and Running while looking to the Left
-                if (!looking2Right) {
-                    if (idle) {
+                if (!this.looking2Right) {
+                    if (this.idle) {
                         if (this.enemyType == 0) {
                             startAnimation(0, 0, 4);
                         }
@@ -319,7 +322,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                             startAnimation(10, 0, 4);
                         }
                     }
-                    if (running) {
+                    if (this.running) {
                         //aranha
                         if (this.enemyType == 0) {
                             startAnimation(1, 0, 5);
@@ -341,14 +344,16 @@ public class Enemy extends Character implements Drawable, Collidable {
                 //Stop condition of animations of the type "movement"
                 //All the animations of moving types use the same counter
 
-                if (cont >= this.endLine) {
-                    cont = this.startLine;
+                if (this.cont >= this.endLine) {
+                    this.cont = this.startLine;
                 }
-                this.drawRef = cont;
+                this.drawRef = this.cont;
             }
+            
+            
             //Attack animations
-            if (attacking) {
-                if (looking2Right) {
+            if (this.attacking) {
+                if (this.looking2Right) {
                     //aranha
                     if (this.enemyType == 0) {
                         startAnimation(10, 0, 8);
@@ -364,10 +369,9 @@ public class Enemy extends Character implements Drawable, Collidable {
                     //minotauro
                     if (this.enemyType == 3) {
                         startAnimation(6, 0, 8);
-                        System.out.println("ATACA DIREITA");
                     }
                 }
-                if (!looking2Right) {
+                if (!this.looking2Right) {
                     //aranha
                     if (this.enemyType == 0) {
                         startAnimation(2, 0, 8);
@@ -382,7 +386,6 @@ public class Enemy extends Character implements Drawable, Collidable {
                     }
                     //minotauro
                     if (this.enemyType == 3) {
-                        System.out.println("ATACA ESQUERDA");
                         startAnimation(16, 0, 7);
                     }
                 }
@@ -391,13 +394,103 @@ public class Enemy extends Character implements Drawable, Collidable {
                     playsong(1);
                 }
                 //Stop condition of animations of the type "atatck"
-                if (atkCont >= this.endLine) {
-                    atkCont = 0;
-                    cont = 0;
-                    attacking = false;
+                if (this.atkCont >= this.endLine) {
+                    this.atkCont = 0;
+                    this.cont = 0;
+                    this.attacking = false;
                 }
-                this.drawRef = atkCont;
+                this.drawRef = this.atkCont;
             }
+            
+            if (this.hitted) {
+                if (this.looking2Right) {
+                    //aranha
+                    if (this.enemyType == 0) {
+                        startAnimation(14, 0, 8);
+                    }
+                    //gladiador
+                    if (this.enemyType == 2) {
+                        startAnimation(8, 0, 2);
+                    }
+                    //minotauro
+                    if (this.enemyType == 3) {
+                        startAnimation(8, 0, 2);
+                    }
+                }
+                if (!this.looking2Right) {
+                    //aranha
+                    if (this.enemyType == 0) {
+                        startAnimation(6, 0, 8);
+                    }
+                    //gladiador
+                    if (this.enemyType == 2) {
+                        startAnimation(3, 0, 2);
+                    }
+                    //minotauro
+                    if (this.enemyType == 3) {
+                        startAnimation(18, 0, 2);
+                    }
+
+                    if (this.hitCont >= this.endLine) {
+                        this.cont = 0;
+                        this.hitCont = 0;
+                        this.hitted = false;
+                        System.out.println(hitted);
+                        this.life -= 1;
+                        
+                        if (this.life == 0) {
+                            died = true;
+                        }
+                    }
+                    this.drawRef = this.hitCont;
+                }
+
+            }
+        }
+        //Dead Player
+        if (this.died) {
+            this.followingPlayer = false;
+            if (this.looking2Right) {
+                //aranha
+                if (this.enemyType == 0) {
+                    startAnimation(14, 0, 8);
+                }
+                //morcego
+                if (this.enemyType == 1) {
+                    startAnimation(2, 0, 4);
+                }
+                //gladiador
+                if (this.enemyType == 2) {
+                    startAnimation(7, 0, 6);
+                }
+                //minotauro
+                if (this.enemyType == 3) {
+                    startAnimation(6, 0, 8);
+                }
+            }
+            if (!this.looking2Right) {
+                //aranha
+                if (this.enemyType == 0) {
+                    startAnimation(6, 0, 8);
+                }
+                //morcego
+                if (this.enemyType == 1) {
+                    startAnimation(5, 0, 4);
+                }
+                //gladiador
+                if (this.enemyType == 2) {
+                    startAnimation(2, 0, 6);
+                }
+                //minotauro
+                if (this.enemyType == 3) {
+                    startAnimation(16, 0, 7);
+                }
+            }
+
+            if (this.deadCont >= this.endLine) {
+                this.deadCont = this.endLine;
+            }
+            this.drawRef = this.deadCont;
         }
     }
 
@@ -538,7 +631,7 @@ public class Enemy extends Character implements Drawable, Collidable {
 
     @Override
     public void gotHit() {
-        System.out.println("Tomou dano");
-        //this.hitted = true;
+        System.out.println("APANHOU");
+        this.hitted = true;
     }
 }

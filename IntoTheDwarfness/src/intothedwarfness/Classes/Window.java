@@ -190,6 +190,7 @@ public class Window extends JFrame implements KeyListener {
             // Pula os quadros enquanto o tempo for em excesso.
             while (excess > DESIRED_UPDATE_TIME) {
                 PLAYER.update();
+                PLAYER.recieveCollidables(ENEMIES);
                 for (Enemy enemy : this.ENEMIES) {
                     enemy.update();
                 }
@@ -198,7 +199,7 @@ public class Window extends JFrame implements KeyListener {
             if ("PlayState".equals(gsm.getType())) {
                 
                 PLAYER.update();
-                
+                PLAYER.recieveCollidables(ENEMIES);
                 for (Enemy enemy : this.ENEMIES) {
                     if (enemy.isStage(this.MAP)) {
                         if (enemy.getXPosition() % 64 == 0 && enemy.getYPosition() % 64 == 0) {

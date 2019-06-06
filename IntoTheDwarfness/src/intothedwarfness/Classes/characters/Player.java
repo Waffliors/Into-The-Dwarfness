@@ -200,10 +200,6 @@ public class Player extends Character implements Drawable, Collidable {
             int topSide_C = (c.getPivotRT().getY() + c.getPivotLT().getY());
             int underSide_C = (c.getPivotRD().getY() + c.getPivotLD().getY());
 
-            if ("EnemyType".equals(c.getType())) {
-                System.out.println(c.getPivotRT().getX());
-            }
-
 
             // Is the right edge of the player to the right of the left edge of the object?
             if (rSide > lSide_C) {
@@ -214,9 +210,11 @@ public class Player extends Character implements Drawable, Collidable {
                         // Is the top edge of the player above the bottom edge of the object?
                         if (topSide < underSide_C) {
                             if ("EnemyType".equals(c.getType())) {
-                                if (attacking) {
-                                    // c.gotHit();
+                                if (attacking && atkCont == 0) {
+                                    c.gotHit();
+                                    System.out.println("Acertou inimigo");
                                 }
+                                    return false;
                             }
                                 return true;
                         }
