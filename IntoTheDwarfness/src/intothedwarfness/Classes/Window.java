@@ -57,8 +57,9 @@ public class Window extends JFrame implements KeyListener {
         this.SCREEN_WIDTH = 1024;
         this.SCREEN_HEIGHT = 768;
         this.MAP = new Map(SPRITES.get(6), 12, 16);
-        this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP, enemiesFactory(), health_bar);
-        this.ENEMIES = enemiesFactory();
+        this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP, health_bar);
+        this.ENEMIES = this.enemiesFactory();
+        this.PLAYER.recieveCollidables(ENEMIES);
         this.DRAWABLES = loadDrawables();
         
         // Set configuration of the screen
@@ -116,15 +117,15 @@ public class Window extends JFrame implements KeyListener {
                 enemyCollidables, 0);
         Enemy spider_3 = new Enemy(64*6, 64*10, 3, SPRITES.get(2), SONGS, MAP, 
                 enemyCollidables, 0);
-        
-        Enemy bat_1 = new Enemy(64*3, 64*3, 2, SPRITES.get(1), SONGS, MAP, 
-                enemyCollidables, 1);
-        Enemy bat_2 = new Enemy(64*9, 64*6, 2, SPRITES.get(1), SONGS, MAP, 
-                enemyCollidables, 1);
-        Enemy bat_3 = new Enemy(64*9, 64*2, 3, SPRITES.get(1), SONGS, MAP, 
-                enemyCollidables, 1);
-        Enemy bat_4 = new Enemy(64*12, 64*8, 3, SPRITES.get(1), SONGS, MAP, 
-                enemyCollidables, 1);
+        Enemy spider_4 = new Enemy(64*3, 64*3, 2, SPRITES.get(2), SONGS, MAP, 
+                enemyCollidables, 0);
+        Enemy spider_5 = new Enemy(64*9, 64*6, 2, SPRITES.get(2), SONGS, MAP, 
+                enemyCollidables, 0);
+        Enemy spider_6 = new Enemy(64*9, 64*2, 3, SPRITES.get(2), SONGS, MAP, 
+                enemyCollidables, 0);
+        Enemy spider_7 = new Enemy(64*12, 64*8, 3, SPRITES.get(2), SONGS, MAP, 
+                enemyCollidables, 0);
+       
         
         Enemy gladiator_1 = new Enemy(64*3, 64*4, 4, SPRITES.get(3), SONGS, MAP, 
                 enemyCollidables, 2);
@@ -145,11 +146,10 @@ public class Window extends JFrame implements KeyListener {
         enemies.add(spider_1);
         enemies.add(spider_2);
         enemies.add(spider_3);
-        
-        enemies.add(bat_1);
-        enemies.add(bat_2);
-        enemies.add(bat_3);
-        enemies.add(bat_4);
+        enemies.add(spider_4);
+        enemies.add(spider_5);
+        enemies.add(spider_6);
+        enemies.add(spider_7);
 
         enemies.add(gladiator_1);
         enemies.add(gladiator_2);
@@ -188,13 +188,16 @@ public class Window extends JFrame implements KeyListener {
             // Pula os quadros enquanto o tempo for em excesso.
             while (excess > DESIRED_UPDATE_TIME) {
                 PLAYER.update();
+                PLAYER.recieveCollidables(ENEMIES);
                 for (Enemy enemy : this.ENEMIES) {
                     enemy.update();
                 }
                 excess -= DESIRED_UPDATE_TIME;
             }
             if ("PlayState".equals(gsm.getType())) {
+                
                 PLAYER.update();
+                PLAYER.recieveCollidables(ENEMIES);
                 for (Enemy enemy : this.ENEMIES) {
                     if (enemy.isStage(this.MAP)) {
                         if (enemy.getXPosition() % 64 == 0 && enemy.getYPosition() % 64 == 0) {
@@ -246,14 +249,14 @@ public class Window extends JFrame implements KeyListener {
     }
     
     private void pathToPlayer(Enemy enemy) {
-        Node end = PLAYER.getNodePos();
-        if (!PLAYER.getNodePos().getNeighbors().get(0).isBlocked()) {
-            end = PLAYER.getNodePos().getNeighbors().get(0);
-        } else if (!PLAYER.getNodePos().getNeighbors().get(1).isBlocked()) {
-            end = PLAYER.getNodePos().getNeighbors().get(1);
-        }
+//        Node end = PLAYER.getNodePos();
+//        if (!PLAYER.getNodePos().getNeighbors().get(0).isBlocked()) {
+//            end = PLAYER.getNodePos().getNeighbors().get(0);
+//        } else if (!PLAYER.getNodePos().getNeighbors().get(1).isBlocked()) {
+//            end = PLAYER.getNodePos().getNeighbors().get(1);
+//        }
         
-        this.path = AStar.aEstrela(enemy.getNodePos(), end, MAP);
+        this.path = AStar.aEstrela(enemy.getNodePos(), PLAYER.getNodePos(), MAP);
         enemy.setPath(path);
 
     }
@@ -322,5 +325,9 @@ public class Window extends JFrame implements KeyListener {
             } while (strategy.contentsRestored());
             strategy.show();
         } while (strategy.contentsLost());
+    }
+
+    private void setCollidables(Player PLAYER) {
+        
     }
 }

@@ -15,6 +15,7 @@ import intothedwarfness.Classes.Map;
 import java.awt.image.BufferedImage;
 import intothedwarfness.Classes.Song;
 import intothedwarfness.Classes.Point;
+import intothedwarfness.Classes.Window;
 import intothedwarfness.IA.Node;
 import intothedwarfness.Interfaces.Drawable;
 import intothedwarfness.Interfaces.Collidable;
@@ -40,7 +41,7 @@ public class Player extends Character implements Drawable, Collidable {
     private ArrayList<BufferedImage> health_bar_image;
 
 /* **************************Class Constructor******************************* */
-    public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map, ArrayList<Enemy> enemies, ArrayList<BufferedImage> health_bar) {
+    public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map, ArrayList<BufferedImage> health_bar) {
         //Player's settings
         this.life = 6;
         this.MAP = map;
@@ -52,7 +53,6 @@ public class Player extends Character implements Drawable, Collidable {
         this.actualStage = 1;
         this.currentMove = '.';
         this.SPRITE = spriteSheet;
-        this.ENEMIES = enemies;
         this.pivots = new ArrayList();
         this.collidables = new ArrayList();
         this.health_bar_image = health_bar;
@@ -78,12 +78,24 @@ public class Player extends Character implements Drawable, Collidable {
         // at 2: Left Down
         // at 3: Right Down
         this.pivots.add(new Point(this.xPos,this.yPos));
-        this.pivots.add(new Point(this.xPos+IMGSIZE,this.yPos));
-        this.pivots.add(new Point(this.xPos,this.yPos+IMGSIZE));
-        this.pivots.add(new Point(this.xPos+IMGSIZE,this.yPos+IMGSIZE));
+        this.pivots.add(new Point(this.xPos+TILESIZE,this.yPos));
+        this.pivots.add(new Point(this.xPos,this.yPos+TILESIZE));
+        this.pivots.add(new Point(this.xPos+TILESIZE,this.yPos+TILESIZE));
     }
     
-    private void initializeCollidables() {
+    public void recieveCollidables(ArrayList<Enemy> enemies){
+        this.ENEMIES = enemies;
+        
+        for (Enemy enemy : this.ENEMIES) {
+                if (enemy.isStage(this.MAP)) {
+                    collidables.add(enemy);
+                }
+            }
+        
+        
+    }
+    
+    public void initializeCollidables() {
         this.collidables.clear();
         
         MAP.getNodeMap();
@@ -92,12 +104,6 @@ public class Player extends Character implements Drawable, Collidable {
                 if(MAP.getNodeMap()[i][j].isBlocked()){
                     collidables.add(MAP.getNodeMap()[i][j]);
                 }
-            }
-        }
-        
-        for (Enemy enemy : this.ENEMIES) {
-            if (enemy.isStage(this.MAP)) {
-            collidables.add(enemy);
             }
         }
     }
@@ -133,6 +139,7 @@ public class Player extends Character implements Drawable, Collidable {
                 looking2Right = false;
             }
             if (currentMove == ' ') {
+                //System.out.println("ATTACKING");
                 this.attacking = true;
             }
             if (currentMove == 'h') {
@@ -177,7 +184,7 @@ public class Player extends Character implements Drawable, Collidable {
     }
 
     //Method that check the collisions
-    private boolean collision() {
+ public boolean collision() {
         //get the sides of the player
         int rSide = (this.getPivotRT().getX() + this.getPivotRD().getX());
         int lSide = (this.getPivotLT().getX() + this.getPivotLD().getX());
@@ -191,6 +198,8 @@ public class Player extends Character implements Drawable, Collidable {
             int lSide_C = (c.getPivotLT().getX() + c.getPivotLD().getX());
             int topSide_C = (c.getPivotRT().getY() + c.getPivotLT().getY());
             int underSide_C = (c.getPivotRD().getY() + c.getPivotLD().getY());
+
+
             // Is the right edge of the player to the right of the left edge of the object?
             if (rSide > lSide_C) {
                 // Is the left edge of the player to the left of the right edge of the object?
@@ -199,10 +208,14 @@ public class Player extends Character implements Drawable, Collidable {
                     if (underSide > topSide_C) {
                         // Is the top edge of the player above the bottom edge of the object?
                         if (topSide < underSide_C) {
-                            if("Enemy".equals(c.getClass().getSimpleName())){
-                                return false;
+                            if ("EnemyType".equals(c.getType())) {
+                                if (attacking && atkCont == 0) {
+                                    c.gotHit();
+                                    System.out.println("Acertou inimigo");
+                                }
+                                    return false;
                             }
-                            return true;
+                                return true;
                         }
                     }
                 }
@@ -482,6 +495,15 @@ public class Player extends Character implements Drawable, Collidable {
     public Node getNodePos(){
         return this.MAP.getNode(yPos/64, xPos/64);  
     }
+    
+    public void setNewCollidables(ArrayList <Enemy> newEnemies){
+        this.ENEMIES = newEnemies;
+        
+    }
+    
+    public ArrayList<Enemy> getEnemies(){        
+        return this.ENEMIES;
+    }
 /* *************************Overridden Methods******************************* */
     @Override
     public void update() {
@@ -509,32 +531,26 @@ public class Player extends Character implements Drawable, Collidable {
     public Boolean isStage(Map map) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
     @Override
     public Point getPivotLT() {
         return this.pivots.get(0);
     }
-
     @Override
     public Point getPivotRT() {
         return this.pivots.get(1);
     }
-
     @Override
     public Point getPivotLD() {
         return this.pivots.get(2);
     }
-
     @Override
     public Point getPivotRD() {
         return this.pivots.get(3);
     }
-
     @Override
     public String getType() {
         return "PlayerType";
     }
-
     @Override
     public void gotHit() {
         this.hitted = true;
