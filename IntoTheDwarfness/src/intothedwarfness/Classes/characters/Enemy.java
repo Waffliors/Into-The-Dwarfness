@@ -36,7 +36,7 @@ public class Enemy extends Character implements Drawable, Collidable {
     private final ArrayList<Collidable> collidables;
     private boolean endedPath, followingPlayer, canPlaySong;
     //Animation
-    private int cont, wait, atkCont, hitCont, deadCont;
+    private int cont, wait, atkCont, hitCont, deadCont, atkTimer;
     private int drawRef, startLine, animation, endLine;
     private boolean looking2Right, attacking, hitted, died, running, idle;
 
@@ -189,7 +189,6 @@ public class Enemy extends Character implements Drawable, Collidable {
                 }
                 //if had collision, return to the old position
                 if (collision()) {
-                    this.attacking = true;
                     //this.xPos = antXPos;
                     //this.yPos = antYPos;
                 }
@@ -235,7 +234,16 @@ public class Enemy extends Character implements Drawable, Collidable {
                         // Is the top edge of the player above the bottom edge of the object?
                         if (topSide < underSide_C) {
                             if ("PlayerType".equals(c.getType())) {
+                                this.atkTimer += 1;
+                                
+                                if (atkTimer >= 5) {
                                 this.attacking = true;
+                                    if (attacking && atkCont == 0) {
+                                        c.gotHit();
+                                        System.out.println("Acertou inimigo");
+                                    }
+                                    atkTimer = 0;
+                                }
                             }
                             return true;
                         }
@@ -251,6 +259,7 @@ public class Enemy extends Character implements Drawable, Collidable {
 
         if (this.attacking) {
             this.atkCont += 1;
+            this.atkTimer +=1;
         }
         if (this.hitted) {
             this.hitCont += 1;
