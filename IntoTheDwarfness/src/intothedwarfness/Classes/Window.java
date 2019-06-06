@@ -23,7 +23,6 @@ import intothedwarfness.Interfaces.Collidable;
 import intothedwarfness.Classes.States.PlayState;
 import intothedwarfness.Classes.States.GameState;
 import intothedwarfness.Classes.characters.Enemy;
-import intothedwarfness.Classes.HUD;
 import intothedwarfness.Classes.characters.Player;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
@@ -34,7 +33,6 @@ public class Window extends JFrame implements KeyListener {
     private final Player PLAYER;
     private final ArrayList<Song> SONGS;
     private final ArrayList<Enemy> ENEMIES;
-    private final HUD HUD;
     private final int SCREEN_WIDTH, SCREEN_HEIGHT;
     private final ArrayList<BufferedImage> SPRITES;
 
@@ -49,7 +47,7 @@ public class Window extends JFrame implements KeyListener {
      * @param SPRITES: List of sprites that will be used in the game
      * @param SONGS:   List of songs that will be used in the game
      */
-    public Window(ArrayList<BufferedImage> SPRITES, ArrayList<Song> SONGS, ArrayList<BufferedImage> HUD) {
+    public Window(ArrayList<BufferedImage> SPRITES, ArrayList<Song> SONGS, ArrayList<BufferedImage> health_bar) {
         // Call the super to set the screen name
         super("Into The Dwarfness");
         // Set the constants
@@ -58,8 +56,7 @@ public class Window extends JFrame implements KeyListener {
         this.SCREEN_WIDTH = 1024;
         this.SCREEN_HEIGHT = 768;
         this.MAP = new Map(SPRITES.get(6), 12, 16);
-        this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP, enemiesFactory());
-        this.HUD = new HUD(HUD, this.PLAYER);
+        this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP, enemiesFactory(), health_bar);
         this.ENEMIES = enemiesFactory();
         this.DRAWABLES = loadDrawables();
         
@@ -86,7 +83,7 @@ public class Window extends JFrame implements KeyListener {
         // Add all game's elements
         elements.add(this.MAP);
         elements.add(this.PLAYER);
-        elements.add(this.HUD);
+        //elements.add(this.HUD);
         for (Enemy enemy : this.ENEMIES) {
             elements.add(enemy);
         }
@@ -189,7 +186,7 @@ public class Window extends JFrame implements KeyListener {
         while (isRunning) {
 
             long beforeTime = System.currentTimeMillis();
-
+            System.out.println("Vida: " + this.PLAYER.getLife());
             // Pula os quadros enquanto o tempo for em excesso.
             while (excess > DESIRED_UPDATE_TIME) {
                 PLAYER.update();
