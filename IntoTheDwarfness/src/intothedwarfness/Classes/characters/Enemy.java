@@ -41,7 +41,7 @@ public class Enemy extends Character implements Drawable, Collidable {
     private boolean looking2Right, attacking, hitted, died, running, idle;
 
     /* ***********************Class Constructor****************************** */
-    public Enemy(int xPos, int yPos, int stage, BufferedImage spriteSheet, 
+    public Enemy(int x, int y, int stage, BufferedImage spriteSheet, 
             ArrayList<Song> songs, Map map, ArrayList<Collidable> collidables, 
             int enemyType) {
         
@@ -67,8 +67,8 @@ public class Enemy extends Character implements Drawable, Collidable {
 
         this.TILESIZE = 64;
         this.life = 4;
-        this.yPos = yPos;
-        this.xPos = xPos;
+        this.yPos = y;
+        this.xPos = x;
         this.actualStage = stage;
         this.pivots = new ArrayList();
         this.collidables = collidables;
@@ -101,19 +101,19 @@ public class Enemy extends Character implements Drawable, Collidable {
         // at 2: Left Down
         // at 3: Right Down
 
-        if(enemyType == 3){
+//        if(enemyType == 3){
+//        this.pivots.add(new Point(this.xPos, this.yPos));
+//        this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos));
+//        this.pivots.add(new Point(this.xPos, this.yPos + IMGSIZE));
+//        this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos + IMGSIZE));
+//            
+//        }else{
         this.pivots.add(new Point(this.xPos, this.yPos));
         this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos));
         this.pivots.add(new Point(this.xPos, this.yPos + IMGSIZE));
         this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos + IMGSIZE));
-            
-        }else{
-        this.pivots.add(new Point(this.xPos, this.yPos));
-        this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos));
-        this.pivots.add(new Point(this.xPos, this.yPos + TILESIZE));
-        this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos + TILESIZE));
-        }
-        }
+        System.out.println(pivots);
+    }
 
 
 
@@ -124,10 +124,12 @@ public class Enemy extends Character implements Drawable, Collidable {
 
     @Override
     public void update() {
+        
         animate();
         move();
+        //setPivot();
     }
-    
+
     public void move() {
         if (!endedPath) {
             if (path.size() == 1) {
@@ -135,10 +137,12 @@ public class Enemy extends Character implements Drawable, Collidable {
                 this.running = false;
                 this.cont = 0;
                 this.endedPath = true;
+                setPivot();
                 return;
             }
             if (path.size() <= 0) {
                 path = null;
+                setPivot();
                 return;
             }
             //save the current position
@@ -155,12 +159,12 @@ public class Enemy extends Character implements Drawable, Collidable {
                 if (currentPos.getX() != next.getX()) {
                     //yPos += (currentPos.getX() < next.getX() ? 8 : -8);
                     if (currentPos.getX() < next.getX()) {
-                        yPos += 4;
+                        this.yPos = this.yPos + 4;
                     }
                     if (currentPos.getX() > next.getX()) {
-                        yPos -= 4;
+                        this.yPos = this.yPos - 4;
                     }
-                    if (yPos % 64 == 0) {
+                    if (this.yPos % 64 == 0) {
                         ((LinkedList<Node>) path).removeFirst();
                     }
 
@@ -168,37 +172,39 @@ public class Enemy extends Character implements Drawable, Collidable {
                     //xPos += (currentPos.getY() < next.getY() ? 8 : -8);
 
                     if (currentPos.getY() < next.getY()) {
-                        xPos += 4;
-                        looking2Right = true;
+                        this.xPos = this.xPos + 4;
+                        this.looking2Right = true;
                     }
                     if (currentPos.getY() > next.getY()) {
-                        xPos -= 4;
-                        looking2Right = false;
+                        this.xPos = this.xPos - 4;
+                        this.looking2Right = false;
                     }
 
-                    if (xPos % 64 == 0) {
+                    if (this.xPos % 64 == 0) {
                         ((LinkedList<Node>) path).removeFirst();
                     }
                 }
-                //set the new pivots
-                setPivot();
                 //if had collision, return to the old position
                 if (collision()) {
                     this.attacking = true;
-                    this.xPos = antXPos;
-                    this.yPos = antYPos;
+                    //this.xPos = antXPos;
+                    //this.yPos = antYPos;
                 }
-            }       
+            }
         }
         
-        if(endedPath && !followingPlayer){
+
+        if (endedPath) {
             this.idle = true;
-            wait+=1;
-            if (wait >= 75){
+            wait += 1;
+            if (wait >= 75) {
                 wait = 0;
                 this.endedPath = false;
             }
-        }            
+        }
+        
+        //set the new pivots
+        setPivot();
     }
     
     public boolean collision() {
@@ -226,7 +232,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                         if (topSide < underSide_C) {
                             if ("PlayerType".equals(c.getType())) {
                                 if (attacking) {
-                                   // c.gotHit();
+                                    // c.gotHit();
                                 }
                             }
                             return true;
@@ -234,11 +240,10 @@ public class Enemy extends Character implements Drawable, Collidable {
                     }
                 }
             }
-
-    }
+        }
         return false;
     }
-    
+
     private void animate() {
         this.cont+= 1;
 
@@ -533,6 +538,7 @@ public class Enemy extends Character implements Drawable, Collidable {
 
     @Override
     public void gotHit() {
-        this.hitted = true;
+        System.out.println("Tomou dano");
+        //this.hitted = true;
     }
 }

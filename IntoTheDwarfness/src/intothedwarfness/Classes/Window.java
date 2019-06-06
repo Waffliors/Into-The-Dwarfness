@@ -56,8 +56,9 @@ public class Window extends JFrame implements KeyListener {
         this.SCREEN_WIDTH = 1024;
         this.SCREEN_HEIGHT = 768;
         this.MAP = new Map(SPRITES.get(6), 12, 16);
-        this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP, enemiesFactory());
-        this.ENEMIES = enemiesFactory();
+        this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP);
+        this.ENEMIES = this.enemiesFactory();
+        this.PLAYER.recieveCollidables(ENEMIES);
         this.DRAWABLES = loadDrawables();
         
         // Set configuration of the screen
@@ -195,7 +196,9 @@ public class Window extends JFrame implements KeyListener {
                 excess -= DESIRED_UPDATE_TIME;
             }
             if ("PlayState".equals(gsm.getType())) {
+                
                 PLAYER.update();
+                
                 for (Enemy enemy : this.ENEMIES) {
                     if (enemy.isStage(this.MAP)) {
                         if (enemy.getXPosition() % 64 == 0 && enemy.getYPosition() % 64 == 0) {
@@ -323,5 +326,9 @@ public class Window extends JFrame implements KeyListener {
             } while (strategy.contentsRestored());
             strategy.show();
         } while (strategy.contentsLost());
+    }
+
+    private void setCollidables(Player PLAYER) {
+        
     }
 }
