@@ -124,7 +124,7 @@ public class Enemy extends Character implements Drawable, Collidable {
 
     @Override
     public void update() {
-        if (!hitted) {
+        if (!hitted && !attacking) {
             move();
         }
         
