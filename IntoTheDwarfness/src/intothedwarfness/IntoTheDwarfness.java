@@ -43,6 +43,8 @@ public class IntoTheDwarfness {
 	    {
 	    	HUD.add(ImageIO.read(new File("images/HUD/Health_" + i + ".png")));
 	    }    
+	    HUD.add(ImageIO.read(new File("images/HUD/Enemy_Count.png")));
+	    HUD.add(ImageIO.read(new File("images/HUD/Boss_Count.png")));
 
         //Creating the window of the game
         Window screen = new Window(sprites, songs, HUD);

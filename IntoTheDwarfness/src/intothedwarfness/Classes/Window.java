@@ -35,6 +35,7 @@ public class Window extends JFrame implements KeyListener {
     private final ArrayList<Enemy> ENEMIES;
     private final int SCREEN_WIDTH, SCREEN_HEIGHT;
     private final ArrayList<BufferedImage> SPRITES;
+    private final HUD HUD;
 
     // Variables of the class
     private List<Node> path;
@@ -57,8 +58,9 @@ public class Window extends JFrame implements KeyListener {
         this.SCREEN_WIDTH = 1024;
         this.SCREEN_HEIGHT = 768;
         this.MAP = new Map(SPRITES.get(6), 12, 16);
-        this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP, health_bar);
+        this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP);
         this.ENEMIES = this.enemiesFactory();
+        this.HUD = new HUD(health_bar, this.PLAYER);
         this.PLAYER.recieveCollidables(ENEMIES);
         this.DRAWABLES = loadDrawables();
         
@@ -88,6 +90,7 @@ public class Window extends JFrame implements KeyListener {
             elements.add(enemy);
         }
         elements.add(this.PLAYER);
+        elements.add(this.HUD);
         return elements;
     }
 
