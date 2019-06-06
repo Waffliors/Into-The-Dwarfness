@@ -33,12 +33,19 @@ public class IntoTheDwarfness {
             sprites.add(ImageIO.read(new File("images/" + i + ".png")));
         }
         sprites.add(ImageIO.read(new File("images/TILES REF.png")));
+            
         
         //Loading the songs of the game
         ArrayList<Song> songs = loadSong();
+        ArrayList<BufferedImage> HUD = new ArrayList();
+
+	    for(int i = 0; i <= 6; i ++)
+	    {
+	    	HUD.add(ImageIO.read(new File("images/HUD/Health_" + i + ".png")));
+	    }    
 
         //Creating the window of the game
-        Window screen = new Window(sprites, songs);
+        Window screen = new Window(sprites, songs, HUD);
         screen.initialize();
         screen.run();
     }

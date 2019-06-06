@@ -33,18 +33,16 @@ public class Player extends Character implements Drawable, Collidable {
     private ArrayList<Collidable> collidables;
     private int xPos, yPos, actualStage, life;
 
-    public int getActualStage() {
-        return actualStage;
-    }
     //Animation
     private int cont, atkCont, hitCont, deadCont;
     private int drawRef, startLine, animation, endLine;
     private boolean looking2Right, attacking, hitted, died, running;
+    private ArrayList<BufferedImage> health_bar_image;
 
 /* **************************Class Constructor******************************* */
-    public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map, ArrayList<Enemy> enemies) {
+    public Player(BufferedImage spriteSheet, ArrayList<Song> songs, Map map, ArrayList<Enemy> enemies, ArrayList<BufferedImage> health_bar) {
         //Player's settings
-        this.life = 4;
+        this.life = 6;
         this.MAP = map;
         this.xPos = 512;
         this.yPos = 128;
@@ -57,6 +55,7 @@ public class Player extends Character implements Drawable, Collidable {
         this.ENEMIES = enemies;
         this.pivots = new ArrayList();
         this.collidables = new ArrayList();
+        this.health_bar_image = health_bar;
         
 
         //Player's animation
@@ -502,6 +501,8 @@ public class Player extends Character implements Drawable, Collidable {
                 IMGSIZE, IMGSIZE);
         //Draw in the player's position
         g.drawImage(image, xPos, yPos, 64, 64, null);
+        // Draw Player's life bar
+        g.drawImage(health_bar_image.get(this.life), 15, 50, 15 + 125, 50 + 32, 0, 0, 125, 32, null);
         
     }
     @Override
@@ -539,4 +540,12 @@ public class Player extends Character implements Drawable, Collidable {
         this.hitted = true;
     }
 
+    public int getActualStage() {
+        return actualStage;
+    }
+
+    public int getLife()
+    {
+    	return this.life;
+    }
 }

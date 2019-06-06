@@ -47,7 +47,8 @@ public class Window extends JFrame implements KeyListener {
      * @param SPRITES: List of sprites that will be used in the game
      * @param SONGS:   List of songs that will be used in the game
      */
-    public Window(ArrayList<BufferedImage> SPRITES, ArrayList<Song> SONGS) {
+    public Window(ArrayList<BufferedImage> SPRITES, ArrayList<Song> SONGS, ArrayList<BufferedImage> health_bar) {
+
         // Call the super to set the screen name
         super("Into The Dwarfness");
         // Set the constants
@@ -56,7 +57,7 @@ public class Window extends JFrame implements KeyListener {
         this.SCREEN_WIDTH = 1024;
         this.SCREEN_HEIGHT = 768;
         this.MAP = new Map(SPRITES.get(6), 12, 16);
-        this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP, enemiesFactory());
+        this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP, enemiesFactory(), health_bar);
         this.ENEMIES = enemiesFactory();
         this.DRAWABLES = loadDrawables();
         
@@ -70,7 +71,7 @@ public class Window extends JFrame implements KeyListener {
         this.setVisible(true);
         this.setFocusable(true);
         this.addKeyListener(this);
-        this.setBackground(new Color(43, 43, 42));
+        this.setBackground(new Color(39, 39, 37));
     }
 
     /***
@@ -82,10 +83,10 @@ public class Window extends JFrame implements KeyListener {
         ArrayList<Drawable> elements = new ArrayList();
         // Add all game's elements
         elements.add(this.MAP);
-        elements.add(this.PLAYER);
         for (Enemy enemy : this.ENEMIES) {
             elements.add(enemy);
         }
+        elements.add(this.PLAYER);
         return elements;
     }
 
@@ -183,9 +184,7 @@ public class Window extends JFrame implements KeyListener {
         }
 
         while (isRunning) {
-
             long beforeTime = System.currentTimeMillis();
-
             // Pula os quadros enquanto o tempo for em excesso.
             while (excess > DESIRED_UPDATE_TIME) {
                 PLAYER.update();
