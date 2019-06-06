@@ -124,9 +124,11 @@ public class Enemy extends Character implements Drawable, Collidable {
 
     @Override
     public void update() {
+        if (!hitted) {
+            move();
+        }
         
         animate();
-        move();
         //setPivot();
     }
 
@@ -151,7 +153,7 @@ public class Enemy extends Character implements Drawable, Collidable {
             int antYPos = this.yPos;
 
             Node currentPos = ((LinkedList<Node>) path).getFirst();
-            if (((LinkedList<Node>) path).size() != 1 && this.path != null) {
+            if (((LinkedList<Node>) path).size() != 1 && this.path != null && !died) {
                 this.endedPath = false;
                 this.running = true;
                 this.idle = false;
@@ -233,9 +235,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                         // Is the top edge of the player above the bottom edge of the object?
                         if (topSide < underSide_C) {
                             if ("PlayerType".equals(c.getType())) {
-                                if (attacking) {
-                                    // c.gotHit();
-                                }
+                                this.attacking = true;
                             }
                             return true;
                         }
@@ -430,21 +430,18 @@ public class Enemy extends Character implements Drawable, Collidable {
                     if (this.enemyType == 3) {
                         startAnimation(18, 0, 2);
                     }
-
-                    if (this.hitCont >= this.endLine) {
-                        this.cont = 0;
-                        this.hitCont = 0;
-                        this.hitted = false;
-                        System.out.println(hitted);
-                        this.life -= 1;
-                        
-                        if (this.life == 0) {
-                            died = true;
-                        }
-                    }
-                    this.drawRef = this.hitCont;
                 }
+                if (this.hitCont >= this.endLine) {
+                    this.cont = 0;
+                    this.hitCont = 0;
+                    this.hitted = false;
+                    this.life -= 1;
 
+                    if (this.life == 0) {
+                        died = true;
+                    }
+                }
+                this.drawRef = this.hitCont;
             }
         }
         //Dead Player
