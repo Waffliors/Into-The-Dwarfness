@@ -321,7 +321,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                         }
                         //fire elemental
                         if (this.enemyType == 1) {
-                            startAnimation(4, 0, 4);
+                            startAnimation(6, 0, 5);
                         }
                         //gladiador
                         if (this.enemyType == 2) {
@@ -339,7 +339,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                         }
                         //fire elemental
                         if (this.enemyType == 1) {
-                            startAnimation(4, 0, 4);
+                            startAnimation(5, 0, 7);
                         }
                         //gladiador
                         if (this.enemyType == 2) {
@@ -370,7 +370,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                     }
                     //fire elemental
                     if (this.enemyType == 1) {
-                        startAnimation(0, 0, 4);
+                        startAnimation(2, 0, 7);
                     }
                     //gladiador
                     if (this.enemyType == 2) {
@@ -388,7 +388,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                     }
                     //fire elemental
                     if (this.enemyType == 1) {
-                        startAnimation(3, 0, 4);
+                        startAnimation(7, 0, 7);
                     }
                     //gladiador
                     if (this.enemyType == 2) {
@@ -418,6 +418,10 @@ public class Enemy extends Character implements Drawable, Collidable {
                     if (this.enemyType == 0) {
                         startAnimation(14, 0, 8);
                     }
+                    //Fire elemental
+                    if (this.enemyType == 1) {
+                        startAnimation(3, 0, 5);
+                    }
                     //gladiador
                     if (this.enemyType == 2) {
                         startAnimation(8, 0, 2);
@@ -431,6 +435,10 @@ public class Enemy extends Character implements Drawable, Collidable {
                     //aranha
                     if (this.enemyType == 0) {
                         startAnimation(6, 0, 8);
+                    }
+                    //Fire elemental
+                    if (this.enemyType == 1) {
+                        startAnimation(8, 0, 5);
                     }
                     //gladiador
                     if (this.enemyType == 2) {
@@ -464,7 +472,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                 }
                 //fire elemental
                 if (this.enemyType == 1) {
-                    startAnimation(2, 0, 4);
+                    startAnimation(4, 0, 7);
                 }
                 //gladiador
                 if (this.enemyType == 2) {
@@ -482,7 +490,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                 }
                 //fire elemental
                 if (this.enemyType == 1) {
-                    startAnimation(5, 0, 4);
+                    startAnimation(9, 0, 7);
                 }
                 //gladiador
                 if (this.enemyType == 2) {
@@ -611,7 +619,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                     g.drawImage(alert, xPos, yPos, 64, 64 + 32, null);
                     break;
                 case 1:
-                    alert = SPRITE.getSubimage(super.tile_16x16[5][0].getSrcX1(), super.tile_32x32[5][0].getSrcY1(), IMGSIZE, IMGSIZE);
+                    alert = SPRITE.getSubimage(super.tile_32x32[7][1].getSrcX1(), super.tile_32x32[7][1].getSrcY1(), IMGSIZE, IMGSIZE);
                     g.drawImage(alert, xPos, yPos, 64, 64, null);
                     break;
                 case 2:
