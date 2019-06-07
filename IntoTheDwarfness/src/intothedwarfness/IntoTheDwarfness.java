@@ -10,57 +10,122 @@
  ** Nathan André da Silva                                                    **
  ** Raphael Oliveira Melo                                                    **
  **                                                                          **
- ** 30/05/2019                                                               **
+ ** 13/06/2019                                                               **
  ******************************************************************************/
 package intothedwarfness;
 
-import intothedwarfness.Classes.Song;
 import java.io.File;
-import java.util.ArrayList;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import intothedwarfness.Classes.Window;
+import intothedwarfness.Classes.Song;
 import java.net.MalformedURLException;
+import intothedwarfness.Classes.Window;
 
 public class IntoTheDwarfness {
-
-    public static void main(String[] args) throws IOException, InterruptedException{
-
-        //Loading the images of the game
+    
+    public static void main(String[] args) throws IOException {
+        // Loading the sprites of the game
         ArrayList<BufferedImage> sprites = new ArrayList();
-        for (int i = 1; i <= 8; i++) {
-            sprites.add(ImageIO.read(new File("images/" + i + ".png")));
-        }
-        sprites.add(ImageIO.read(new File("images/TILES REF.png")));
-            
-        
-        //Loading the songs of the game
-        ArrayList<Song> songs = loadSong();
+        loadSprites(sprites);
+        // Loading the HUD elements of the game
         ArrayList<BufferedImage> HUD = new ArrayList();
-
-	    for(int i = 0; i <= 6; i ++)
-	    {
-	    	HUD.add(ImageIO.read(new File("images/HUD/Health_" + i + ".png")));
-	    }    
-	    HUD.add(ImageIO.read(new File("images/HUD/Enemy_Count.png")));
-	    HUD.add(ImageIO.read(new File("images/HUD/Boss_Count.png")));
-            HUD.add(ImageIO.read(new File("images/HUD/key.png")));
-
-        //Creating the window of the game
+        loadHUD(HUD);
+        // Loading the songs of the game
+        ArrayList<Song> songs = new ArrayList();
+        loadSongs(songs);
+        //The order of the elements in the above lists can be seen in:
+        //Into-The-Dwarfness\IntoTheDwarfness\documentation
+        
+        // Creating the window of the game
         Window screen = new Window(sprites, songs, HUD);
         screen.initialize();
-        screen.run();
+        try {
+            screen.run();
+        } catch (InterruptedException ex) {
+        }
     }
-    
-    public static ArrayList<Song> loadSong() throws MalformedURLException{
-        ArrayList<Song> songs = new ArrayList();
-        songs.add(new Song("songs/music/DungeonRun80bpm.wav"));
-        songs.add(new Song("songs/sfx/melee sounds/sword sound.wav"));
-        songs.add(new Song("songs/sfx/hurt/pain2.wav"));
-        songs.add(new Song("songs/sfx/hurt/die2.wav"));
-        songs.add(new Song("songs/sfx/footsteps/gravel.wav"));
-        songs.add(new Song("songs/sfx/Gladiator/fight01.wav"));
-        return songs;
+
+    /**
+     * Load the wav song files that will be used in the game
+     * 
+     * @param songList : The ArrayList where they will be added
+     * @throws MalformedURLException
+     */
+    private static void loadSongs(ArrayList<Song> songList) 
+            throws MalformedURLException {
+        // First, load the dwarf's SFX
+        songList.add(new Song(
+                "songs/sfx/Dwarf/Dwarf - Attack.wav"));
+        songList.add(new Song(
+                "songs/sfx/Dwarf/Dwarf - Died.wav"));
+        songList.add(new Song(
+                "songs/sfx/Dwarf/Dwarf - Hitted.wav"));
+        // Then, the fire elemental's SFX
+        songList.add(new Song(
+                "songs/sfx/Fire Elemental/Fire Elemental - Attack.wav "));
+        songList.add(new Song(
+                "songs/sfx/Fire Elemental/Fire Elemental - Died.wav "));
+        songList.add(new Song(
+                "songs/sfx/Fire Elemental/Fire Elemental - Hurt.wav "));
+        // Then, the gladiator's SFX
+        songList.add(new Song(
+                "songs/sfx/Gladiator/Gladiator - Attack.wav "));
+        songList.add(new Song(
+                "songs/sfx/Gladiator/Gladiator - Died.wav "));
+        songList.add(new Song(
+                "songs/sfx/Gladiator/Gladiator - Hurt.wav "));
+        // Then, the minitaur's SFX
+        songList.add(new Song(
+                "songs/sfx/Minotaur/Minotaur - Attack.wav "));
+        songList.add(new Song(
+                "songs/sfx/Minotaur/Minotaur - Died.wav "));
+        songList.add(new Song(
+                "songs/sfx/Minotaur/Minotaur - Hurt.wav "));
+        // Then, the spider's SFX
+        songList.add(new Song(
+                "songs/sfx/Spider/Spider - Attack.wav "));
+        songList.add(new Song(
+                "songs/sfx/Spider/Spider - Died.wav "));
+        // And finally, the Musics
+        songList.add(new Song(
+                "songs/music/Boss Music.wav "));
+        songList.add(new Song(
+                "songs/music/Stage Song.wav "));
+    }
+
+    /**
+     * Load all the sprites that will be used in the game
+     * 
+     * @param spriteList : The ArrayList where they will be added
+     * @throws IOException
+     */
+    private static void loadSprites(ArrayList<BufferedImage> spriteList)
+            throws IOException {
+        // This loop will add all the images in the list
+        for (int i = 1; i <= 8; i++) {
+            spriteList.add(ImageIO.read(new File("images/" + i + ".png")));
+        }
+        // Then, add the imagem that is used to see the tiles
+        spriteList.add(ImageIO.read(new File("images/TILES REF.png")));
+    }
+
+    /**
+     * Load the images used in the game HUD
+     * 
+     * @param hudList : The ArrayList where they will be added
+     * @throws IOException
+     */
+    private static void loadHUD(ArrayList<BufferedImage> hudList) 
+            throws IOException {
+        // As in loadSprite, the loop load the images of player's life
+        for (int i = 0; i <= 6; i++) {
+            hudList.add(ImageIO.read(new File("images/HUD/Health_" + i + ".png")));
+        }
+        //After that, load the other images
+        hudList.add(ImageIO.read(new File("images/HUD/Enemy_Count.png")));
+        hudList.add(ImageIO.read(new File("images/HUD/Boss_Count.png")));
+        hudList.add(ImageIO.read(new File("images/HUD/key.png")));
     }
 }

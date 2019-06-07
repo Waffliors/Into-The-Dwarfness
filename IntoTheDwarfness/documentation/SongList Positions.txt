@@ -1,0 +1,16 @@
+[0] -> Dwarf - Attack 
+[1] -> Dwarf - Died
+[2] -> Dwarf - Hitted
+[3] -> Fire Elemental - Attack
+[4] -> Fire Elemental - Died
+[5] -> Fire Elemental - Hurt
+[6] -> Gladiator - Attack
+[7] -> Gladiator - Died
+[8] -> Gladiator - Hurt
+[9] -> Minotaur - Attack
+[10] -> Minotaur - Died
+[11] -> Minotaur - Hurt
+[12] -> Spider - Attack
+[13] -> Spider - Died
+[14] -> Boss Music
+[15] -> Stage Song
