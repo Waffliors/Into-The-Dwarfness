@@ -27,6 +27,16 @@ public class Player extends Character implements Drawable, Collidable {
     private final BufferedImage SPRITE;
     private final ArrayList<Song> SONGS;
     //Position
+    private int enemiesKilledCount, bossKilledCount;
+
+    public int getEnemiesKilledCount() {
+        return enemiesKilledCount;
+    }
+
+    public int getBossKilledCount() {
+        return bossKilledCount;
+    }
+    
     private char currentMove;
     private ArrayList<Point> pivots;
     private ArrayList<Enemy> ENEMIES;
