@@ -30,8 +30,8 @@ public class IntoTheDwarfness {
         ArrayList<BufferedImage> sprites = new ArrayList();
         loadSprites(sprites);
         // Loading the HUD elements of the game
-        ArrayList<BufferedImage> HUD = new ArrayList();
-        loadHUD(HUD);
+        ArrayList<BufferedImage> hud = new ArrayList();
+        loadHUD(hud);
         // Loading the songs of the game
         ArrayList<Song> songs = new ArrayList();
         loadSongs(songs);
@@ -39,7 +39,7 @@ public class IntoTheDwarfness {
         //Into-The-Dwarfness\IntoTheDwarfness\documentation
         
         // Creating the window of the game
-        Window screen = new Window(sprites, songs, HUD);
+        Window screen = new Window(sprites, songs, hud);
         screen.initialize();
         try {
             screen.run();

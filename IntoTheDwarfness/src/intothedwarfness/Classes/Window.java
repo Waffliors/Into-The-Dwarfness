@@ -170,7 +170,7 @@ public class Window extends JFrame implements KeyListener {
 
     // Game Loop
     public void run() throws InterruptedException {
-        SONGS.get(0).playSound();
+        //SONGS.get(0).playSound();
         boolean isRunning = true;
 
         long excess = 0;
@@ -309,7 +309,8 @@ public class Window extends JFrame implements KeyListener {
         PLAYER.setCurrentMove('.');
         PLAYER.setLook(e.getKeyChar());
 
-        if (PLAYER.checkStage(e.getKeyChar(), this.MAP) > 0) {
+        //if (PLAYER.checkStage(e.getKeyChar()) > 0) {
+        if (PLAYER.getActualStage() > 0) {
             for (Enemy enemy : this.ENEMIES) {
                 if (enemy.getActualStage() == this.MAP.getActualStage()) {
                     this.MAP.getStageEnemies().add(enemy);
