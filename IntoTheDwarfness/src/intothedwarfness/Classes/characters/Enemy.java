@@ -229,9 +229,6 @@ public class Enemy extends Character implements Drawable, Collidable {
                  }
 
              }
-             if (endedPath && followingPlayer) {
-                 this.attacking = true;
-             }
 
         //set the new pivots
         setPivot();
@@ -267,7 +264,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                                 if (atkTimer >= 5) {
                                 this.attacking = true;
                                     if (attacking && atkCont == 0) {
-                                        //c.gotHit();
+                                        c.gotHit();
                                     }
                                     atkTimer = 0;
                                 }
