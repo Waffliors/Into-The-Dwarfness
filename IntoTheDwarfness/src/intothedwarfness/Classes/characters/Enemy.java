@@ -240,7 +240,6 @@ public class Enemy extends Character implements Drawable, Collidable {
                                 this.attacking = true;
                                     if (attacking && atkCont == 0) {
                                         c.gotHit();
-                                        System.out.println("Acertou inimigo");
                                     }
                                     atkTimer = 0;
                                 }
