@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import intothedwarfness.Classes.characters.Player;
 import intothedwarfness.Interfaces.Drawable;
+import java.net.MalformedURLException;
 
 public class HUD implements Drawable {
 
@@ -20,11 +21,10 @@ public class HUD implements Drawable {
     private Font font;
 
     //Loading the HUD images
-    public HUD(ArrayList<BufferedImage> HUD, Player player) {
+    public HUD(ArrayList<BufferedImage> HUD, Player player) throws MalformedURLException {
         this.player = player;
-        this.hud = HUD;
-
-        this.fName = "/font/RetroGaming.ttf";
+        this.hud = HUD;        
+        this.fName = "/Resources/RetroGaming.ttf";
         this.is = HUD.class.getResourceAsStream(fName);
 
         try {
@@ -48,11 +48,16 @@ public class HUD implements Drawable {
         g.drawString("" + player.getEnemiesKilledCount(), 760, 85);
         g.drawString("" + player.getBossKilledCount(), 913, 85);
         
-       if(player.getBossKilledCount()>=1){
-        BufferedImage image = this.hud.get(9).getSubimage(0,0,64, 64);
-        g.drawImage(image, 30, 100, 32, 32, null);
-
-              }
+        if(player.getBossKilledCount()>=1){
+            BufferedImage image = this.hud.get(9).getSubimage(0,0,64, 64);
+            g.drawImage(image, 30, 100, 32, 32, null);
+        }
+    }
+    
+    public void paintPauseMenu(Graphics g) {
+        
+        g.drawImage(this.hud.get(11), 0, 0, 1024, 768, null);
+        g.drawImage(this.hud.get(10), 0, 0, 1024, 768, null);        
     }
 
     @Override

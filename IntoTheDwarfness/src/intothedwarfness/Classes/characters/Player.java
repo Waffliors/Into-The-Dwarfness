@@ -422,7 +422,7 @@ public class Player extends Character implements Drawable, Collidable {
      * 
      * @param enemies : ArrayList with the enemies
      */
-    public void recieveCollidables(ArrayList<Enemy> enemies) {
+    public void receiveCollidables(ArrayList<Enemy> enemies) {
         // Set the enemy list
         this.enemies = enemies;
         // Add the enemies in the collidables list

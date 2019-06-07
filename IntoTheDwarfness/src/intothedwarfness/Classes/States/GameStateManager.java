@@ -16,7 +16,7 @@ public class GameStateManager {
     public GameState currGameState;
     
     public GameStateManager() {
-        currGameState = new PlayState();
+        currGameState = new PauseState();
     }
     
     public void init() {

@@ -36,6 +36,7 @@ public class Window extends JFrame implements KeyListener {
     private final int SCREEN_WIDTH, SCREEN_HEIGHT;
     private final ArrayList<BufferedImage> SPRITES;
     private final HUD HUD;
+    private boolean pause;
 
     // Variables of the class
     private List<Node> path;
@@ -62,7 +63,7 @@ public class Window extends JFrame implements KeyListener {
         this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP);
         this.ENEMIES = this.enemiesFactory();
         this.HUD = new HUD(health_bar, this.PLAYER);
-        this.PLAYER.recieveCollidables(ENEMIES);
+        this.PLAYER.receiveCollidables(ENEMIES);
         this.DRAWABLES = loadDrawables();
         
         // Set configuration of the screen
@@ -76,6 +77,10 @@ public class Window extends JFrame implements KeyListener {
         this.setFocusable(true);
         this.addKeyListener(this);
         this.setBackground(new Color(39, 39, 37));
+    }
+
+    public boolean isPause() {
+        return pause;
     }
 
     /***
@@ -193,7 +198,7 @@ public class Window extends JFrame implements KeyListener {
             // Pula os quadros enquanto o tempo for em excesso.
             while (excess > DESIRED_UPDATE_TIME) {
                 PLAYER.update();
-                PLAYER.recieveCollidables(ENEMIES);
+                PLAYER.receiveCollidables(ENEMIES);
                 for (Enemy enemy : this.ENEMIES) {
                     enemy.update();
                 }
@@ -204,7 +209,8 @@ public class Window extends JFrame implements KeyListener {
                     int temp = 0;
                     int temp2 = 0;
                 PLAYER.update();
-                PLAYER.recieveCollidables(ENEMIES);
+                PLAYER.receiveCollidables(ENEMIES);
+                
                 for (Enemy enemy : this.ENEMIES) {
                     if (enemy.isStage(this.MAP)) {
                         if (enemy.getXPosition() % 64 == 0 && enemy.getYPosition() % 64 == 0) {
@@ -341,6 +347,9 @@ public class Window extends JFrame implements KeyListener {
                     } else {
                         drawable.paintComponent(graphics);
                     }
+                }
+                if ("PauseState".equals(gsm.getType())) {
+                    HUD.paintPauseMenu(graphics);
                 }
                 //graphics.drawImage(this.SPRITES.get(8), 0, 0, null);
                 // Disposes of this graphics context, it's no longer referenced.
