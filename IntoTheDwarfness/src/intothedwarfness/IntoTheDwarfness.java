@@ -126,7 +126,7 @@ public class IntoTheDwarfness {
         //After that, load the other images
         hudList.add(ImageIO.read(new File("images/HUD/Enemy_Count.png")));
         hudList.add(ImageIO.read(new File("images/HUD/Boss_Count.png")));
-        hudList.add(ImageIO.read(new File("images/HUD/key.png")));
+        hudList.add(ImageIO.read(new File("images/HUD/Key.png")));
         hudList.add(ImageIO.read(new File("images/HUD/Pause_Image.png")));
         hudList.add(ImageIO.read(new File("images/HUD/Pause_Background.png")));
     }

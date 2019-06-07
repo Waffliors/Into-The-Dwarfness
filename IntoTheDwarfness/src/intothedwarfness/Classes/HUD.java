@@ -21,7 +21,7 @@ public class HUD implements Drawable {
     private Font font;
 
     //Loading the HUD images
-    public HUD(ArrayList<BufferedImage> HUD, Player player) throws MalformedURLException {
+    public HUD(ArrayList<BufferedImage> HUD, Player player) {
         this.player = player;
         this.hud = HUD;        
         this.fName = "/Resources/RetroGaming.ttf";
