@@ -22,23 +22,27 @@ public class Map extends JPanel implements Drawable {
     private final BufferedImage SPRITE;   
     private final ArrayList<Tile> TILEMAP;
     private final List<Integer> UNBLOCKEDTILES;
+    private boolean showPortal;
+    private BufferedImage portal;
     
     private ArrayList<Node> NodeList = new ArrayList();
     private int wallMap[][], floorMap[][], objectMap[][];
     private Node nodeMap[][];
     private final ArrayList<Enemy> stageEnemies = new ArrayList();
-    public int actualStage;
+    public int actualStage, animation;
 
 /* **************************Class Constructor******************************* */
-    public Map(BufferedImage spriteSheet, int lines, int columns) {
+    public Map(BufferedImage spriteSheet, int lines, int columns, BufferedImage portal) {
         this.XPOS = 0;
         this.YPOS = 0;
+        this.portal = portal;
         this.LINES = lines;
         this.COLUMNS = columns;
         this.SPRITE = spriteSheet;
         this.TILEMAP = loadTile();
         this.actualStage = 1;
         this.UNBLOCKEDTILES = loadUblockedTiles();
+        this.animation = 0;
         stageCreator(1);
         this.nodeMap = loadNodeMap();
         findNeighbors();
@@ -451,9 +455,9 @@ public class Map extends JPanel implements Drawable {
         //Create stage 8
         if (actualStage == 8) {
             this.floorMap = new int[][]{
-                {  6,   6,   6,   6,   6,   6, 133, 133, 133, 133,   6,   6,   6,   6,   6,   6},
+                {  6,   6,   6,   6,   6,   6, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133},
                 {133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133},
-                {133, 133, 133, 264, 133, 133,   6, 101,   6, 133, 248, 133, 133, 133, 133, 133},
+                {133, 133, 133, 264, 133, 133,   6, 101,   6, 133, 133, 133, 133, 133, 133, 133},
                 {133, 133, 133, 133, 133, 133,   6,   6,   6, 133, 133, 133, 133, 133, 248, 133},
                 {133, 133, 248, 133, 133, 248, 133, 133, 133, 133, 133, 133, 264, 133, 133, 133},
                 {133, 133, 133, 133, 133, 264, 133, 133, 133, 133, 133, 133, 133, 133, 133, 133},
@@ -480,9 +484,9 @@ public class Map extends JPanel implements Drawable {
 
             this.wallMap = new int[][]{
                 {  3,   4,   4,   4,   4,   4,  34,   6,   6,  32,   4,   4,   4,  45,   4,   5},
-                { 19,  20,  20,  20,  20,  20,  50,   6,   6,  48, 144, 145, 145, 148,  20,  21},
-                { 18,   6,   6,   6,   6,   6,   6,   6,   6,   6, 160, 161, 161, 164,   6,  16},
-                { 18,   6,   6,   6,   6,   6,   6,   6,   6,   6, 176, 177, 177, 180,   6,  16},
+                { 19,  20,  20,  20,  20,  20,  50,   6,   6,  48,  20,   20, 20,  20,  20,  21},
+                { 18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16},
+                { 18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16},
                 { 18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16},
                 { 18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16},
                 { 18,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,   6,  16},
@@ -564,6 +568,11 @@ public class Map extends JPanel implements Drawable {
 /* *************************Overridden Methods******************************* */
     @Override
     public void paintComponent(Graphics g) {
+        if (this.animation >= 448){
+            this.animation = 0;
+            
+        }
+        this.animation +=64;
         for (int x = 0; x < this.floorMap[0].length; x++) {
             for (int y = 0; y < this.floorMap.length; y++) {
                 g.drawImage(SPRITE,
@@ -589,8 +598,20 @@ public class Map extends JPanel implements Drawable {
 
             }
         }
+       
+        if (showPortal && actualStage == 7) {
+            BufferedImage image = portal.getSubimage(
+                    animation, 0, 64, 64);
+            g.drawImage(image, 450, 250, 128, 128, null);
+        }
     }
 
+    public boolean showPortal(){
+        return this.showPortal;
+}
+    public void setPortal(boolean show){
+        this.showPortal = show;
+    }
     @Override
     public Boolean isStage(Map map) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

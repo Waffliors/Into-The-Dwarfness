@@ -39,6 +39,7 @@ public class Window extends JFrame implements KeyListener {
 
     // Variables of the class
     private List<Node> path;
+    private int enemyCont;
     private GameStateManager gsm;
     private final ArrayList<Drawable> DRAWABLES;
 
@@ -57,7 +58,7 @@ public class Window extends JFrame implements KeyListener {
         this.SPRITES = SPRITES;
         this.SCREEN_WIDTH = 1024;
         this.SCREEN_HEIGHT = 768;
-        this.MAP = new Map(SPRITES.get(6), 12, 16);
+        this.MAP = new Map(SPRITES.get(6), 12, 16, SPRITES.get(5));
         this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP);
         this.ENEMIES = this.enemiesFactory();
         this.HUD = new HUD(health_bar, this.PLAYER);
@@ -199,7 +200,9 @@ public class Window extends JFrame implements KeyListener {
                 excess -= DESIRED_UPDATE_TIME;
             }
             if ("PlayState".equals(gsm.getType())) {
-                
+
+                    int temp = 0;
+                    int temp2 = 0;
                 PLAYER.update();
                 PLAYER.recieveCollidables(ENEMIES);
                 for (Enemy enemy : this.ENEMIES) {
@@ -213,6 +216,19 @@ public class Window extends JFrame implements KeyListener {
                             }
                         }
                         enemy.update();
+                    }
+                    if (enemy.died()) {
+                        temp = temp + 1;
+                    }
+                    if (enemy.died() && "BossType".equals(enemy.getType())){
+                        temp2 = temp2 + 1;
+                        temp = temp - 1;
+                    }
+                    PLAYER.setEnemiesKilledCount(temp);
+                    PLAYER.setBossKilledCount(temp2);
+                    
+                    if(PLAYER.getBossKilledCount() >= 1){
+                        MAP.setPortal(true);
                     }
                 }
             }
@@ -254,14 +270,16 @@ public class Window extends JFrame implements KeyListener {
     
     private void pathToPlayer(Enemy enemy) {
         Node end = PLAYER.getNodePos();
-        if (!PLAYER.getNodePos().getNeighbors().get(0).isBlocked()) {
-            end = PLAYER.getNodePos().getNeighbors().get(0);
-        } else if (!PLAYER.getNodePos().getNeighbors().get(1).isBlocked()) {
-            end = PLAYER.getNodePos().getNeighbors().get(1);
-        }
-        
-        this.path = AStar.aEstrela(enemy.getNodePos(), PLAYER.getNodePos(), MAP);
+////        if (!PLAYER.getNodePos().getNeighbors().get(0).isBlocked()) {
+////            end = PLAYER.getNodePos().getNeighbors().get(0);
+////        } else if (!PLAYER.getNodePos().getNeighbors().get(1).isBlocked()) {
+////            end = PLAYER.getNodePos().getNeighbors().get(1);
+////        }
+       this.path = AStar.aEstrela(enemy.getNodePos(), end, MAP);
         enemy.setPath(path);
+        if (path == null){
+            setRandomPath(enemy);
+        }
 
     }
 
@@ -323,7 +341,7 @@ public class Window extends JFrame implements KeyListener {
                         drawable.paintComponent(graphics);
                     }
                 }
-                //graphics.drawImage(this.SPRITES.get(7), 0, 0, null);
+                //graphics.drawImage(this.SPRITES.get(8), 0, 0, null);
                 // Disposes of this graphics context, it's no longer referenced.
                 graphics.dispose();
             } while (strategy.contentsRestored());

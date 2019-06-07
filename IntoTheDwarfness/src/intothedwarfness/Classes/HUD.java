@@ -47,6 +47,12 @@ public class HUD implements Drawable {
         g.setFont(font.deriveFont(40.f));
         g.drawString("" + player.getEnemiesKilledCount(), 760, 85);
         g.drawString("" + player.getBossKilledCount(), 913, 85);
+        
+       if(player.getBossKilledCount()>=1){
+        BufferedImage image = this.hud.get(9).getSubimage(0,0,64, 64);
+        g.drawImage(image, 30, 100, 32, 32, null);
+
+              }
     }
 
     @Override

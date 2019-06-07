@@ -63,10 +63,25 @@ public class Enemy extends Character implements Drawable, Collidable {
             default:
                 this.IMGSIZE = 0;
         }
+        
+        switch (this.enemyType) {
+            case 0:
+                this.life = 1;
+                break;
+            case 2:
+                this.life = 3;
+                break;
+            case 1:
+                this.life = 2;
+                break;
+            case 3:
+                this.life = 4;
+                break;
+        }
 
 
+        
         this.TILESIZE = 64;
-        this.life = 4;
         this.yPos = y;
         this.xPos = x;
         this.actualStage = stage;
@@ -102,17 +117,26 @@ public class Enemy extends Character implements Drawable, Collidable {
         // at 2: Left Down
         // at 3: Right Down
 
-//        if(enemyType == 3){
-//        this.pivots.add(new Point(this.xPos, this.yPos));
-//        this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos));
-//        this.pivots.add(new Point(this.xPos, this.yPos + IMGSIZE));
-//        this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos + IMGSIZE));
-//            
-//        }else{
+        if(enemyType == 0){
+        this.pivots.add(new Point(this.xPos, this.yPos+32));
+        this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos+32));
+        this.pivots.add(new Point(this.xPos, this.yPos + IMGSIZE));
+        this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos + IMGSIZE));
+            
+        }
+        
+        if(enemyType == 3){
+        this.pivots.add(new Point(this.xPos, this.yPos));
+        this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos));
+        this.pivots.add(new Point(this.xPos, this.yPos + IMGSIZE));
+        this.pivots.add(new Point(this.xPos + IMGSIZE, this.yPos + IMGSIZE));
+            
+        }else{
         this.pivots.add(new Point(this.xPos, this.yPos));
         this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos));
         this.pivots.add(new Point(this.xPos, this.yPos + TILESIZE));
         this.pivots.add(new Point(this.xPos + TILESIZE, this.yPos + TILESIZE));
+        }
     }
 
 
@@ -124,7 +148,7 @@ public class Enemy extends Character implements Drawable, Collidable {
 
     @Override
     public void update() {
-        if (!hitted && !attacking) {
+        if (!hitted && !attacking && path != null) {
             move();
         }
         
@@ -196,15 +220,19 @@ public class Enemy extends Character implements Drawable, Collidable {
         }
         
 
-        if (endedPath) {
-            this.idle = true;
-            wait += 1;
-            if (wait >= 75) {
-                wait = 0;
-                this.endedPath = false;
-            }
-        }
-        
+             if (endedPath && !followingPlayer) {
+                 this.idle = true;
+                 wait += 1;
+                 if (wait >= 75) {
+                     wait = 0;
+                     this.endedPath = false;
+                 }
+
+             }
+             if (endedPath && followingPlayer) {
+                 this.attacking = true;
+             }
+
         //set the new pivots
         setPivot();
     }
@@ -239,7 +267,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                                 if (atkTimer >= 5) {
                                 this.attacking = true;
                                     if (attacking && atkCont == 0) {
-                                        c.gotHit();
+                                        //c.gotHit();
                                     }
                                     atkTimer = 0;
                                 }
@@ -475,11 +503,11 @@ public class Enemy extends Character implements Drawable, Collidable {
                 }
                 //gladiador
                 if (this.enemyType == 2) {
-                    startAnimation(7, 0, 6);
+                    startAnimation(9, 0, 6);
                 }
                 //minotauro
                 if (this.enemyType == 3) {
-                    startAnimation(6, 0, 8);
+                    startAnimation(9, 0, 5);
                 }
             }
             if (!this.looking2Right) {
@@ -489,15 +517,15 @@ public class Enemy extends Character implements Drawable, Collidable {
                 }
                 //fire elemental
                 if (this.enemyType == 1) {
-                    startAnimation(5, 0, 7);
+                    startAnimation(9, 0, 7);
                 }
                 //gladiador
                 if (this.enemyType == 2) {
-                    startAnimation(2, 0, 6);
+                    startAnimation(4, 0, 6);
                 }
                 //minotauro
                 if (this.enemyType == 3) {
-                    startAnimation(16, 0, 7);
+                    startAnimation(19, 0, 5);
                 }
             }
 
@@ -559,6 +587,14 @@ public class Enemy extends Character implements Drawable, Collidable {
         }
         this.followingPlayer = false;
         return false;
+    }
+    
+    public boolean died(){
+        if (this.life == 0){
+            return true;
+        }else{
+            return false;
+        }
     }
     
     @Override
@@ -634,8 +670,12 @@ public class Enemy extends Character implements Drawable, Collidable {
 
     @Override
     public String getType() {
+        if(this.enemyType == 3){
+            return "BossType";
+        }else{
+        
         return "EnemyType";
-    }
+    }}
 
     @Override
     public void gotHit() {

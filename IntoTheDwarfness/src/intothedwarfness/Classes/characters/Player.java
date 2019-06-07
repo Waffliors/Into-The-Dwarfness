@@ -29,6 +29,14 @@ public class Player extends Character implements Drawable, Collidable {
     //Position
     private int enemiesKilledCount, bossKilledCount;
 
+    public void setEnemiesKilledCount(int enemiesKilledCount) {
+        this.enemiesKilledCount = enemiesKilledCount;
+    }
+
+    public void setBossKilledCount(int bossKilledCount) {
+        this.bossKilledCount = bossKilledCount;
+    }
+
     public int getEnemiesKilledCount() {
         return enemiesKilledCount;
     }
@@ -211,7 +219,7 @@ public class Player extends Character implements Drawable, Collidable {
                     if (underSide > topSide_C) {
                         // Is the top edge of the player above the bottom edge of the object?
                         if (topSide < underSide_C) {
-                            if ("EnemyType".equals(c.getType())) {
+                            if ("EnemyType".equals(c.getType()) || "BossType".equals(c.getType())) {
                                 if (attacking && atkCont == 0) {
                                     c.gotHit();
                                 }
@@ -301,7 +309,7 @@ public class Player extends Character implements Drawable, Collidable {
                 this.yPos = 64;
                 this.actualStage = 4;
             }
-            if (key == 'w' && yPos <= 272 && xPos == 480) {
+            if (key == 'w' && yPos <= 272 && (xPos >= 400 && xPos <= 550) && MAP.showPortal()) {
                 this.yPos = 384;
                 this.xPos = 768;
                 this.actualStage = 8;
