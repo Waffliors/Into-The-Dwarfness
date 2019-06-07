@@ -44,7 +44,6 @@ public class HUD implements Drawable {
         g.drawImage(this.hud.get(8), 850, 50, 850 + 50, 50 + 50, 0, 0, 400, 400, null);
 
         g.setColor(new Color(209, 209, 209));
-        System.out.println(font.deriveFont(40.f).getSize());
         g.setFont(font.deriveFont(40.f));
         g.drawString("" + player.getEnemiesKilledCount(), 760, 85);
         g.drawString("" + player.getBossKilledCount(), 913, 85);
