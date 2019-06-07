@@ -8,8 +8,8 @@ import intothedwarfness.Classes.Tile;
 import javax.swing.JPanel;
 
 public abstract class Character  extends JPanel {
-    Tile[][] tile_16x16 = loadTile(16);
     Tile[][] tile_32x32 = loadTile(32);    
+    Tile[][] tile_64x64 = loadTile(64);
     Tile[][] tile_96x96 = loadTile(96);
     
     public abstract void update();

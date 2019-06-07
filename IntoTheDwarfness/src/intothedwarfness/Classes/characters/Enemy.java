@@ -490,7 +490,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                 }
                 //fire elemental
                 if (this.enemyType == 1) {
-                    startAnimation(9, 0, 7);
+                    startAnimation(5, 0, 7);
                 }
                 //gladiador
                 if (this.enemyType == 2) {
