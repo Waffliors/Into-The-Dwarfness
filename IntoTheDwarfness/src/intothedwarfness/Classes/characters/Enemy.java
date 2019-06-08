@@ -630,7 +630,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                     super.tile_96x96[drawRef][animation].getSrcX1(),
                     super.tile_96x96[drawRef][animation].getSrcY1(),
                     IMGSIZE, IMGSIZE);
-            g.drawImage(image, xPos-10, yPos, 96, 96, null);
+            g.drawImage(image, xPos-10, yPos, 120, 120, null);
         }
         //If following the player, draws the exclamation point
         if (this.followingPlayer) {

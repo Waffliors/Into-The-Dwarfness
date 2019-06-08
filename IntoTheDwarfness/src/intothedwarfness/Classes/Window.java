@@ -26,6 +26,10 @@ import intothedwarfness.Classes.characters.Enemy;
 import intothedwarfness.Classes.characters.Player;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
+import java.awt.FontFormatException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Window extends JFrame implements KeyListener {
 
@@ -63,7 +67,11 @@ public class Window extends JFrame implements KeyListener {
         this.MAP = new Map(SPRITES.get(6), 12, 16, SPRITES.get(5), SONGS);
         this.ENEMIES = new ArrayList();
         this.DRAWABLES = new ArrayList();
-        buildGame(health_bar);
+        try {
+            buildGame(health_bar);
+        } catch (FontFormatException | IOException ex) {
+            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         // Set configuration of the screen
         this.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
@@ -173,7 +181,7 @@ public class Window extends JFrame implements KeyListener {
         return enemies;
     }
 
-    private void buildGame(ArrayList<BufferedImage> health_bar) {
+    private void buildGame(ArrayList<BufferedImage> health_bar) throws FontFormatException, IOException {
         if (this.ENEMIES.size() > 0) {
             this.ENEMIES.clear();
         }
@@ -258,7 +266,11 @@ public class Window extends JFrame implements KeyListener {
             // map.getNode(screenWidth, screenWidth);
             repaint();
             if (PLAYER.getLife() == 0) {
-                buildGame(HUD.getHealthBar());
+                try {
+                    buildGame(HUD.getHealthBar());
+                } catch (FontFormatException | IOException ex) {
+                    Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 
             }
             long afterTime = System.currentTimeMillis();
