@@ -129,5 +129,7 @@ public class IntoTheDwarfness {
         hudList.add(ImageIO.read(new File("images/HUD/Key.png")));
         hudList.add(ImageIO.read(new File("images/HUD/Pause_Image.png")));
         hudList.add(ImageIO.read(new File("images/HUD/Pause_Background.png")));
+        hudList.add(ImageIO.read(new File("images/HUD/Dead_Image.png")));
+        hudList.add(ImageIO.read(new File("images/HUD/Dead_Background.png")));
     }
 }

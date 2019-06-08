@@ -259,6 +259,7 @@ public class Window extends JFrame implements KeyListener {
             repaint();
             if (PLAYER.getLife() == 0) {
                 buildGame(HUD.getHealthBar());
+                
             }
             long afterTime = System.currentTimeMillis();
             long sleepTime = afterTime - beforeTime;
