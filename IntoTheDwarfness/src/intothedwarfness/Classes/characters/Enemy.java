@@ -264,7 +264,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                                 if (atkTimer >= 5) {
                                 this.attacking = true;
                                     if (attacking && atkCont == 0) {
-                                        c.gotHit();
+                                        //c.gotHit();
                                     }
                                     atkTimer = 0;
                                 }
@@ -283,13 +283,53 @@ public class Enemy extends Character implements Drawable, Collidable {
         this.cont+= 1;
 
         if (this.attacking) {
+            if(atkCont == 0){
+                if (enemyType == 0){
+                    playSong(12);
+                }
+                if (enemyType == 1){
+                    playSong(3);
+                }
+                if (enemyType == 2){
+                    playSong(6);
+                }
+                if (enemyType == 3){
+                    playSong(9);
+                }
+            }
+            
             this.atkCont += 1;
             this.atkTimer +=1;
         }
         if (this.hitted) {
+            if(hitCont == 0){
+                if (enemyType == 1){
+                    playSong(5);
+                }
+                if (enemyType == 2){
+                    playSong(8);
+                }
+                if (enemyType == 3){
+                    playSong(11);
+                }
+            }
             this.hitCont += 1;
         }
         if (this.died) {
+            if(deadCont == 0){
+                if (enemyType == 0){
+                    playSong(13);
+                }
+                if (enemyType == 1){
+                    playSong(4);
+                }
+                if (enemyType == 2){
+                    playSong(7);
+                }
+                if (enemyType == 3){
+                    playSong(10);
+                }
+            }
             this.deadCont += 1;
         }
         
@@ -423,10 +463,6 @@ public class Enemy extends Character implements Drawable, Collidable {
                         startAnimation(16, 0, 7);
                     }
                 }
-                //Play the song of this animation
-                if (atkCont == 1) {
-                    playsong(1);
-                }
                 //Stop condition of animations of the type "atatck"
                 if (this.atkCont >= this.endLine) {
                     this.atkCont = 0;
@@ -541,7 +577,7 @@ public class Enemy extends Character implements Drawable, Collidable {
     }
     
     //Method that play the player's songs
-    private void playsong(int ref){
+    private void playSong(int ref){
         SONGS.get(ref).playSoundOnce();
     }
 

@@ -60,7 +60,7 @@ public class Window extends JFrame implements KeyListener {
         this.SPRITES = SPRITES;
         this.SCREEN_WIDTH = 1024;
         this.SCREEN_HEIGHT = 768;
-        this.MAP = new Map(SPRITES.get(6), 12, 16, SPRITES.get(5));
+        this.MAP = new Map(SPRITES.get(6), 12, 16, SPRITES.get(5), SONGS);
         this.ENEMIES = new ArrayList();
         this.DRAWABLES = new ArrayList();
         buildGame(health_bar);
@@ -191,8 +191,8 @@ public class Window extends JFrame implements KeyListener {
 
     // Game Loop
     public void run() throws InterruptedException {
-        //SONGS.get(0).playSound();
         boolean isRunning = true;
+        SONGS.get(15).playSound();
 
         long excess = 0;
         long noDelays = 0;

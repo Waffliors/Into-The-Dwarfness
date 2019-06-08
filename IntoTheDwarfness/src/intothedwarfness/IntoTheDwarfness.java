@@ -89,9 +89,6 @@ public class IntoTheDwarfness {
                 "songs/music/Boss Music.wav"));
         songList.add(new Song(
                 "songs/music/Stage Song.wav"));
-        
-        songList.get(13).playSound();
-        
     }
 
     /**
