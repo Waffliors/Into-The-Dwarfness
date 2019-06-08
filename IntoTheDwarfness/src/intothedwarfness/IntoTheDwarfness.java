@@ -56,11 +56,15 @@ public class IntoTheDwarfness {
     private static void loadSongs(ArrayList<Song> songList) 
             throws MalformedURLException {
         // First, load the dwarf's SFX
-        songList.add(new Song("songs/sfx\\Dwarf/Dwarf - Attack.wav"));
-        songList.add(new Song("songs/sfx\\Dwarf/Dwarf - Died.wav"));
-        songList.add(new Song("songs/sfx\\Dwarf/Dwarf - Hitted.wav"));
+        songList.add(new Song(
+                "songs/sfx\\Dwarf/Dwarf - Attack.wav"));
+        songList.add(new Song(
+                "songs/sfx\\Dwarf/Dwarf - Died.wav"));
+        songList.add(new Song(
+                "songs/sfx\\Dwarf/Dwarf - Hitted.wav"));
         // Then, the fire elemental's SFX
-        songList.add(new Song("songs/sfx/Fire Elemental/Fire Elemental - Attack.wav"));
+        songList.add(new Song(
+                "songs/sfx/Fire Elemental/Fire Elemental - Attack.wav"));
         songList.add(new Song(
                 "songs/sfx/Fire Elemental/Fire Elemental - Died.wav"));
         songList.add(new Song(

@@ -1,11 +1,11 @@
-/** ***************************************************************************
- **     Player class                                                         **
- **                                                                          **
- ** The player object is one that will be manipulated by the player, the     **
- ** class is responsible for manipulating the object through the keyboard    **
- ** events passed by the Window                                              **
- **                                                                          **
- *****************************************************************************/
+/*******************************************************************************
+ **     Player class                                                          **
+ **                                                                           **
+ ** The player object is one that will be manipulated by the player, the      **
+ ** class is responsible for manipulating the object through the keyboard     **
+ ** events passed by the Window                                               **
+ **                                                                           **
+ ******************************************************************************/
 package intothedwarfness.Classes.characters;
 
 import java.awt.Graphics;
@@ -379,6 +379,52 @@ public class Player extends Character implements Drawable, Collidable {
     }
     
     /**
+     * Method that check if the player collide
+     * 
+     * @return : true if collide, false if not;
+     */
+    private boolean collision() {
+        // Get the sides of the player
+        int rSide = (this.getPivotRT().getX() + this.getPivotRD().getX());
+        int lSide = (this.getPivotLT().getX() + this.getPivotLD().getX());
+        int topSide = (this.getPivotRT().getY() + this.getPivotLT().getY());
+        int underSide = (this.getPivotRD().getY() + this.getPivotLD().getY());
+        // For each colliding object to pick up the sides of the object and
+        // compare with those of the player
+        for (Collidable c : this.collidables) {
+            int rSide_C = (c.getPivotRT().getX() + c.getPivotRD().getX());
+            int lSide_C = (c.getPivotLT().getX() + c.getPivotLD().getX());
+            int topSide_C = (c.getPivotRT().getY() + c.getPivotLT().getY());
+            int underSide_C = (c.getPivotRD().getY() + c.getPivotLD().getY());
+            // Is the right edge of the player to the right of the left edge of 
+            //the object?
+            if (rSide > lSide_C) {
+                // Is the left edge of the player to the left of the right edge 
+                //of the object?
+                if (lSide < rSide_C) {
+                    // The bottom edge of the player is below the top edge of 
+                    //the object?
+                    if (underSide > topSide_C) {
+                        // Is the top edge of the player above the bottom edge 
+                        //of the object?
+                        if (topSide < underSide_C) {
+                            if ("EnemyType".equals(c.getType()) 
+                                || "BossType".equals(c.getType())) {
+                                if (attacking && atkCont == 0) {
+                                    c.gotHit();
+                                }
+                                return false;
+                            }
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
      * Method that receives the char of the window's KeyEvent and set the 
      * player's state
      * 
@@ -431,52 +477,6 @@ public class Player extends Character implements Drawable, Collidable {
                 collidables.add(enemy);
             }
         }
-    }
-
-    /**
-     * Method that check if the player collide
-     * 
-     * @return : true if collide, false if not;
-     */
-    private boolean collision() {
-        // Get the sides of the player
-        int rSide = (this.getPivotRT().getX() + this.getPivotRD().getX());
-        int lSide = (this.getPivotLT().getX() + this.getPivotLD().getX());
-        int topSide = (this.getPivotRT().getY() + this.getPivotLT().getY());
-        int underSide = (this.getPivotRD().getY() + this.getPivotLD().getY());
-        // For each colliding object to pick up the sides of the object and
-        // compare with those of the player
-        for (Collidable c : this.collidables) {
-            int rSide_C = (c.getPivotRT().getX() + c.getPivotRD().getX());
-            int lSide_C = (c.getPivotLT().getX() + c.getPivotLD().getX());
-            int topSide_C = (c.getPivotRT().getY() + c.getPivotLT().getY());
-            int underSide_C = (c.getPivotRD().getY() + c.getPivotLD().getY());
-            // Is the right edge of the player to the right of the left edge of 
-            //the object?
-            if (rSide > lSide_C) {
-                // Is the left edge of the player to the left of the right edge 
-                //of the object?
-                if (lSide < rSide_C) {
-                    // The bottom edge of the player is below the top edge of 
-                    //the object?
-                    if (underSide > topSide_C) {
-                        // Is the top edge of the player above the bottom edge 
-                        //of the object?
-                        if (topSide < underSide_C) {
-                            if ("EnemyType".equals(c.getType()) 
-                                || "BossType".equals(c.getType())) {
-                                if (attacking && atkCont == 0) {
-                                    c.gotHit();
-                                }
-                                return false;
-                            }
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     /**
