@@ -1,5 +1,5 @@
 /*******************************************************************************
- **     Player class                                                          **
+ **     Player Class                                                          **
  **                                                                           **
  ** The player object is one that will be manipulated by the player, the      **
  ** class is responsible for manipulating the object through the keyboard     **
