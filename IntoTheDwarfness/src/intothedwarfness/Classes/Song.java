@@ -20,7 +20,7 @@ public class Song extends JApplet {
         song = java.applet.Applet.newAudioClip(songPath);
     }
 
-/* ****************************Class Methods********************************* */
+    /* ************************* Class Methods ****************************** */
     /**
      * Play the song in loop
      */
