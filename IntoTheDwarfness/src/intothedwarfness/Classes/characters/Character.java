@@ -15,6 +15,12 @@ public abstract class Character  extends JPanel {
     Tile[][] tile_64x64 = loadTile(64);
     Tile[][] tile_96x96 = loadTile(96);
    
+    /**
+     * Method that initialize the matrix
+     * 
+     * @param tileSize : the size of the tile
+     * @return : the matrix created
+     */
     private Tile[][] loadTile(int tileSize) {
         Tile[][] spriteT = new Tile [20][20];
         int x, y, srcX1, srcY1, srcX2, srcY2, id = -1;

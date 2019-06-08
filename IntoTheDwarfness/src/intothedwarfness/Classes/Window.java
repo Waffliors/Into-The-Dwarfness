@@ -289,7 +289,7 @@ public class Window extends JFrame implements KeyListener {
             }
         }
 
-        this.path = AStar.aEstrela(enemy.getNodePos(), node, MAP);
+        this.path = AStar.aStar(enemy.getNodePos(), node, MAP);
         enemy.setPath(path);
 
     }
@@ -301,7 +301,7 @@ public class Window extends JFrame implements KeyListener {
 ////        } else if (!PLAYER.getNodePos().getNeighbors().get(1).isBlocked()) {
 ////            end = PLAYER.getNodePos().getNeighbors().get(1);
 ////        }
-        this.path = AStar.aEstrela(enemy.getNodePos(), end, MAP);
+        this.path = AStar.aStar(enemy.getNodePos(), end, MAP);
         enemy.setPath(path);
         if (path == null) {
             setRandomPath(enemy);
