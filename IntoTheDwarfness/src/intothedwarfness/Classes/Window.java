@@ -174,7 +174,6 @@ public class Window extends JFrame implements KeyListener {
     }
 
     private void buildGame(ArrayList<BufferedImage> health_bar) {
-        System.out.println(this.ENEMIES.isEmpty());
         if (this.ENEMIES.size() > 0) {
             this.ENEMIES.clear();
         }
@@ -186,7 +185,7 @@ public class Window extends JFrame implements KeyListener {
         this.HUD = new HUD(health_bar, this.PLAYER);
         this.PLAYER.receiveCollidables(ENEMIES);
         this.DRAWABLES = loadDrawables();
-        
+        this.MAP.stageCreator(1);
         initialize();
     }
 
@@ -227,9 +226,7 @@ public class Window extends JFrame implements KeyListener {
                 int temp2 = 0;
                 PLAYER.update();
                 PLAYER.receiveCollidables(ENEMIES);
-                if (PLAYER.getLife() == 0) {
-                    buildGame(HUD.getHealthBar());
-                }
+
                 for (Enemy enemy : this.ENEMIES) {
                     if (enemy.isStage(this.MAP)) {
                         if (enemy.getXPosition() % 64 == 0 && enemy.getYPosition() % 64 == 0) {
@@ -260,6 +257,9 @@ public class Window extends JFrame implements KeyListener {
 
             // map.getNode(screenWidth, screenWidth);
             repaint();
+            if (PLAYER.getLife() == 0) {
+                buildGame(HUD.getHealthBar());
+            }
             long afterTime = System.currentTimeMillis();
             long sleepTime = afterTime - beforeTime;
 
