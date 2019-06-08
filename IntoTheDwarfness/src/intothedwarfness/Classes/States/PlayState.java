@@ -8,6 +8,7 @@ package intothedwarfness.Classes.States;
 public class PlayState extends GameState {
 
     /* **************************Class Methods******************************* */
+    
     /**
      * Initialize the state
      */

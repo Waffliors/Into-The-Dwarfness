@@ -1,39 +1,39 @@
+/*******************************************************************************
+ **      Point Class                                                          **
+ **                                                                           **
+ ** Create the points used in the pivots of all the objetcs inside the game   **
+ ******************************************************************************/
 package intothedwarfness.Classes;
-import java.util.Comparator;
 
 public class Point {
-    private int x,y;
-    
+    private final int X,Y;
+   
+    /* *********************** Class Constructor **************************** */
     public Point(int x, int y){
-        this.x = x;
-        this.y = y;
+        //Constants
+        this.X = x;
+        this.Y = y;
     }
 
+    /**
+     * @return the x position of the point
+     */
     public int getX() {
-        return this.x;
+        return this.X;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
+    /**
+     * @return the y position of the point 
+     */
     public int getY() {
-        return this.y;
+        return this.Y;
     }
 
-    public void setY(int y) {
-        this.y = y;
-    }
-    
-    public Point getSide(Point point){
-        return new Point(this.x + point.x, this.y + point.y);
-        
-    }
-    
+    /**
+     * @return a String that represent the point
+     */
     @Override
     public String toString(){
-        return "["+x+","+y+"]";
-        
-    }
-   
+        return "["+X+","+Y+"]"; 
+    } 
 }
