@@ -56,11 +56,6 @@ public class HUD implements Drawable {
             BufferedImage image = this.health_bar.get(9).getSubimage(0,0,64, 64);
             g.drawImage(image, 30, 100, 32, 32, null);
         }
-        
-        if(player.getLife() == 0) {
-            g.drawImage(this.health_bar.get(9), 0, 0, 1024, 768, null);
-            g.drawImage(this.health_bar.get(10), 0, 0, 1024, 768, null);
-        }
     }
     
     public void paintPauseMenu(Graphics g) {
