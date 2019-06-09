@@ -1,41 +1,42 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/*******************************************************************************
+ **      GameStateManeger Class                                               **
+ **                                                                           **
+ ** This is the game estate manager class, he's the one responsible for the   ** 
+ ** management of the  game states                                            **
+ ******************************************************************************/
 package intothedwarfness.Classes.States;
 
-import java.awt.Graphics;
-
-/**
- *
- * @author mathe
- */
 public class GameStateManager {
-    
+
     public GameState currGameState;
-    
+
+    /* *********************** Class Constructor **************************** */
     public GameStateManager() {
+        //Set the initial gamestate
         currGameState = new PauseState();
     }
-    
+
+    /* **************************Class Methods******************************* */
+    /**
+     * Initialize the game state
+     */
     public void init() {
         currGameState.init();
     }
-    
-    public void tick() {
-        currGameState.tick();
-    }
-    
+
+    /**
+     * @return the type of the state
+     */
     public String getType() {
         return currGameState.getType();
     }
-    
-    public void render(Graphics g) {
-        currGameState.render(g);
-    }
-    
-    public void switchState (GameState newState) {
+
+    /**
+     * Switch the state of the game
+     *
+     * @param newState : the new state
+     */
+    public void switchState(GameState newState) {
         currGameState = newState;
         currGameState.init();
     }

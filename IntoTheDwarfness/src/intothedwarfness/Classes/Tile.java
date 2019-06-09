@@ -1,47 +1,76 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *  Class Tile Map, where the Tiles will be created to be used in class Map    *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-package intothedwarfness.Classes;
+/*******************************************************************************
+ **      Tile Class                                                           **
+ **                                                                           **
+ ** Create the tiles that whill be like pieces of the screen and will be used **
+ ** during the game                                                           **
+ ******************************************************************************/
 
+package intothedwarfness.Classes;
 public class Tile {
-    
-    /*------------------------------------------------------------------------*
-     *------------------------ Class Variables -------------------------------*
-     *------------------------------------------------------------------------*/
-    private final int srcX1, srcY1, srcX2, srcY2, id;
+
+    private final int SRCX1, SRCY1, SRCX2, SRCY2;
     private boolean blocked;
-    /*------------------------------------------------------------------------*
-     *----------------------- Class Constructor ------------------------------*
-     *------------------------------------------------------------------------*/
+
+    /* *********************** Class Constructor **************************** */
     public Tile(int srcX1, int srcY1, int srcX2, int srcY2, int id) {
-        this.srcX1 = srcX1;
-        this.srcY1 = srcY1;
-        this.srcX2 = srcX2;
-        this.srcY2 = srcY2;
-        this.id = id;
+        //Constants
+        this.SRCX1 = srcX1;
+        this.SRCY1 = srcY1;
+        this.SRCX2 = srcX2;
+        this.SRCY2 = srcY2;
         this.blocked = false;
-        
     }
 
+    /* ************************* Class Methods ****************************** */
+    
+    /**
+     * @return if Tile is blocked 
+     */
     public boolean isBlocked() {
         return blocked;
     }
 
+    /**
+     * Set if Tile is blocked
+     * @param blocked 
+     */
     public void setBlocked(boolean blocked) {
         this.blocked = blocked;
     }
 
-     /*------------------------------------------------------------------------*
-     *------------------------- Class Methods --------------------------------*
-     *------------------------------------------------------------------------*/
-    public int getID(){return this.id;}
-    public int getSrcX1() {return srcX1;}
-    public int getSrcY1() {return srcY1;}
-    public int getSrcX2() {return srcX2;}
-    public int getSrcY2() {return srcY2;}
+    /**
+     * @return the SRCX1
+     */
+    public int getSrcX1() {
+        return SRCX1;
+    }
 
-	@Override
-	public String toString(){
-		return "" + this.srcX1 + " " + this.srcY1 + " " + this.srcX2 + " " + this.srcY2;
-	}
+    /**
+     * @return the SRCY1
+     */
+    public int getSrcY1() {
+        return SRCY1;
+    }
+
+    /**
+     * @return the SRCX2
+     */
+    public int getSrcX2() {
+        return SRCX2;
+    }
+
+    /**
+     * @return the SRCY2
+     */
+    public int getSrcY2() {
+        return SRCY2;
+    }
+
+    /**
+     * @return a string that contains the attributes of the Tile 
+     */
+    @Override
+    public String toString() {
+        return "" + this.SRCX1 + " " + this.SRCY1 + " " + this.SRCX2 + " " + this.SRCY2;
+    }
 }

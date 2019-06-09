@@ -57,42 +57,42 @@ public class IntoTheDwarfness {
             throws MalformedURLException {
         // First, load the dwarf's SFX
         songList.add(new Song(
-                "songs/sfx/Dwarf/Dwarf - Attack.wav"));
+                "songs/sfx\\Dwarf/Dwarf - Attack.wav"));
         songList.add(new Song(
-                "songs/sfx/Dwarf/Dwarf - Died.wav"));
+                "songs/sfx\\Dwarf/Dwarf - Died.wav"));
         songList.add(new Song(
-                "songs/sfx/Dwarf/Dwarf - Hitted.wav"));
+                "songs/sfx\\Dwarf/Dwarf - Hitted.wav"));
         // Then, the fire elemental's SFX
         songList.add(new Song(
-                "songs/sfx/Fire Elemental/Fire Elemental - Attack.wav "));
+                "songs/sfx/Fire Elemental/Fire Elemental - Attack.wav"));
         songList.add(new Song(
-                "songs/sfx/Fire Elemental/Fire Elemental - Died.wav "));
+                "songs/sfx/Fire Elemental/Fire Elemental - Died.wav"));
         songList.add(new Song(
-                "songs/sfx/Fire Elemental/Fire Elemental - Hurt.wav "));
+                "songs/sfx/Fire Elemental/Fire Elemental - Hurt.wav"));
         // Then, the gladiator's SFX
         songList.add(new Song(
-                "songs/sfx/Gladiator/Gladiator - Attack.wav "));
+                "songs/sfx/Gladiator/Gladiator - Attack.wav"));
         songList.add(new Song(
-                "songs/sfx/Gladiator/Gladiator - Died.wav "));
+                "songs/sfx/Gladiator/Gladiator - Died.wav"));
         songList.add(new Song(
-                "songs/sfx/Gladiator/Gladiator - Hurt.wav "));
+                "songs/sfx/Gladiator/Gladiator - Hurt.wav"));
         // Then, the minitaur's SFX
         songList.add(new Song(
-                "songs/sfx/Minotaur/Minotaur - Attack.wav "));
+                "songs/sfx/Minotaur/Minotaur - Attack.wav"));
         songList.add(new Song(
-                "songs/sfx/Minotaur/Minotaur - Died.wav "));
+                "songs/sfx/Minotaur/Minotaur - Died.wav"));
         songList.add(new Song(
-                "songs/sfx/Minotaur/Minotaur - Hurt.wav "));
+                "songs/sfx/Minotaur/Minotaur - Hurt.wav"));
+        songList.add(new Song(
+                "songs/sfx/Spider/Spider - Attack.wav"));
         // Then, the spider's SFX
         songList.add(new Song(
-                "songs/sfx/Spider/Spider - Attack.wav "));
-        songList.add(new Song(
-                "songs/sfx/Spider/Spider - Died.wav "));
+                "songs/sfx/Spider/Spider - Died.wav"));
         // And finally, the Musics
         songList.add(new Song(
-                "songs/music/Boss Music.wav "));
+                "songs/music/Boss Music.wav"));
         songList.add(new Song(
-                "songs/music/Stage Song.wav "));
+                "songs/music/Stage Song.wav"));
     }
 
     /**

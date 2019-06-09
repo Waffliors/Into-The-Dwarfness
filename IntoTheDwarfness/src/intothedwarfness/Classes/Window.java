@@ -26,6 +26,10 @@ import intothedwarfness.Classes.characters.Enemy;
 import intothedwarfness.Classes.characters.Player;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
+import java.awt.FontFormatException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Window extends JFrame implements KeyListener {
 
@@ -60,10 +64,14 @@ public class Window extends JFrame implements KeyListener {
         this.SPRITES = SPRITES;
         this.SCREEN_WIDTH = 1024;
         this.SCREEN_HEIGHT = 768;
-        this.MAP = new Map(SPRITES.get(6), 12, 16, SPRITES.get(5));
+        this.MAP = new Map(SPRITES.get(6), 12, 16, SPRITES.get(5), SONGS);
         this.ENEMIES = new ArrayList();
         this.DRAWABLES = new ArrayList();
-        buildGame(health_bar);
+        try {
+            buildGame(health_bar);
+        } catch (FontFormatException | IOException ex) {
+            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         // Set configuration of the screen
         this.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
@@ -173,7 +181,7 @@ public class Window extends JFrame implements KeyListener {
         return enemies;
     }
 
-    private void buildGame(ArrayList<BufferedImage> health_bar) {
+    private void buildGame(ArrayList<BufferedImage> health_bar) throws FontFormatException, IOException {
         if (this.ENEMIES.size() > 0) {
             this.ENEMIES.clear();
         }
@@ -191,8 +199,8 @@ public class Window extends JFrame implements KeyListener {
 
     // Game Loop
     public void run() throws InterruptedException {
-        //SONGS.get(0).playSound();
         boolean isRunning = true;
+        SONGS.get(15).playSound();
 
         long excess = 0;
         long noDelays = 0;
@@ -258,7 +266,11 @@ public class Window extends JFrame implements KeyListener {
             // map.getNode(screenWidth, screenWidth);
             repaint();
             if (PLAYER.getLife() == 0) {
-                buildGame(HUD.getHealthBar());   
+                try {
+                    buildGame(HUD.getHealthBar());
+                } catch (FontFormatException | IOException ex) {
+                    Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             long afterTime = System.currentTimeMillis();
             long sleepTime = afterTime - beforeTime;
@@ -288,7 +300,7 @@ public class Window extends JFrame implements KeyListener {
             }
         }
 
-        this.path = AStar.aEstrela(enemy.getNodePos(), node, MAP);
+        this.path = AStar.aStar(enemy.getNodePos(), node, MAP);
         enemy.setPath(path);
 
     }
@@ -300,7 +312,7 @@ public class Window extends JFrame implements KeyListener {
 ////        } else if (!PLAYER.getNodePos().getNeighbors().get(1).isBlocked()) {
 ////            end = PLAYER.getNodePos().getNeighbors().get(1);
 ////        }
-        this.path = AStar.aEstrela(enemy.getNodePos(), end, MAP);
+        this.path = AStar.aStar(enemy.getNodePos(), end, MAP);
         enemy.setPath(path);
         if (path == null) {
             setRandomPath(enemy);

@@ -1,16 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/*******************************************************************************
+ **      Song Class                                                           **
+ **                                                                           **
+ ** Create the objects that will be responsible by hold the songs of the game **
+ ** and play when requested                                                   **
+ ******************************************************************************/
 package intothedwarfness.Classes;
 
+import java.net.*;
 import java.io.File;
 import javax.swing.*;
-import java.net.*;
 
 public class Song extends JApplet {
-/* ***************************Class Variables******************************** */
     private URL songPath;
     private java.applet.AudioClip song;
     
@@ -18,19 +18,24 @@ public class Song extends JApplet {
     public Song(String path) throws MalformedURLException {
         songPath = new File(path).toURI().toURL();
         song = java.applet.Applet.newAudioClip(songPath);
-        
     }
 
-/* ****************************Class Methods********************************* */
-    //Play the song in loop
+    /* ************************* Class Methods ****************************** */
+    /**
+     * Play the song in loop
+     */
     public void playSound() {
         song.loop();
     }
-    //Stop the song
+    /**
+     * Srop the song
+     */
     public void stopSound() {
         song.stop();
     }
-    //Play the song once
+    /**
+     * Play the song just one time
+     */
     public void playSoundOnce() {
         song.play();
     }

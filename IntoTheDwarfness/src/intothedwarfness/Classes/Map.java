@@ -30,9 +30,11 @@ public class Map extends JPanel implements Drawable {
     private Node nodeMap[][];
     private final ArrayList<Enemy> stageEnemies = new ArrayList();
     public int actualStage, animation;
+    private ArrayList<Song> SONGS;
+    private boolean play = false;
 
 /* **************************Class Constructor******************************* */
-    public Map(BufferedImage spriteSheet, int lines, int columns, BufferedImage portal) {
+    public Map(BufferedImage spriteSheet, int lines, int columns, BufferedImage portal, ArrayList <Song> songs) {
         this.XPOS = 0;
         this.YPOS = 0;
         this.portal = portal;
@@ -46,6 +48,8 @@ public class Map extends JPanel implements Drawable {
         stageCreator(1);
         this.nodeMap = loadNodeMap();
         findNeighbors();
+        this.SONGS = songs;
+        this.SONGS.get(15).playSound();
     }
 
 /* ********************Auxiliary methods of the Constructor****************** */
@@ -615,5 +619,9 @@ public class Map extends JPanel implements Drawable {
     @Override
     public Boolean isStage(Map map) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public int getStage(){
+        return this.actualStage;
     }
 }
