@@ -194,6 +194,7 @@ public class Window extends JFrame implements KeyListener {
         this.PLAYER.receiveCollidables(ENEMIES);
         this.DRAWABLES = loadDrawables();
         this.MAP.stageCreator(1);
+        this.MAP.setPortal(false);
         initialize();
     }
 

@@ -1,8 +1,10 @@
-/******************************************************************************
- ** Class Map, where the map will be created with a tile list and where it   **
- ** will be drawn based on three Matrices: one for the floor, one for the    **
- ** walls and the last for objects, here you will also find the graph used   **
- ** for the artificial intelligence of the enemies and for player movement   **
+/*******************************************************************************
+ **     Map Class                                                             **
+ **                                                                           **
+ **  Where the map will be created with a tile list and where it              **
+ **  will be drawn based on three Matrices: one for the floor, one for the    **
+ **  walls and the last for objects, here you will also find the graph used   **
+ **  for the artificial intelligence of the enemies and for player movement   **
  ******************************************************************************/
 package intothedwarfness.Classes;
 
@@ -17,43 +19,49 @@ import java.awt.image.BufferedImage;
 import intothedwarfness.Interfaces.Drawable;
 
 public class Map extends JPanel implements Drawable {
-/* ***************************Class Variables******************************** */
-    private final int XPOS, YPOS, LINES, COLUMNS;
+    // Constants
     private final BufferedImage SPRITE;   
     private final ArrayList<Tile> TILEMAP;
     private final List<Integer> UNBLOCKEDTILES;
+    private final int XPOS, YPOS, LINES, COLUMNS;
+    //Map configuration
+    private Node nodeMap[][];
     private boolean showPortal;
     private BufferedImage portal;
-    
+    private ArrayList<Song> SONGS;
+    public int actualStage, animation;
     private ArrayList<Node> NodeList = new ArrayList();
     private int wallMap[][], floorMap[][], objectMap[][];
-    private Node nodeMap[][];
-    private final ArrayList<Enemy> stageEnemies = new ArrayList();
-    public int actualStage, animation;
-    private ArrayList<Song> SONGS;
-    private boolean play = false;
 
-/* **************************Class Constructor******************************* */
-    public Map(BufferedImage spriteSheet, int lines, int columns, BufferedImage portal, ArrayList <Song> songs) {
+    /* *********************** Class Constructor **************************** */
+    public Map(BufferedImage spriteSheet, int lines, int columns, 
+            BufferedImage portal, ArrayList <Song> songs) {
+        // Set the constants
         this.XPOS = 0;
         this.YPOS = 0;
-        this.portal = portal;
+        this.SONGS = songs;
         this.LINES = lines;
         this.COLUMNS = columns;
         this.SPRITE = spriteSheet;
         this.TILEMAP = loadTile();
-        this.actualStage = 1;
+        this.SONGS.get(15).playSound();
         this.UNBLOCKEDTILES = loadUblockedTiles();
+        // Set the map configurations
+        this.portal = portal;
+        this.actualStage = 1;
         this.animation = 0;
         stageCreator(1);
         this.nodeMap = loadNodeMap();
         findNeighbors();
-        this.SONGS = songs;
-        this.SONGS.get(15).playSound();
     }
 
-/* ********************Auxiliary methods of the Constructor****************** */
-    //Method that load the TileS
+    
+    /* **************************Class Methods******************************* */
+    
+    /**
+     * Method that load tje tiles
+     * @return a ArrayList with the Tiles
+     */
     private ArrayList<Tile> loadTile() {
         ArrayList<Tile> imageTiles = new ArrayList();
         int x, y, srcX1, srcY1, srcX2, srcY2, id = -1;
@@ -69,7 +77,11 @@ public class Map extends JPanel implements Drawable {
         return imageTiles;
     }
     
-    //Method that will define de unblocked pieces os map
+    /**
+     * Method that will define de unblocked pieces os map
+     * 
+     * @return a ArrayList with all the unblocked references
+     */
     private List<Integer> loadUblockedTiles (){
         List<Integer> unblockedTiles = 
                 Arrays.asList( 20, 23, 24, 25, 26, 27, 28, 29, 30, 48, 49, 50,
@@ -89,13 +101,17 @@ public class Map extends JPanel implements Drawable {
         return unblockedTiles;
     }
     
-    //Method that load the NodeMap
+    /**
+     * Method that load the NodeMap
+     * 
+     * @return a Node matrix
+     */
     private Node[][] loadNodeMap() {
         int x = 0;
         int y = 0;
-        Node RESP[][] = new Node[LINES][COLUMNS];
-
         int cont = 0;
+        Node RESP[][] = new Node[LINES][COLUMNS];
+        
         for (int i = 0; i < LINES; i++) {
             for (int j = 0; j < COLUMNS; j++) {
                 //Create the node
@@ -124,31 +140,14 @@ public class Map extends JPanel implements Drawable {
         return RESP;
     }
 
-    public int getLINES() {
-        return LINES;
-    }
-
-    public int getCOLUMNS() {
-        return COLUMNS;
-    }
-
-    public ArrayList<Node> getNodeList() {
-        return NodeList;
-    }
-    
-/* ****************************Class Methods********************************* */ 
-
-    public int getActualStage() {
-        return actualStage;
-    }
-    
-    public ArrayList<Enemy> getStageEnemies() {
-        return stageEnemies;
-    }
-
-    //For each stage, all the three matrices are redrawn
+    /**
+     * Create the matrix of the current stage
+     * @param ref : the stage that will be created
+     */
     public void stageCreator(int ref) {
+        // Set the actual stage
         this.actualStage = ref;
+        //For each stage in the game, there is three matrices
         //Create stage 1
         if (actualStage == 1) {
             this.floorMap = new int[][]{
@@ -500,14 +499,17 @@ public class Map extends JPanel implements Drawable {
                 { 35,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  36,  37},
                 { 51,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  53},};            
         }
-        //After Create the new map, load the graph
+        // After Create the new map, load the new Node Map
         this.nodeMap = loadNodeMap();
+        // And find their neighbors
         findNeighbors();
     }
     
-    //Method that walks through the matrix of nodes and for each of them finds
-    //its orthogonal neighbors
-    public void findNeighbors() {
+    /**
+     * Method that walks through the matrix of nodes and for each of them finds
+     * its orthogonal neighbors
+     */
+    private void findNeighbors() {
         for (int i = 0; i < LINES; i++) {
             for (int j = 0; j < COLUMNS; j++) {
                 calculateNeighbors(nodeMap[i][j]);
@@ -515,33 +517,37 @@ public class Map extends JPanel implements Drawable {
         }
     }
     
-    //Method that calculate the orthogonal neighbors
+    /**
+     * Method that calculate the orthogonal neighbors of a Node
+     *
+     * @param node
+     */
     private void calculateNeighbors(Node node) {
         int lin = node.getX();
         int col = node.getY();
-        
+
         //Index in the matrix of the left neighbor
-        int adjLeft_lin = lin;
-        int adjLeft_col = col-1;
+        int adjL_lin = lin;
+        int adjL_col = col - 1;
         //Index in matrix of the right neighbor
-        int adjRight_lin = lin;
-        int adjRight_col = col+1;
+        int adjR_lin = lin;
+        int adjR_col = col + 1;
         //Index in matrix of the top neighbor
         int adjTop_lin = lin - 1;
         int adjTop_col = col;
         ////Index in matrix of the down neighbor
         int adjDown_lin = lin + 1;
         int adjDown_col = col;
-        
+
         //Now check if the neighbors of the node are in the limits of the matrix
-        if (adjLeft_lin >= 0 && adjLeft_lin <= LINES) {
-            if (adjLeft_col >= 0 && adjLeft_col <= COLUMNS) {
-                nodeMap[lin][col].addNeighbor(nodeMap[adjLeft_lin][adjLeft_col]);
+        if (adjL_lin >= 0 && adjL_lin <= LINES) {
+            if (adjL_col >= 0 && adjL_col <= COLUMNS) {
+                nodeMap[lin][col].addNeighbor(nodeMap[adjL_lin][adjL_col]);
             }
         }
-        if (adjRight_lin >= 0 && adjRight_lin <= LINES) {
-            if (adjRight_col >= 0 && adjRight_col <= COLUMNS-1) {
-                nodeMap[lin][col].addNeighbor(nodeMap[adjRight_lin][adjRight_col]);
+        if (adjR_lin >= 0 && adjR_lin <= LINES) {
+            if (adjR_col >= 0 && adjR_col <= COLUMNS - 1) {
+                nodeMap[lin][col].addNeighbor(nodeMap[adjR_lin][adjR_col]);
             }
         }
         if (adjTop_lin >= 0 && adjTop_lin <= LINES) {
@@ -549,79 +555,122 @@ public class Map extends JPanel implements Drawable {
                 nodeMap[lin][col].addNeighbor(nodeMap[adjTop_lin][adjTop_col]);
             }
         }
-        if (adjDown_lin >= 0 && adjDown_lin <= LINES-1) {
+        if (adjDown_lin >= 0 && adjDown_lin <= LINES - 1) {
             if (adjDown_col >= 0 && adjDown_col <= COLUMNS) {
                 nodeMap[lin][col].addNeighbor(nodeMap[adjDown_lin][adjDown_col]);
             }
         }
-        //Print the neighbors
-        //nodeMap[lin][col].showNeigh();
-    }
-    
-    //Return a node of the Node Map
-    public Node getNode(int x, int y) {
-            //System.out.println(x + " " + y);
-            return nodeMap[x][y];
     }
 
-    //Return the node map
+    /**
+     * Method that paint the map
+     * 
+     * @param g : the graphic context 
+     */
+    @Override
+    public void paintComponent(Graphics g) {
+        // Animation counter for portal
+        if (this.animation >= 448){
+            this.animation = 0;
+        }
+        this.animation +=64;
+        
+        // Paint the map
+        for (int x = 0; x < this.floorMap[0].length; x++) {
+            for (int y = 0; y < this.floorMap.length; y++) {
+                // Paint the floor matrix
+                g.drawImage(SPRITE,
+                        (x * 64) + XPOS, (y * 64) + YPOS,
+                        (x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS,
+                        TILEMAP.get(this.floorMap[y][x]).getSrcX1(), 
+                        TILEMAP.get(this.floorMap[y][x]).getSrcY1(),
+                        TILEMAP.get(this.floorMap[y][x]).getSrcX2(), 
+                        TILEMAP.get(this.floorMap[y][x]).getSrcY2(),
+                        null);
+                // Paint the wall matrix
+                g.drawImage(SPRITE,
+                        (x * 64) + XPOS, (y * 64) + YPOS,
+                        (x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS,
+                        TILEMAP.get(this.wallMap[y][x]).getSrcX1(), 
+                        TILEMAP.get(this.wallMap[y][x]).getSrcY1(),
+                        TILEMAP.get(this.wallMap[y][x]).getSrcX2(), 
+                        TILEMAP.get(this.wallMap[y][x]).getSrcY2(),
+                        null);
+                //Paint the object matrix
+                g.drawImage(SPRITE,
+                        (x * 64) + XPOS, (y * 64) + YPOS,
+                        (x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS,
+                        TILEMAP.get(this.objectMap[y][x]).getSrcX1(), 
+                        TILEMAP.get(this.objectMap[y][x]).getSrcY1(),
+                        TILEMAP.get(this.objectMap[y][x]).getSrcX2(), 
+                        TILEMAP.get(this.objectMap[y][x]).getSrcY2(),
+                        null);
+            }
+        }
+       
+        //If the enemy killed the first boss, paint the portal
+        if (showPortal && actualStage == 7) {
+            BufferedImage image = portal.getSubimage(animation, 0, 64, 64);
+            g.drawImage(image, 450, 250, 128, 128, null);
+        }
+    }
+    
+    /**
+     * Return a node of the Node Map
+     *
+     * @param x: the line of the node in the matrix
+     * @param y: the column of the node in the matrix
+     * @return : a node in the Node Map
+     */
+    public Node getNode(int x, int y) {
+        return nodeMap[x][y];
+    }
+    
+    /**
+     * @return the map Node Map
+     */
     public Node[][] getNodeMap() {
         return nodeMap;
     }
     
-/* *************************Overridden Methods******************************* */
-    @Override
-    public void paintComponent(Graphics g) {
-        if (this.animation >= 448){
-            this.animation = 0;
-            
-        }
-        this.animation +=64;
-        for (int x = 0; x < this.floorMap[0].length; x++) {
-            for (int y = 0; y < this.floorMap.length; y++) {
-                g.drawImage(SPRITE,
-                        (x * 64) + XPOS, (y * 64) + YPOS,
-                        (x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS,
-                        TILEMAP.get(this.floorMap[y][x]).getSrcX1(), TILEMAP.get(this.floorMap[y][x]).getSrcY1(),
-                        TILEMAP.get(this.floorMap[y][x]).getSrcX2(), TILEMAP.get(this.floorMap[y][x]).getSrcY2(),
-                        null);
-
-                g.drawImage(SPRITE,
-                        (x * 64) + XPOS, (y * 64) + YPOS,
-                        (x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS,
-                        TILEMAP.get(this.wallMap[y][x]).getSrcX1(), TILEMAP.get(this.wallMap[y][x]).getSrcY1(),
-                        TILEMAP.get(this.wallMap[y][x]).getSrcX2(), TILEMAP.get(this.wallMap[y][x]).getSrcY2(),
-                        null);
-
-                g.drawImage(SPRITE,
-                        (x * 64) + XPOS, (y * 64) + YPOS,
-                        (x * 64) + 64 + XPOS, (y * 64) + 64 + YPOS,
-                        TILEMAP.get(this.objectMap[y][x]).getSrcX1(), TILEMAP.get(this.objectMap[y][x]).getSrcY1(),
-                        TILEMAP.get(this.objectMap[y][x]).getSrcX2(), TILEMAP.get(this.objectMap[y][x]).getSrcY2(),
-                        null);
-
-            }
-        }
-       
-        if (showPortal && actualStage == 7) {
-            BufferedImage image = portal.getSubimage(
-                    animation, 0, 64, 64);
-            g.drawImage(image, 450, 250, 128, 128, null);
-        }
-    }
-
-    public boolean showPortal(){
+    /**
+     * @return if the map can show the portal
+     */
+    public boolean showPortal() {
         return this.showPortal;
-}
+    }
+    
+    /**
+     * Set if the map can show the portal
+     * @param show 
+     */
     public void setPortal(boolean show){
         this.showPortal = show;
     }
-    @Override
-    public Boolean isStage(Map map) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    /**
+     * @return the number of the map lines 
+     */
+    public int getLINES() {
+        return LINES;
+    }
+
+    /**
+     * @return the number of the map columns  
+     */
+    public int getCOLUMNS() {
+        return COLUMNS;
+    }
+
+    /**
+     * @return the node list
+     */
+    public ArrayList<Node> getNodeList() {
+        return NodeList;
     }
     
-    public int getStage(){
-        return this.actualStage;
+    @Override
+    public Boolean isStage(Map map) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

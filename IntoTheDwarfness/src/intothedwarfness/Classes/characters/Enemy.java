@@ -41,9 +41,9 @@ public class Enemy extends Character implements Drawable, Collidable {
     public Enemy(int x, int y, int stage, BufferedImage spriteSheet, 
             ArrayList<Song> songs, Map map, ArrayList<Collidable> collidables, 
             int typeEnemy) {
-
+        
+        this.enemyType = typeEnemy;  
         //Each enemy have a image size
-        this.enemyType = typeEnemy;
         switch (this.enemyType) {
             case 3:
                 this.IMGSIZE = 96;
@@ -76,8 +76,7 @@ public class Enemy extends Character implements Drawable, Collidable {
         this.xPos = x;
         this.wait = 40;
         this.endedPath = true;
-        this.actualStage = stage;
-        this.enemyType = enemyType;
+        this.actualStage = stage;      
         this.pivots = new ArrayList();
         this.collidables = collidables;
         //Enemy's animation       

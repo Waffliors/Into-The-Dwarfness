@@ -56,8 +56,8 @@ public class HUD implements Drawable {
         
         //If the player killed a boss, show the key
         if(PLAYER.getBossKilledCount()>=1){
-            BufferedImage image = this.HEALTH_BAR.get(9).getSubimage(0,0,64, 64);
-            g.drawImage(image, 30, 100, 64, 64, null);
+            BufferedImage image = this.HEALTH_BAR.get(9).getSubimage(0,0,64,89);
+            g.drawImage(image, 30, 100, 32, 45, null);
         }
         
         if(PLAYER.getLife() == 0) {
