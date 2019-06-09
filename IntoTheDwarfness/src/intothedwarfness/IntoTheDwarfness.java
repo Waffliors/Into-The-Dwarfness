@@ -107,6 +107,11 @@ public class IntoTheDwarfness {
         for (int i = 1; i <= 8; i++) {
             spriteList.add(ImageIO.read(new File("images/" + i + ".png")));
         }
+        
+        for (int i = 1; i < 2; i++) {
+            spriteList.add(ImageIO.read(new File("images/totem_"+i+".png")));
+        }
+        
         // Then, add the imagem that is used to see the tiles
         spriteList.add(ImageIO.read(new File("images/TILES REF.png")));
     }
