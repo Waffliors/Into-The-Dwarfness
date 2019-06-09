@@ -122,13 +122,13 @@ public class Map extends JPanel implements Drawable {
                 int temp3 = floorMap[i][j];
 
                 if (!UNBLOCKEDTILES.contains(temp1) && temp1 != 6) {
-                    RESP[i][j].setBloqueado(true);
+                    RESP[i][j].setBlocked(true);
                 }
                 if (!UNBLOCKEDTILES.contains(temp2) && temp2 != 6) {
-                    RESP[i][j].setBloqueado(true);
+                    RESP[i][j].setBlocked(true);
                 }
                 if (!UNBLOCKEDTILES.contains(temp3)) {
-                    RESP[i][j].setBloqueado(true);
+                    RESP[i][j].setBlocked(true);
                 }
                 this.NodeList.add(RESP[i][j]);
                 x += 64;

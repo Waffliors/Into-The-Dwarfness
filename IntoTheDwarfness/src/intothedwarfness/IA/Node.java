@@ -64,7 +64,7 @@ public class Node implements Collidable{
     /**
      * @param blocked set if the Node is blocked or not
      */
-    public void setBloqueado(boolean blocked) {
+    public void setBlocked(boolean blocked) {
         this.blocked = blocked;
     }
     

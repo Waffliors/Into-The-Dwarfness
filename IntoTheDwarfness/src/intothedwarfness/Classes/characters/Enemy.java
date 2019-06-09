@@ -31,7 +31,7 @@ public class Enemy extends Character implements Drawable, Collidable {
     // Enemy's lists
     private List<Node> path;
     private ArrayList<Point> pivots;
-    private final ArrayList<Collidable> collidables;
+    private final ArrayList<Collidable> COLLIDABLES;
     // Animation
     private int drawRef, startLine, animation, endLine;
     private int cont, wait, atkCont, hitCont, deadCont, atkTimer;
@@ -78,7 +78,7 @@ public class Enemy extends Character implements Drawable, Collidable {
         this.endedPath = true;
         this.actualStage = stage;      
         this.pivots = new ArrayList();
-        this.collidables = collidables;
+        this.COLLIDABLES = collidables;
         //Enemy's animation       
         this.looking2Right = true;
         setPivot();
@@ -526,7 +526,7 @@ public class Enemy extends Character implements Drawable, Collidable {
 
         // For each colliding object to pick up the sides of the object and 
         // compare with those of the player
-        for (Collidable c : this.collidables) {
+        for (Collidable c : this.COLLIDABLES) {
             int rSide_C = (c.getPivotRT().getX() + c.getPivotRD().getX());
             int lSide_C = (c.getPivotLT().getX() + c.getPivotLD().getX());
             int topSide_C = (c.getPivotRT().getY() + c.getPivotLT().getY());
