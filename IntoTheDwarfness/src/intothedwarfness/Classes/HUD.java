@@ -59,6 +59,14 @@ public class HUD implements Drawable {
             BufferedImage image = this.HEALTH_BAR.get(9).getSubimage(0,0,64, 64);
             g.drawImage(image, 30, 100, 64, 64, null);
         }
+        
+        if(PLAYER.getLife() == 0) {
+            BufferedImage deathBackground = this.HEALTH_BAR.get(13);
+            g.drawImage(deathBackground, 0, 0, 1024, 768, null);
+            
+            BufferedImage deathImage = this.HEALTH_BAR.get(12);
+            g.drawImage(deathImage, 0, 0, 1024, 768, null);
+        }
     }
     
     /**

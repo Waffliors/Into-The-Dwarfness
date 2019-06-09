@@ -265,13 +265,6 @@ public class Window extends JFrame implements KeyListener {
 
             // map.getNode(screenWidth, screenWidth);
             repaint();
-            if (PLAYER.getLife() == 0) {
-                try {
-                    buildGame(HUD.getHealthBar());
-                } catch (FontFormatException | IOException ex) {
-                    Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
             long afterTime = System.currentTimeMillis();
             long sleepTime = afterTime - beforeTime;
 
@@ -338,6 +331,14 @@ public class Window extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if ("PlayState".equals(gsm.getType())) {
             PLAYER.setCurrentMove(e.getKeyChar());
+            
+            if (PLAYER.getLife() == 0 && e.getKeyChar() == ' ') {
+                try {
+                    buildGame(HUD.getHealthBar());
+                } catch (FontFormatException | IOException ex) {
+                    Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }
 
