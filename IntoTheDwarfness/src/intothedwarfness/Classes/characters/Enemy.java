@@ -40,9 +40,10 @@ public class Enemy extends Character implements Drawable, Collidable {
     /* *********************** Class Constructor **************************** */
     public Enemy(int x, int y, int stage, BufferedImage spriteSheet, 
             ArrayList<Song> songs, Map map, ArrayList<Collidable> collidables, 
-            int enemyType) {
+            int typeEnemy) {
 
         //Each enemy have a image size
+        this.enemyType = typeEnemy;
         switch (this.enemyType) {
             case 3:
                 this.IMGSIZE = 96;
@@ -630,7 +631,7 @@ public class Enemy extends Character implements Drawable, Collidable {
                     super.tile_96x96[drawRef][animation].getSrcX1(),
                     super.tile_96x96[drawRef][animation].getSrcY1(),
                     IMGSIZE, IMGSIZE);
-            g.drawImage(image, xPos-10, yPos, 120, 120, null);
+            g.drawImage(image, xPos-10, yPos, 96, 96, null);
         }
         //If following the player, draws the exclamation point
         if (this.followingPlayer) {
