@@ -8,7 +8,7 @@
  ******************************************************************************/
 package intothedwarfness.Classes;
 
-import intothedwarfness.Classes.characters.Enemy;
+
 import java.util.List;
 import java.util.Arrays;
 import java.awt.Graphics;

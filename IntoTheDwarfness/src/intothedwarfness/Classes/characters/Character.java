@@ -11,9 +11,9 @@ public abstract class Character  extends JPanel {
   
     public abstract void update();
     //The class initialize the base matrix for the paintComponnent
-    Tile[][] tile_32x32 = loadTile(32);    
-    Tile[][] tile_64x64 = loadTile(64);
-    Tile[][] tile_96x96 = loadTile(96);
+    protected Tile[][] tile_32x32 = loadTile(32);    
+    protected Tile[][] tile_64x64 = loadTile(64);
+    protected Tile[][] tile_96x96 = loadTile(96);
    
     /**
      * Method that initialize the matrix
