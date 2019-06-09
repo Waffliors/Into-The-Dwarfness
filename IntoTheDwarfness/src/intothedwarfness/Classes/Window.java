@@ -1,9 +1,11 @@
-/** ****************************************************************************
- ** Class Window: This class is responsible for creating the game window,     **
+/*******************************************************************************
+ **     Window Class                                                          **
+ **                                                                           **
+ ** This class is responsible for creating the game window,                   **
  ** within this window will be created and drawn the objects of the game      **
  ** (Player, Enemy and Map), collected the events of the keyboard and where   **
  ** will be the game loop.                                                    **
- ***************************************************************************** */
+ ******************************************************************************/
 package intothedwarfness.Classes;
 
 import java.awt.Color;
@@ -12,10 +14,14 @@ import java.util.Random;
 import java.awt.Graphics;
 import javax.swing.JFrame;
 import java.util.ArrayList;
+import java.io.IOException;
 import java.awt.event.KeyEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import intothedwarfness.IA.Node;
 import intothedwarfness.IA.AStar;
 import java.awt.event.KeyListener;
+import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferStrategy;
 import intothedwarfness.Interfaces.Drawable;
@@ -26,37 +32,24 @@ import intothedwarfness.Classes.characters.Enemy;
 import intothedwarfness.Classes.characters.Player;
 import intothedwarfness.Classes.States.PauseState;
 import intothedwarfness.Classes.States.GameStateManager;
-import java.awt.FontFormatException;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Window extends JFrame implements KeyListener {
-
     // Constants
     private final Map MAP;
     private final ArrayList<Song> SONGS;
     private final int SCREEN_WIDTH, SCREEN_HEIGHT;
     private final ArrayList<BufferedImage> SPRITES;
-    private boolean pause;
-
-    // Variables of the class
-    private Player PLAYER;
-    private ArrayList<Enemy> ENEMIES;
+    // Variables of the game
     private HUD HUD;
+    private Player player;
     private List<Node> path;
     private GameStateManager gsm;
-    private ArrayList<Drawable> DRAWABLES;
+    private ArrayList<Enemy> enemies;
+    private ArrayList<Drawable> drawables;
 
-    /**
-     * *
-     * Game Screen Constructor
-     *
-     * @param SPRITES: List of sprites that will be used in the game
-     * @param SONGS: List of songs that will be used in the game
-     */
-    public Window(ArrayList<BufferedImage> SPRITES, ArrayList<Song> SONGS, ArrayList<BufferedImage> health_bar) {
-
+    /* *********************** Class Constructor **************************** */
+    public Window(ArrayList<BufferedImage> SPRITES, ArrayList<Song> SONGS, 
+            ArrayList<BufferedImage> health_bar) {
         // Call the super to set the screen name
         super("Into The Dwarfness");
         // Set the constants
@@ -65,14 +58,13 @@ public class Window extends JFrame implements KeyListener {
         this.SCREEN_WIDTH = 1024;
         this.SCREEN_HEIGHT = 768;
         this.MAP = new Map(SPRITES.get(6), 12, 16, SPRITES.get(5), SONGS);
-        this.ENEMIES = new ArrayList();
-        this.DRAWABLES = new ArrayList();
+        this.enemies = new ArrayList();
+        this.drawables = new ArrayList();
         try {
             buildGame(health_bar);
         } catch (FontFormatException | IOException ex) {
-            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null,ex);
         }
-
         // Set configuration of the screen
         this.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
         this.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
@@ -86,12 +78,7 @@ public class Window extends JFrame implements KeyListener {
         this.setBackground(new Color(39, 39, 37));
     }
 
-    public boolean isPause() {
-        return pause;
-    }
-
     /**
-     * *
      * Load all drawable elements list
      *
      * @return : ArrayList that contains all drawable elements
@@ -100,16 +87,15 @@ public class Window extends JFrame implements KeyListener {
         ArrayList<Drawable> elements = new ArrayList();
         // Add all game's elements
         elements.add(this.MAP);
-        for (Enemy enemy : this.ENEMIES) {
+        for (Enemy enemy : this.enemies) {
             elements.add(enemy);
         }
-        elements.add(this.PLAYER);
+        elements.add(this.player);
         elements.add(this.HUD);
         return elements;
     }
 
     /**
-     * *
      * Initialize the Game state manager
      */
     public void initialize() {
@@ -118,128 +104,223 @@ public class Window extends JFrame implements KeyListener {
     }
 
     /**
-     * *
      * Initialize all the enemies of the game
      *
      * @return : ArrayList that contains all game's enemies
      */
     private ArrayList<Enemy> enemiesFactory() {
-        ArrayList<Enemy> enemies = new ArrayList();
         // All the enemies will collide with the player
         ArrayList<Collidable> enemyCollidables = new ArrayList();
-        enemyCollidables.add(PLAYER);
+        enemyCollidables.add(player);
 
-        Enemy spider_1 = new Enemy(64 * 4, 64 * 9, 1, SPRITES.get(2), SONGS, MAP,
-                enemyCollidables, 0);
-        Enemy spider_2 = new Enemy(64 * 2, 64 * 1, 2, SPRITES.get(2), SONGS, MAP,
-                enemyCollidables, 0);
-        Enemy spider_3 = new Enemy(64 * 6, 64 * 8, 2, SPRITES.get(2), SONGS, MAP,
-                enemyCollidables, 0);
+        // Create the spiders
+        Enemy spider_1 = new Enemy(
+        64 * 4, 64 * 9, 1, SPRITES.get(2), SONGS, MAP, enemyCollidables, 0);
+        Enemy spider_2 = new Enemy(
+        64 * 2, 64 * 1, 2, SPRITES.get(2), SONGS, MAP, enemyCollidables, 0);
+        Enemy spider_3 = new Enemy(
+        64 * 6, 64 * 8, 2, SPRITES.get(2), SONGS, MAP, enemyCollidables, 0);
 
-        Enemy fire_elemental_1 = new Enemy(64 * 3, 64 * 3, 3, SPRITES.get(7), SONGS, MAP,
-                enemyCollidables, 1);
-        Enemy fire_elemental_2 = new Enemy(64 * 9, 64 * 4, 3, SPRITES.get(7), SONGS, MAP,
-                enemyCollidables, 1);
-        Enemy fire_elemental_3 = new Enemy(64 * 9, 64 * 2, 3, SPRITES.get(7), SONGS, MAP,
-                enemyCollidables, 1);
-        Enemy fire_elemental_4 = new Enemy(64 * 12, 64 * 8, 3, SPRITES.get(7), SONGS, MAP,
-                enemyCollidables, 1);
+        // Create the fire elementals
+        Enemy fire_elemental_1 = new Enemy(
+        64 * 3, 64 * 3, 3, SPRITES.get(7), SONGS, MAP, enemyCollidables, 1);
+        Enemy fire_elemental_2 = new Enemy(
+        64 * 9, 64 * 4, 3, SPRITES.get(7), SONGS, MAP, enemyCollidables, 1);
+        Enemy fire_elemental_3 = new Enemy(
+        64 * 9, 64 * 2, 3, SPRITES.get(7), SONGS, MAP, enemyCollidables, 1);
+        Enemy fire_elemental_4 = new Enemy(
+        64 * 12, 64 * 8, 3, SPRITES.get(7), SONGS, MAP, enemyCollidables, 1);
 
-        Enemy gladiator_1 = new Enemy(64 * 3, 64 * 4, 4, SPRITES.get(3), SONGS, MAP,
-                enemyCollidables, 2);
-        Enemy gladiator_2 = new Enemy(64 * 12, 64 * 4, 4, SPRITES.get(3), SONGS, MAP,
-                enemyCollidables, 2);
-        Enemy gladiator_3 = new Enemy(64 * 8, 64 * 5, 5, SPRITES.get(3), SONGS, MAP,
-                enemyCollidables, 2);
-        Enemy gladiator_4 = new Enemy(64 * 7, 64 * 8, 5, SPRITES.get(3), SONGS, MAP,
-                enemyCollidables, 2);
+        // Create the gladiators
+        Enemy gladiator_1 = new Enemy(
+        64 * 3, 64 * 4, 4, SPRITES.get(3), SONGS, MAP, enemyCollidables, 2);
+        Enemy gladiator_2 = new Enemy(
+        64 * 12, 64 * 4, 4, SPRITES.get(3), SONGS, MAP,enemyCollidables, 2);
+        Enemy gladiator_3 = new Enemy(
+        64 * 8, 64 * 5, 5, SPRITES.get(3), SONGS, MAP, enemyCollidables, 2);
+        Enemy gladiator_4 = new Enemy(
+        64 * 7, 64 * 8, 5, SPRITES.get(3), SONGS, MAP, enemyCollidables, 2);
 
-        Enemy minotaur_1 = new Enemy(64 * 12, 64 * 4, 6, SPRITES.get(4), SONGS, MAP,
-                enemyCollidables, 3);
-        Enemy minotaur_2 = new Enemy(64 * 4, 64 * 9, 8, SPRITES.get(4), SONGS, MAP,
-                enemyCollidables, 3);
-        Enemy minotaur_3 = new Enemy(64 * 8, 64 * 9, 8, SPRITES.get(4), SONGS, MAP,
-                enemyCollidables, 3);
+        // Create the minotaurs
+        Enemy minotaur_1 = new Enemy(
+        64 * 12, 64 * 4, 6, SPRITES.get(4), SONGS, MAP,enemyCollidables, 3);
+        Enemy minotaur_2 = new Enemy(
+        64 * 4, 64 * 9, 8, SPRITES.get(4), SONGS, MAP, enemyCollidables, 3);
+        Enemy minotaur_3 = new Enemy(
+        64 * 8, 64 * 9, 8, SPRITES.get(4), SONGS, MAP, enemyCollidables, 3);
 
+        // Add all enemies in the enemies list
         enemies.add(spider_1);
         enemies.add(spider_2);
         enemies.add(spider_3);
-        enemies.add(fire_elemental_1);
-        enemies.add(fire_elemental_2);
-        enemies.add(fire_elemental_3);
-        enemies.add(fire_elemental_4);
-
+        enemies.add(minotaur_1);
+        enemies.add(minotaur_2);
+        enemies.add(minotaur_3);
         enemies.add(gladiator_1);
         enemies.add(gladiator_2);
         enemies.add(gladiator_3);
         enemies.add(gladiator_4);
-
-        enemies.add(minotaur_1);
-        enemies.add(minotaur_2);
-        enemies.add(minotaur_3);
-
+        enemies.add(fire_elemental_1);
+        enemies.add(fire_elemental_2);
+        enemies.add(fire_elemental_3);
+        enemies.add(fire_elemental_4);
+        
         return enemies;
     }
 
-    private void buildGame(ArrayList<BufferedImage> health_bar) throws FontFormatException, IOException {
-        if (this.ENEMIES.size() > 0) {
-            this.ENEMIES.clear();
+    /**
+     * Method that reload the game after de player die
+     * 
+     * @param health_bar
+     * @throws FontFormatException
+     * @throws IOException 
+     */
+    private void buildGame(ArrayList<BufferedImage> health_bar) 
+            throws FontFormatException, IOException {
+        if (this.enemies.size() > 0) {
+            this.enemies.clear();
         }
-        if (this.DRAWABLES.size() > 0) {
-            this.DRAWABLES.clear();
+        if (this.drawables.size() > 0) {
+            this.drawables.clear();
         }
-        this.PLAYER = new Player(SPRITES.get(0), SONGS, MAP);
-        this.ENEMIES = this.enemiesFactory();
-        this.HUD = new HUD(health_bar, this.PLAYER);
-        this.PLAYER.receiveCollidables(ENEMIES);
-        this.DRAWABLES = loadDrawables();
+        this.player = new Player(SPRITES.get(0), SONGS, MAP);
+        this.enemies = this.enemiesFactory();
+        this.HUD = new HUD(health_bar, this.player);
+        this.player.receiveCollidables(enemies);
+        this.drawables = loadDrawables();
         this.MAP.stageCreator(1);
         this.MAP.setPortal(false);
         initialize();
     }
+    
+    /**
+     * Set a random path in the map for the AStar of an enemy
+     * 
+     * @param enemy 
+     */
+    private void setRandomPath(Enemy enemy) {
+        Random random = new Random();
+        boolean find = false;
+        Node node = null;
 
-    // Game Loop
+        while (!find) {
+            node = MAP.getNode(
+                    random.nextInt(MAP.getLINES()), 
+                    random.nextInt(MAP.getCOLUMNS()));
+            if (!node.isBlocked()) {
+                find = true;
+            }
+        }
+        
+        this.path = AStar.aStar(enemy.getNodePos(), node, MAP);
+        enemy.setPath(path);
+    }
+
+    /**
+     * Set a path in the map for the AStar between the player and the enemy
+     * 
+     * @param enemy 
+     */
+    private void pathToPlayer(Enemy enemy) {
+        this.path = AStar.aStar(enemy.getNodePos(), player.getNodePos(), MAP);
+        enemy.setPath(path);
+        //If can't find a path to the player, set a random path
+        if (path == null) {
+            setRandomPath(enemy);
+        }
+    }
+    
+    /**
+     * Get a key typed event
+     * 
+     * @param e the key typed 
+     */
+    @Override
+    public void keyTyped(KeyEvent e) {
+        if (e.getKeyChar() == 'p' || e.getKeyChar() == 'P') {
+            if ("PlayState".equals(gsm.getType())) {
+                GameState pause = new PauseState();
+                gsm.switchState(pause);
+            } else {
+                GameState play = new PlayState();
+                gsm.switchState(play);
+            }
+        }
+    }
+    
+    /**
+     * Get a key pressed event
+     * 
+     * @param e the key pressed
+     */
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if ("PlayState".equals(gsm.getType())) {
+            player.setCurrentMove(e.getKeyChar());
+            if (player.getLife() == 0 && e.getKeyChar() == ' ') {
+                try {
+                    buildGame(HUD.getHealthBar());
+                } catch (FontFormatException | IOException ex) {
+                    Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Get a key released event
+     * 
+     * @param e the key released
+     */
+    @Override
+    public void keyReleased(KeyEvent e) {
+        player.setCurrentMove('.');
+        player.setLook(e.getKeyChar());
+    }
+
+    /**
+     * The game loop
+     * 
+     * @throws InterruptedException 
+     */
     public void run() throws InterruptedException {
-        boolean isRunning = true;
-        SONGS.get(15).playSound();
-
         long excess = 0;
         long noDelays = 0;
-
-        final long DESIRED_UPDATE_TIME = 80;
+        boolean isRunning = true;
         final long NO_DELAYS_PER_YIELD = 16;
+        final long DESIRED_UPDATE_TIME = 80;
 
-        // Cria double-buffering strategy genérico
+        // Creates generic double buffer strategy
         this.createBufferStrategy(2);
-        // BufferStrategy strategy = this.getBufferStrategy();
 
-        // Set path and pass it to enemy
-        for (Enemy enemy : this.ENEMIES) {
+        // Set a random path for all the enemies
+        for (Enemy enemy : this.enemies) {
             setRandomPath(enemy);
         }
 
         while (isRunning) {
             long beforeTime = System.currentTimeMillis();
-            // Pula os quadros enquanto o tempo for em excesso.
+            // Skip the frames while the time is in excess.
             while (excess > DESIRED_UPDATE_TIME) {
-                PLAYER.update();
-                PLAYER.receiveCollidables(ENEMIES);
-                for (Enemy enemy : this.ENEMIES) {
+                player.update();
+                player.receiveCollidables(enemies);
+                for (Enemy enemy : this.enemies) {
                     enemy.update();
                 }
                 excess -= DESIRED_UPDATE_TIME;
             }
+            
             if ("PlayState".equals(gsm.getType())) {
-
                 int temp = 0;
                 int temp2 = 0;
-                PLAYER.update();
-                PLAYER.receiveCollidables(ENEMIES);
+                player.update();
+                player.receiveCollidables(enemies);
 
-                for (Enemy enemy : this.ENEMIES) {
+                for (Enemy enemy : this.enemies) {
                     if (enemy.isStage(this.MAP)) {
-                        if (enemy.getXPosition() % 64 == 0 && enemy.getYPosition() % 64 == 0) {
-                            if (enemy.inRange(PLAYER)) {
+                        if (enemy.getXPosition() % 64 == 0 && 
+                                enemy.getYPosition() % 64 == 0) {
+                            if (enemy.inRange(player)) {
                                 pathToPlayer(enemy);
                             }
                             if (enemy.endedPath()) {
@@ -255,16 +336,13 @@ public class Window extends JFrame implements KeyListener {
                         temp2 = temp2 + 1;
                         temp = temp - 1;
                     }
-                    PLAYER.setEnemiesKilledCount(temp);
-                    PLAYER.setBossKilledCount(temp2);
-
-                    if (PLAYER.getBossKilledCount() >= 1) {
+                    player.setEnemiesKilledCount(temp);
+                    player.setBossKilledCount(temp2);
+                    if (player.getBossKilledCount() >= 1) {
                         MAP.setPortal(true);
                     }
                 }
             }
-
-            // map.getNode(screenWidth, screenWidth);
             repaint();
             long afterTime = System.currentTimeMillis();
             long sleepTime = afterTime - beforeTime;
@@ -282,76 +360,13 @@ public class Window extends JFrame implements KeyListener {
         }
     }
 
-    private void setRandomPath(Enemy enemy) {
-        Random random = new Random();
-        boolean find = false;
-        Node node = null;
-
-        while (!find) {
-            node = MAP.getNode(random.nextInt(11), random.nextInt(15));
-            if (!node.isBlocked()) {
-                find = true;
-            }
-        }
-
-        this.path = AStar.aStar(enemy.getNodePos(), node, MAP);
-        enemy.setPath(path);
-
-    }
-
-    private void pathToPlayer(Enemy enemy) {
-        Node end = PLAYER.getNodePos();
-////        if (!PLAYER.getNodePos().getNeighbors().get(0).isBlocked()) {
-////            end = PLAYER.getNodePos().getNeighbors().get(0);
-////        } else if (!PLAYER.getNodePos().getNeighbors().get(1).isBlocked()) {
-////            end = PLAYER.getNodePos().getNeighbors().get(1);
-////        }
-        this.path = AStar.aStar(enemy.getNodePos(), end, MAP);
-        enemy.setPath(path);
-        if (path == null) {
-            setRandomPath(enemy);
-        }
-
-    }
-
-    /* *************************Overridden Methods******************************* */
-    @Override
-    public void keyTyped(KeyEvent e) {
-        if (e.getKeyChar() == 'p') {
-            if ("PlayState".equals(gsm.getType())) {
-                GameState pause = new PauseState();
-                gsm.switchState(pause);
-            } else {
-                GameState play = new PlayState();
-                gsm.switchState(play);
-            }
-        }
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if ("PlayState".equals(gsm.getType())) {
-            PLAYER.setCurrentMove(e.getKeyChar());
-            
-            if (PLAYER.getLife() == 0 && e.getKeyChar() == ' ') {
-                try {
-                    buildGame(HUD.getHealthBar());
-                } catch (FontFormatException | IOException ex) {
-                    Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        PLAYER.setCurrentMove('.');
-        PLAYER.setLook(e.getKeyChar());
-    }
-
+    /**
+     * Paint all the elements of the game
+     * 
+     * @param g the graphic context
+     */
     @Override
     public void paint(Graphics g) {
-
         BufferStrategy strategy = this.getBufferStrategy();
         if (strategy == null) {
             return;
@@ -362,8 +377,8 @@ public class Window extends JFrame implements KeyListener {
                 // Clear the previous frame
                 graphics.clearRect(0, 0, this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
                 // For each drawable object in list, paint
-                for (Drawable drawable : this.DRAWABLES) {
-                    if (drawable.getClass() == this.ENEMIES.get(0).getClass()) {
+                for (Drawable drawable : this.drawables) {
+                    if (drawable.getClass() == this.enemies.get(0).getClass()) {
                         if (drawable.isStage(this.MAP)) {
                             drawable.paintComponent(graphics);
                         }
