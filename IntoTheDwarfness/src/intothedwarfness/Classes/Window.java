@@ -389,6 +389,7 @@ public class Window extends JFrame implements KeyListener {
                 if ("PauseState".equals(gsm.getType())) {
                     HUD.paintPauseMenu(graphics);
                 }
+                
                 // Disposes of this graphics context, it's no longer referenced.
                 graphics.dispose();
             } while (strategy.contentsRestored());

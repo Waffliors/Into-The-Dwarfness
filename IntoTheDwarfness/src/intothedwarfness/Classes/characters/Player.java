@@ -287,7 +287,7 @@ public class Player extends Character implements Drawable, Collidable {
                     }
                 }
                 // Stop condition of animations of the type "movement"
-                if (cont == this.endLine) {
+                if (cont >= this.endLine) {
                     cont = this.startLine;
                 }
                 // All the animations of moving types use the same counter
@@ -305,7 +305,7 @@ public class Player extends Character implements Drawable, Collidable {
                 if (atkCont == 1) {
                 }
                 // Stop condition of animations of the type "atatck"
-                if (atkCont == this.endLine) {
+                if (atkCont >= this.endLine) {
                     atkCont = 0;
                     cont = 0;
                     attacking = false;
@@ -320,12 +320,9 @@ public class Player extends Character implements Drawable, Collidable {
                 if (!looking2Right) {
                     startAnimation(8, 0, 4);
                 }
-                // Play song of this animation
-                if (hitCont == 1) {
-                }
                 // Stop condition of animations of the type "get hit", also
                 // decrease the player's life
-                if (hitCont == endLine) {
+                if (hitCont >= endLine) {
                     cont = 0;
                     hitCont = 0;
                     hitted = false;
