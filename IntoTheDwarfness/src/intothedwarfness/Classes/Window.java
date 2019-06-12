@@ -5,6 +5,10 @@
  ** within this window will be created and drawn the objects of the game      **
  ** (Player, Enemy and Map), collected the events of the keyboard and where   **
  ** will be the game loop.                                                    **
+ **                                                                           **
+ ** For the game clock, the algorithm was used as the base available in:      **
+ **                                                                           **
+ ** http://www.pontov.com.br/site/index.php/java/48-java2d/121-o-loop-de-animacao
  ******************************************************************************/
 package intothedwarfness.Classes;
 
